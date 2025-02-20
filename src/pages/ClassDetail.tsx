@@ -39,7 +39,7 @@ const ClassDetail = () => {
     flashcardSets: [
       {
         id: 1,
-        name: "Cell Biology",
+        name: "Cell  BIOLOGY",
         cards: [
           { id: 1, front: "What is a cell?", back: "The basic structural unit of all living organisms" },
           { id: 2, front: "What is a nucleus?", back: "The control center of the cell containing genetic material" },
