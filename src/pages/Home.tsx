@@ -21,18 +21,17 @@ const Home = () => {
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {classes.map((cls) => (
-          <Card key={cls.id}>
-            <CardHeader>
-              <CardTitle>{cls.name}</CardTitle>
-              <CardDescription>{cls.teacher}</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-gray-600">{cls.sets} sets</p>
-              <Button variant="link" asChild className="mt-2 p-0">
-                <Link to={`/class/${cls.id}`}>View Class →</Link>
-              </Button>
-            </CardContent>
-          </Card>
+          <Link to={`/class/${cls.id}`} key={cls.id}>
+            <Card className="transition-transform transform hover:scale-105 hover:shadow-lg">
+              <CardHeader>
+                <CardTitle>{cls.name}</CardTitle>
+                <CardDescription>{cls.teacher}</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-gray-600">{cls.sets} sets</p>
+              </CardContent>
+            </Card>
+          </Link>
         ))}
       </div>
     </div>
