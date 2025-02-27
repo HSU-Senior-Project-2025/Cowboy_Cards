@@ -9,6 +9,16 @@ create table classes (
   updated_at timestamp without time zone not null
 );
 
+create table flashcard_sets (
+  id numeric primary key,
+  name text not null,
+  description text not null,
+  user_id uuid not null,
+  class_id uuid not null,
+  created_at timestamp without time zone not null,
+  updated_at timestamp without time zone not null
+);
+
 
 -- CREATE TABLE classes (
 --     id          SERIAL                          PRIMARY KEY, 

@@ -17,3 +17,13 @@ type Class struct {
 	CreatedAt   pgtype.Timestamp
 	UpdatedAt   pgtype.Timestamp
 }
+
+type FlashcardSet struct {
+	ID          pgtype.Numeric
+	Name        string
+	Description string
+	UserID      pgtype.UUID
+	ClassID     pgtype.UUID
+	CreatedAt   pgtype.Timestamp
+	UpdatedAt   pgtype.Timestamp
+}

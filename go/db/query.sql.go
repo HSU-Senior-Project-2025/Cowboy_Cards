@@ -7,6 +7,8 @@ package db
 
 import (
 	"context"
+
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 const getClasses = `-- name: GetClasses :many
@@ -28,6 +30,38 @@ func (q *Queries) GetClasses(ctx context.Context) ([]Class, error) {
 			&i.Description,
 			&i.JoinCode,
 			&i.TeacherID,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getFlashCardSet = `-- name: GetFlashCardSet :many
+SELECT id, name, description, user_id, class_id, created_at, updated_at FROM flashcard_sets WHERE user_id = $1
+`
+
+func (q *Queries) GetFlashCardSet(ctx context.Context, userID pgtype.UUID) ([]FlashcardSet, error) {
+	rows, err := q.db.Query(ctx, getFlashCardSet, userID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []FlashcardSet
+	for rows.Next() {
+		var i FlashcardSet
+		if err := rows.Scan(
+			&i.ID,
+			&i.Name,
+			&i.Description,
+			&i.UserID,
+			&i.ClassID,
 			&i.CreatedAt,
 			&i.UpdatedAt,
 		); err != nil {
