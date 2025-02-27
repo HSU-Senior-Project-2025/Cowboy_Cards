@@ -12,7 +12,7 @@ func Routes(r *chi.Mux, cfg *controllers.Config) {
 		w.Write([]byte("hello world\n"))
 	})
 	r.Get("/classes", cfg.GetClasses)
-	r.Get("/flashcardset", cfg.GetFlashCardSet)
+	r.Get("/flashcardset/{id}", cfg.GetFlashCardSet)
 	// r.Get("/users", cfg.GetUsers)
 	// r.Get("/user", cfg.GetUser)
 

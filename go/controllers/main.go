@@ -7,6 +7,8 @@ import (
 	"net/http"
 
 	"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/db"
+	"github.com/go-chi/chi/v5"
+	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgtype"
 )
@@ -44,6 +46,17 @@ func (cfg *Config) GetClasses(w http.ResponseWriter, r *http.Request) {
 }
 
 func (cfg *Config) GetFlashCardSet(w http.ResponseWriter, r *http.Request) {
+	idStr := chi.URLParam(r, "id")
+
+	log.Println("idStr: ", idStr)
+
+	// Validate UUID
+	_, err := uuid.Parse(idStr)
+	if err != nil {
+		http.Error(w, "Invalid UUID format", http.StatusBadRequest)
+		return
+	}
+
 	ctx := context.Background()
 
 	conn, err := pgx.ConnectConfig(ctx, cfg.DB)
@@ -56,7 +69,7 @@ func (cfg *Config) GetFlashCardSet(w http.ResponseWriter, r *http.Request) {
 
 	id := new(pgtype.UUID)
 
-	err = id.Scan("550e8400-e29b-41d4-a716-446655440001")
+	err = id.Scan(idStr)
 	if err != nil {
 		log.Fatalf("Scan error... %v", err)
 	}
