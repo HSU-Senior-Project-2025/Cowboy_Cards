@@ -18,6 +18,17 @@ type Class struct {
 	UpdatedAt   pgtype.Timestamp
 }
 
+type Flashcard struct {
+	ID         pgtype.Int4
+	Front      string
+	Back       string
+	SetID      int32
+	UserID     int32
+	IsMastered bool
+	CreatedAt  pgtype.Timestamp
+	UpdatedAt  pgtype.Timestamp
+}
+
 type FlashcardSet struct {
 	ID          pgtype.Int4
 	Name        string

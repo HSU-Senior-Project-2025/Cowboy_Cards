@@ -19,6 +19,16 @@ create table flashcard_sets (
 	updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_DATE
 );
 
+create table flashcards (
+	id SERIAL, 
+	front TEXT NOT NULL,
+	back TEXT NOT NULL,
+	set_id INTEGER NOT NULL,
+	user_id INTEGER NOT NULL,
+	is_mastered BOOLEAN NOT NULL DEFAULT FALSE,
+	created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_DATE,
+	updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_DATE
+);
 
 -- CREATE TABLE classes (
 --     id          SERIAL                          PRIMARY KEY, 

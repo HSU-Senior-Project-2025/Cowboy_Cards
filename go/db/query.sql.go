@@ -9,6 +9,27 @@ import (
 	"context"
 )
 
+const createFlashCard = `-- name: CreateFlashCard :exec
+INSERT INTO flashcards (front, back, set_id, user_id) VALUES ($1, $2, $3, $4)
+`
+
+type CreateFlashCardParams struct {
+	Front  string
+	Back   string
+	SetID  int32
+	UserID int32
+}
+
+func (q *Queries) CreateFlashCard(ctx context.Context, arg CreateFlashCardParams) error {
+	_, err := q.db.Exec(ctx, createFlashCard,
+		arg.Front,
+		arg.Back,
+		arg.SetID,
+		arg.UserID,
+	)
+	return err
+}
+
 const getClasses = `-- name: GetClasses :many
 SELECT id, name, description, join_code, teacher_id, created_at, updated_at FROM classes
 `
