@@ -1,17 +1,19 @@
 # Formatting Standards
 
+by Stephen and Danny
+
+### Description
+
 The purpose of this document is to define formatting standards for the project.
 
-## Description
-
-This is advised because **_you will likely_** experience merge conflicts when pulling and making pull requests to upstream if the following is true:
+This is advised because you might experience merge conflicts when pulling from the upstream if the following are true:
 
 1. Your formatting differs from upstream
-2. You have a divergent history from upstream (you pushed something before syncing your fork)
+2. You have a divergent history from upstream (you **pushed** something **before** syncing your fork)
 
-It is difficult to prevent merge conflicts entirely when maintaining a fork, but to help decrease the amount of resolving, having consistent formatting between forks is preferable.
+It is difficult to prevent merge conflicts entirely when maintaining a fork, but to help decrease the amount of resolving, having consistent formatting between forks is preferable. It should also reduce diff noise, or long diffs that don't show any actual change in functionality, just whitespace changes.
 
-We will be using the Prettier extension with all settings at default, with an emphasis on tab width and line width. I will be detailing the setup for VSCode and IntelliJ below.
+We will be using the **Prettier** extension with most settings at their default values. Here is how to setup VSCode and IntelliJ. The only setting you should have to change is the **single quote** setting to **true**.
 
 ## Setup
 
@@ -23,10 +25,8 @@ We will be using the Prettier extension with all settings at default, with an em
    - Do `Ctrl+Shift+P` and type `Install Extensions`
    - Select the option `Extensions: Install Extensions`
 2. Find Prettier in Extensions
-
    - Type `Prettier` in the search bar
    - Install the "Prettier - Code formatter" extension by Prettier
-
 3. Configure VSCode settings
 
    **Option 1: Using GUI**
@@ -115,20 +115,20 @@ We will be using the Prettier extension with all settings at default, with an em
    - Navigate to Tools > Actions on Save
    - Check `Reformat code`
 
-### Test Setup
+#### Test Setup
 
 To verify your setup works:
 
 1. Open one of the Typescript files in the project
-2. Make some formatting changes (add extra spaces, break lines incorrectly)
+2. Add a blank line somewhere
 3. Save the file
-4. The formatting should automatically be corrected according to the standards
+4. The file should format on save to the exact state it was in when you opened it
 
-### Troubleshooting
+#### Troubleshooting
 
 - Restarting your editor can fix some issues
 - If you're using IntelliJ, you must have the Prettier installed globally on your machine
-- If you're using IntelliJ, double-check your settings after you reopen your project/fork. The settings detailed in this guide do not apply to all project
+- If you're using IntelliJ, double-check your settings after you reopen your project/fork. The settings detailed in this guide do not apply to all projects
 - Refer to these docs for other issues:
 
   https://www.jetbrains.com/help/idea/prettier.html#ws_prettier_reformat_code
@@ -137,8 +137,4 @@ To verify your setup works:
   https://prettier.io/docs/install  
   https://www.freecodecamp.org/news/how-to-use-prettier-in-visual-studio-code/
 
-- Message me on Discord/Teams/email if you can't find a solution.
-
----
-
-Created: 2025-02-28 5:30 AM CST by @SLajuwomi
+- Let us know on Teams if you have any issues
