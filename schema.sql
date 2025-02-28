@@ -10,13 +10,13 @@ create table classes (
 );
 
 create table flashcard_sets (
-  id numeric primary key,
-  name text not null,
-  description text not null,
-  user_id uuid not null,
-  class_id uuid not null,
-  created_at timestamp without time zone not null,
-  updated_at timestamp without time zone not null
+	id SERIAL, 
+	name TEXT NOT NULL,
+	description TEXT NOT NULL,
+	user_id INTEGER NOT NULL,
+	class_id INTEGER NOT NULL,
+	created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_DATE,
+	updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_DATE
 );
 
 

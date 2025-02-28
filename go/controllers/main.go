@@ -5,12 +5,10 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/db"
-	"github.com/go-chi/chi/v5"
-	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
-	"github.com/jackc/pgx/v5/pgtype"
 )
 
 type Config struct {
@@ -46,14 +44,22 @@ func (cfg *Config) GetClasses(w http.ResponseWriter, r *http.Request) {
 }
 
 func (cfg *Config) GetFlashCardSet(w http.ResponseWriter, r *http.Request) {
-	idStr := chi.URLParam(r, "id")
+	userIDStr := r.Header.Get("user_id")
+	if userIDStr == "" {
+		http.Error(w, "missing 'user_id' header", http.StatusBadRequest)
+		return
+	}
 
-	log.Println("idStr: ", idStr)
-
-	// Validate UUID
-	_, err := uuid.Parse(idStr)
+	// Convert string to int
+	userID, err := strconv.Atoi(userIDStr)
 	if err != nil {
-		http.Error(w, "Invalid UUID format", http.StatusBadRequest)
+		http.Error(w, "Invalid 'user_id' header", http.StatusBadRequest)
+		return
+	}
+
+	id := int32(userID)
+	if id == 0 {
+		http.Error(w, "Invalid 'user_id' header", http.StatusBadRequest)
 		return
 	}
 
@@ -67,14 +73,7 @@ func (cfg *Config) GetFlashCardSet(w http.ResponseWriter, r *http.Request) {
 
 	query := db.New(conn)
 
-	id := new(pgtype.UUID)
-
-	err = id.Scan(idStr)
-	if err != nil {
-		log.Fatalf("Scan error... %v", err)
-	}
-
-	flashcard_sets, err := query.GetFlashCardSet(ctx, *id)
+	flashcard_sets, err := query.GetFlashCardSet(ctx, id)
 	if err != nil {
 		log.Fatalf("error getting flash card sets from db... %v", err)
 	}

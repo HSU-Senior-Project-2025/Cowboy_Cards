@@ -19,11 +19,11 @@ type Class struct {
 }
 
 type FlashcardSet struct {
-	ID          pgtype.Numeric
+	ID          pgtype.Int4
 	Name        string
 	Description string
-	UserID      pgtype.UUID
-	ClassID     pgtype.UUID
+	UserID      int32
+	ClassID     int32
 	CreatedAt   pgtype.Timestamp
 	UpdatedAt   pgtype.Timestamp
 }
