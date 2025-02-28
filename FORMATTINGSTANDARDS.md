@@ -51,6 +51,8 @@ We will be using the Prettier extension with all settings at default, with an em
       - Set it to `2`
       - Find `Prettier: Print Width`
       - Set it to `80`
+      - Find `Prettier: Single Quote`
+      - Make sure this is checked.
 
    **Option 2: Using JSON**
 
@@ -62,7 +64,8 @@ We will be using the Prettier extension with all settings at default, with an em
        "editor.defaultFormatter": "esbenp.prettier-vscode",
        "editor.formatOnSave": true,
        "prettier.tabWidth": 2,
-       "prettier.printWidth": 80
+       "prettier.printWidth": 80,
+       "prettier.singleQuote": true
      }
      ```
 
@@ -100,7 +103,8 @@ We will be using the Prettier extension with all settings at default, with an em
      ```json
      {
        "tabWidth": 2,
-       "printWidth": 80
+       "printWidth": 80,
+       "singleQuote": true
      }
      ```
    - Add this file to your `.gitignore`
