@@ -4,6 +4,18 @@ SELECT * FROM classes;
 -- name: GetUsersFlashCardSets :many
 SELECT * FROM flashcard_sets WHERE user_id = $1;
 
+-- name: GetUserFlashCardSet :one
+SELECT * FROM flashcard_sets WHERE id = $1 AND user_id = $2;
+
+-- name: CreateUserFlashCardSet :exec
+INSERT INTO flashcard_sets (name, user_id) VALUES ($1, $2);
+
+-- name: UpdateUserFlashCardSet :exec
+UPDATE flashcard_sets SET name = $1 WHERE id = $2;
+
+-- name: DeleteUserFlashCardSet :exec
+DELETE FROM flashcard_sets WHERE id = $1;
+
 -- name: CreateFlashCard :exec
 INSERT INTO flashcards (front, back, set_id, user_id) VALUES ($1, $2, $3, $4);
 
