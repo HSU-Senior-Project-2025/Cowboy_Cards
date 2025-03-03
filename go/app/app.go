@@ -1,6 +1,7 @@
 package app
 
 import (
+	"crypto/tls"
 	"log"
 	"net/http"
 	"os"
@@ -17,12 +18,15 @@ import (
 
 func LoadConfig() (*controllers.Config, error) {
 	conn, err := pgx.ParseConfig(os.Getenv("DATABASE_URL"))
-	conn.User = os.Getenv("DBUSER")
-	conn.Host = os.Getenv("DBHOST")
-
 	if err != nil {
 		log.Fatalf("error parsing config: %v", err)
 	}
+
+	// Enable SSL for Supabase
+	conn.TLSConfig = &tls.Config{
+		MinVersion: tls.VersionTLS12,
+	}
+
 	cfg := &controllers.Config{
 		DB: conn,
 	}
