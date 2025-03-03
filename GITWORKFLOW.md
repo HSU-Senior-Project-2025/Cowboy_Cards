@@ -30,7 +30,7 @@ To be able to sync with the sprint branch on the upstream repo, you need to add 
 
 Now run `git pull upstream [name of sprint branch]`. This will update your fork's master branch with the latest commits to the sprint branch.
 
-### Do this early and often, and BEFORE you make any commits.
+### Do this early and often, and BEFORE you push any commits.
 
 Run `git branch` and there should be one line of output, **master**.
 
@@ -42,11 +42,11 @@ To create a new branch, run `git checkout -b [ticket-number/feature]` (replace t
 
 #### 6. Develop
 
-Make your code changes in the newly created branch. When you are ready to commit, run the usual commands: `git status`, `git add [files]`, `git commit -am "Descriptive commit message"`.
+Make your code changes in the newly created branch. When you are ready to commit, run the usual commands: `git status`, `git add [files]`, `git commit -am "Descriptive commit message"`. Make as many commits as you need.
 
 #### 7. Stay up-to-date
 
-Before creating a pull request, it is **_essential_** to integrate the latest changes from the sprint branch of the original repository. This minimizes the risk of merge conflicts. If you have **uncommitted** changes, you can commit them with `git commit` or stash them with `git stash` first. Run `git pull upstream [name of sprint branch]`. To retrieve any stashed changes, run `git stash pop`.
+**_Before_** creating a pull request, it is **_essential_** to integrate the latest changes from the sprint branch of the original repository. This minimizes the risk of merge conflicts. If you have **uncommitted** changes, you can commit them with `git commit` or stash them with `git stash` first. Run `git pull upstream [name of sprint branch]`. To retrieve any stashed changes, run `git stash pop`.
 
 Review the updates and reconcile any differences between them and your code. Use your IDE or a text editor to carefully review the conflicting code and choose the correct changes.
 
@@ -82,7 +82,7 @@ Team leads will be responsible for merging approved pull requests. Squash mergin
 
 **Git config**: Check your global git config with `git config --list`. See that you don't have any **pull** options (ff-only, rebase, ff or merge) set; this can make pulling and merging upstream changes difficult.
 
-**Merge conflicts**: If you encounter merge conflicts, carefully review the conflicting code and resolve them manually. Commit the resolved changes.
+**Merge conflicts**: Synching with the upstream **regularly** while developing, **_before_** you push anything, will reduce merge conflicts. If you encounter merge conflicts, it doesn't mean anything is wrong, or broken, it just means **git** doesn't know how to reconcile the differences. You have created divergent histories, and **git** wants to converge them. Carefully review the conflicts and resolve them manually in your IDE/editor. Commit the resolved changes.
 
 **Push errors**: If you have trouble pushing your branch, ensure you've updated your local branch with the latest changes from the sprint branch as described above.
 

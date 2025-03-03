@@ -1,41 +1,49 @@
-
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Apple, LogIn } from "lucide-react";
-import { useIonRouter } from "@ionic/react";
-import { useToast } from "@/components/ui/use-toast";
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { useToast } from '@/components/ui/use-toast';
+import { useIonRouter } from '@ionic/react';
+import { Apple, LogIn } from 'lucide-react';
+import { useState } from 'react';
 
 export const AuthForm = () => {
   const [isLogin, setIsLogin] = useState(true);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const ionRouter = useIonRouter();
   const { toast } = useToast();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // In a real app, you would validate credentials here
-    console.log("Auth submitted:", { email, password, isLogin });
-    
+    console.log('Auth submitted:', { email, password, isLogin });
+
     // Show success message
     toast({
-      title: isLogin ? "Welcome back!" : "Account created",
-      description: "You have been successfully logged in.",
+      title: isLogin ? 'Welcome back!' : 'Account created',
+      description: 'You have been successfully logged in.',
     });
 
     // Navigate to the home page using Ionic's router
-    ionRouter.push("/home");
+    ionRouter.push('/home');
   };
 
   return (
     <Card className="w-[350px]">
       <CardHeader>
-        <CardTitle>{isLogin ? "Welcome back" : "Create account"}</CardTitle>
+        <CardTitle>{isLogin ? 'Welcome back' : 'Create account'}</CardTitle>
         <CardDescription>
-          {isLogin ? "Enter your credentials to continue" : "Sign up for a new account"}
+          {isLogin
+            ? 'Enter your credentials to continue'
+            : 'Sign up for a new account'}
         </CardDescription>
       </CardHeader>
       <form onSubmit={handleSubmit}>
@@ -70,7 +78,7 @@ export const AuthForm = () => {
         <CardFooter className="flex flex-col space-y-4">
           <Button type="submit" className="w-full">
             <LogIn className="mr-2 h-4 w-4" />
-            {isLogin ? "Sign in" : "Sign up"}
+            {isLogin ? 'Sign in' : 'Sign up'}
           </Button>
           <Button variant="outline" type="button" className="w-full">
             <Apple className="mr-2 h-4 w-4" />
@@ -82,7 +90,9 @@ export const AuthForm = () => {
             onClick={() => setIsLogin(!isLogin)}
             className="text-sm"
           >
-            {isLogin ? "Need an account? Sign up" : "Already have an account? Sign in"}
+            {isLogin
+              ? 'Need an account? Sign up'
+              : 'Already have an account? Sign in'}
           </Button>
         </CardFooter>
       </form>
