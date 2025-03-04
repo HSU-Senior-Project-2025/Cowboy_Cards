@@ -9,21 +9,55 @@ import (
 )
 
 type Class struct {
-	ID          pgtype.UUID
+	ID          int32
 	Name        string
 	Description string
+	StudentIds  []int32
 	JoinCode    string
-	TeacherID   pgtype.UUID
+	TeacherID   int32
 	CreatedAt   pgtype.Timestamp
 	UpdatedAt   pgtype.Timestamp
 }
 
+type ClassUser struct {
+	UserID  int32
+	ClassID int32
+}
+
+type Flashcard struct {
+	ID        int32
+	Front     string
+	Back      string
+	SetID     int32
+	UserID    int32
+	CreatedAt pgtype.Timestamp
+	UpdatedAt pgtype.Timestamp
+}
+
 type FlashcardSet struct {
-	ID          pgtype.Numeric
+	ID          int32
 	Name        string
 	Description string
-	UserID      pgtype.UUID
-	ClassID     pgtype.UUID
+	UserID      int32
+	ClassID     int32
 	CreatedAt   pgtype.Timestamp
 	UpdatedAt   pgtype.Timestamp
+}
+
+type User struct {
+	ID        int32
+	Username  string
+	FirstName string
+	LastName  string
+	Role      string
+	CreatedAt pgtype.Timestamp
+	UpdatedAt pgtype.Timestamp
+}
+
+type UserCardHistory struct {
+	UserID     int32
+	CardID     int32
+	CreatedAt  pgtype.Timestamp
+	TimesSeen  pgtype.Int4
+	IsMastered bool
 }

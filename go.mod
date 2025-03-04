@@ -4,8 +4,6 @@ go 1.24.0
 
 require (
 	github.com/go-chi/chi/v5 v5.2.1
-	github.com/google/uuid v1.6.0
-	github.com/gorilla/mux v1.8.1
 	github.com/jackc/pgx/v5 v5.7.2
 	github.com/joho/godotenv v1.5.1
 	github.com/urfave/negroni/v3 v3.1.1

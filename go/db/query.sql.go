@@ -7,12 +7,40 @@ package db
 
 import (
 	"context"
-
-	"github.com/jackc/pgx/v5/pgtype"
 )
 
+const createFlashCard = `-- name: CreateFlashCard :exec
+INSERT INTO flashcards (front, back, set_id, user_id) VALUES ($1, $2, $3, $4)
+`
+
+type CreateFlashCardParams struct {
+	Front  string
+	Back   string
+	SetID  int32
+	UserID int32
+}
+
+func (q *Queries) CreateFlashCard(ctx context.Context, arg CreateFlashCardParams) error {
+	_, err := q.db.Exec(ctx, createFlashCard,
+		arg.Front,
+		arg.Back,
+		arg.SetID,
+		arg.UserID,
+	)
+	return err
+}
+
+const deleteFlashCard = `-- name: DeleteFlashCard :exec
+DELETE FROM flashcards WHERE id = $1
+`
+
+func (q *Queries) DeleteFlashCard(ctx context.Context, id int32) error {
+	_, err := q.db.Exec(ctx, deleteFlashCard, id)
+	return err
+}
+
 const getClasses = `-- name: GetClasses :many
-SELECT id, name, description, join_code, teacher_id, created_at, updated_at FROM classes
+SELECT id, name, description, student_ids, join_code, teacher_id, created_at, updated_at FROM classes
 `
 
 func (q *Queries) GetClasses(ctx context.Context) ([]Class, error) {
@@ -28,6 +56,7 @@ func (q *Queries) GetClasses(ctx context.Context) ([]Class, error) {
 			&i.ID,
 			&i.Name,
 			&i.Description,
+			&i.StudentIds,
 			&i.JoinCode,
 			&i.TeacherID,
 			&i.CreatedAt,
@@ -43,12 +72,82 @@ func (q *Queries) GetClasses(ctx context.Context) ([]Class, error) {
 	return items, nil
 }
 
-const getFlashCardSet = `-- name: GetFlashCardSet :many
+const getFlashCard = `-- name: GetFlashCard :one
+SELECT id, front, back, set_id, user_id, created_at, updated_at FROM flashcards WHERE id = $1
+`
+
+func (q *Queries) GetFlashCard(ctx context.Context, id int32) (Flashcard, error) {
+	row := q.db.QueryRow(ctx, getFlashCard, id)
+	var i Flashcard
+	err := row.Scan(
+		&i.ID,
+		&i.Front,
+		&i.Back,
+		&i.SetID,
+		&i.UserID,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
+const getUser = `-- name: GetUser :one
+SELECT id, username, first_name, last_name, role, created_at, updated_at FROM users WHERE id = $1
+`
+
+func (q *Queries) GetUser(ctx context.Context, id int32) (User, error) {
+	row := q.db.QueryRow(ctx, getUser, id)
+	var i User
+	err := row.Scan(
+		&i.ID,
+		&i.Username,
+		&i.FirstName,
+		&i.LastName,
+		&i.Role,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
+const getUsers = `-- name: GetUsers :many
+SELECT id, username, first_name, last_name, role, created_at, updated_at FROM users
+`
+
+func (q *Queries) GetUsers(ctx context.Context) ([]User, error) {
+	rows, err := q.db.Query(ctx, getUsers)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []User
+	for rows.Next() {
+		var i User
+		if err := rows.Scan(
+			&i.ID,
+			&i.Username,
+			&i.FirstName,
+			&i.LastName,
+			&i.Role,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getUsersFlashCardSets = `-- name: GetUsersFlashCardSets :many
 SELECT id, name, description, user_id, class_id, created_at, updated_at FROM flashcard_sets WHERE user_id = $1
 `
 
-func (q *Queries) GetFlashCardSet(ctx context.Context, userID pgtype.UUID) ([]FlashcardSet, error) {
-	rows, err := q.db.Query(ctx, getFlashCardSet, userID)
+func (q *Queries) GetUsersFlashCardSets(ctx context.Context, userID int32) ([]FlashcardSet, error) {
+	rows, err := q.db.Query(ctx, getUsersFlashCardSets, userID)
 	if err != nil {
 		return nil, err
 	}
@@ -73,4 +172,19 @@ func (q *Queries) GetFlashCardSet(ctx context.Context, userID pgtype.UUID) ([]Fl
 		return nil, err
 	}
 	return items, nil
+}
+
+const updateFlashCard = `-- name: UpdateFlashCard :exec
+UPDATE flashcards SET front = $1, back = $2 WHERE id = $3
+`
+
+type UpdateFlashCardParams struct {
+	Front string
+	Back  string
+	ID    int32
+}
+
+func (q *Queries) UpdateFlashCard(ctx context.Context, arg UpdateFlashCardParams) error {
+	_, err := q.db.Exec(ctx, updateFlashCard, arg.Front, arg.Back, arg.ID)
+	return err
 }
