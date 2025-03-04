@@ -8,10 +8,10 @@ SELECT * FROM flashcard_sets WHERE user_id = $1;
 SELECT * FROM flashcard_sets WHERE id = $1 AND user_id = $2;
 
 -- name: CreateUserFlashCardSet :exec
-INSERT INTO flashcard_sets (name, user_id) VALUES ($1, $2);
+INSERT INTO flashcard_sets (name, description, user_id, class_id) VALUES ($1, $2, $3, $4);
 
 -- name: UpdateUserFlashCardSet :exec
-UPDATE flashcard_sets SET name = $1 WHERE id = $2;
+UPDATE flashcard_sets SET name = $1, description = $2 WHERE id = $3;
 
 -- name: DeleteUserFlashCardSet :exec
 DELETE FROM flashcard_sets WHERE id = $1;

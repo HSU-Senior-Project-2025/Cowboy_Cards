@@ -91,6 +91,187 @@ func (cfg *Config) GetUsersFlashCardSets(w http.ResponseWriter, r *http.Request)
 	w.Write(append(b, 10)) //add newline
 }
 
+func (cfg *Config) GetUserFlashCardSet(w http.ResponseWriter, r *http.Request) {
+	// curl -X GET localhost:8000/flashcard_set -H "id: 1" -H "user_id: 11"
+	idStr := r.Header.Get("id")
+	if idStr == "" {
+		http.Error(w, "missing 'id' header", http.StatusBadRequest)
+		return
+	}
+
+	userIDStr := r.Header.Get("user_id")
+	if userIDStr == "" {
+		http.Error(w, "missing 'user_id' header", http.StatusBadRequest)
+		return
+	}
+
+	userID, err := strconv.Atoi(userIDStr)
+	if err != nil {
+		log.Println("error:", err)
+		http.Error(w, "Invalid 'user_id' header", http.StatusBadRequest)
+		return
+	}
+
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		log.Println("error:", err)
+		http.Error(w, "Invalid 'id' header", http.StatusBadRequest)
+		return
+	}
+
+	userIDInt := int32(userID)
+
+	ctx := context.Background()
+	conn, err := pgx.ConnectConfig(ctx, cfg.DB)
+	if err != nil {
+		log.Fatalf("could not connect to db... %v", err)
+	}
+	defer conn.Close(ctx)
+	query := db.New(conn)
+	flashcard_set, err := query.GetUserFlashCardSet(ctx, db.GetUserFlashCardSetParams{ID: int32(id), UserID: userIDInt})
+	if err != nil {
+		log.Fatalf("error getting flash card sets from db... %v", err)
+	}
+	log.Println("data: ", flashcard_set)
+	log.Println()
+	b, err := json.Marshal(flashcard_set)
+	if err != nil {
+		log.Println("error:", err)
+	}
+	w.Write(append(b, 10)) //add newline
+}
+
+func (cfg *Config) CreateUserFlashCardSet(w http.ResponseWriter, r *http.Request) {
+	// curl -X POST localhost:8000/flashcard_set -H "name: test" -H "description: test" -H "user_id: 11" -H "class_id: 1"
+
+	name := r.Header.Get("name")
+	description := r.Header.Get("description")
+	userIDStr := r.Header.Get("user_id")
+	classIDStr := r.Header.Get("class_id")
+	if name == "" || description == "" || userIDStr == "" || classIDStr == "" {
+		http.Error(w, "missing required headers", http.StatusBadRequest)
+		return
+	}
+
+	userID, err := strconv.Atoi(userIDStr)
+	if err != nil {
+		http.Error(w, "Invalid 'user_id' header", http.StatusBadRequest)
+		return
+	}
+	classID, err := strconv.Atoi(classIDStr)
+	if err != nil {
+		http.Error(w, "Invalid 'class_id' header", http.StatusBadRequest)
+		return
+	}
+
+	userIDInt := int32(userID)
+	classIDInt := int32(classID)
+
+	ctx := context.Background()
+
+	conn, err := pgx.ConnectConfig(ctx, cfg.DB)
+	if err != nil {
+		log.Fatalf("could not connect to db... %v", err)
+	}
+	defer conn.Close(ctx)
+
+	query := db.New(conn)
+
+	error := query.CreateUserFlashCardSet(ctx, db.CreateUserFlashCardSetParams{
+		Name:        name,
+		Description: description,
+		UserID:      userIDInt,
+		ClassID:     classIDInt,
+	})
+	if error != nil {
+		log.Printf("error creating flashcard set in db: %v", err)
+		http.Error(w, "Failed to create flashcard set", http.StatusInternalServerError)
+		return
+	}
+	log.Println("Flashcard set created successfully")
+}
+
+func (cfg *Config) UpdateUserFlashCardSet(w http.ResponseWriter, r *http.Request) {
+	// curl -X PUT localhost:8000/flashcard_set -H "id: 1" -H "name: test" -H "description: test"
+
+	idStr := r.Header.Get("id")
+	if idStr == "" {
+		http.Error(w, "missing 'id' header", http.StatusBadRequest)
+		return
+	}
+
+	name := r.Header.Get("name")
+	description := r.Header.Get("description")
+	if name == "" && description == "" {
+		http.Error(w, "missing required headers", http.StatusBadRequest)
+		return
+	}
+
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		log.Println("error:", err)
+		http.Error(w, "Invalid 'id' header", http.StatusBadRequest)
+		return
+	}
+
+	ctx := context.Background()
+
+	conn, err := pgx.ConnectConfig(ctx, cfg.DB)
+	if err != nil {
+		log.Fatalf("could not connect to db... %v", err)
+	}
+	defer conn.Close(ctx)
+
+	query := db.New(conn)
+
+	error := query.UpdateUserFlashCardSet(ctx, db.UpdateUserFlashCardSetParams{
+		ID:          int32(id),
+		Name:        name,
+		Description: description,
+	})
+	if error != nil {
+		log.Printf("error updating flashcard set in db: %v", err)
+		http.Error(w, "Failed to update flashcard set", http.StatusInternalServerError)
+		return
+	}
+	log.Println("Flashcard set updated successfully")
+}
+
+func (cfg *Config) DeleteUserFlashCardSet(w http.ResponseWriter, r *http.Request) {
+	// curl -X DELETE localhost:8000/flashcard_set -H "id: 1"
+
+	idStr := r.Header.Get("id")
+	if idStr == "" {
+		http.Error(w, "missing 'id' header", http.StatusBadRequest)
+		return
+	}
+
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		log.Println("error:", err)
+		http.Error(w, "Invalid 'id' header", http.StatusBadRequest)
+		return
+	}
+
+	ctx := context.Background()
+
+	conn, err := pgx.ConnectConfig(ctx, cfg.DB)
+	if err != nil {
+		log.Fatalf("could not connect to db... %v", err)
+	}
+	defer conn.Close(ctx)
+
+	query := db.New(conn)
+
+	error := query.DeleteUserFlashCardSet(ctx, int32(id))
+	if error != nil {
+		log.Printf("error deleting flashcard set in db: %v", err)
+		http.Error(w, "Failed to delete flashcard set", http.StatusInternalServerError)
+		return
+	}
+	log.Println("Flashcard set deleted successfully")
+}
+
 func (cfg *Config) GetUsers(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
 

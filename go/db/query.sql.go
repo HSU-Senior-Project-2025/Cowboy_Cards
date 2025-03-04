@@ -31,16 +31,23 @@ func (q *Queries) CreateFlashCard(ctx context.Context, arg CreateFlashCardParams
 }
 
 const createUserFlashCardSet = `-- name: CreateUserFlashCardSet :exec
-INSERT INTO flashcard_sets (name, user_id) VALUES ($1, $2)
+INSERT INTO flashcard_sets (name, description, user_id, class_id) VALUES ($1, $2, $3, $4)
 `
 
 type CreateUserFlashCardSetParams struct {
-	Name   string
-	UserID int32
+	Name        string
+	Description string
+	UserID      int32
+	ClassID     int32
 }
 
 func (q *Queries) CreateUserFlashCardSet(ctx context.Context, arg CreateUserFlashCardSetParams) error {
-	_, err := q.db.Exec(ctx, createUserFlashCardSet, arg.Name, arg.UserID)
+	_, err := q.db.Exec(ctx, createUserFlashCardSet,
+		arg.Name,
+		arg.Description,
+		arg.UserID,
+		arg.ClassID,
+	)
 	return err
 }
 
@@ -134,11 +141,16 @@ func (q *Queries) GetUser(ctx context.Context, id int32) (User, error) {
 }
 
 const getUserFlashCardSet = `-- name: GetUserFlashCardSet :one
-SELECT id, name, description, user_id, class_id, created_at, updated_at FROM flashcard_sets WHERE id = $1
+SELECT id, name, description, user_id, class_id, created_at, updated_at FROM flashcard_sets WHERE id = $1 AND user_id = $2
 `
 
-func (q *Queries) GetUserFlashCardSet(ctx context.Context, id int32) (FlashcardSet, error) {
-	row := q.db.QueryRow(ctx, getUserFlashCardSet, id)
+type GetUserFlashCardSetParams struct {
+	ID     int32
+	UserID int32
+}
+
+func (q *Queries) GetUserFlashCardSet(ctx context.Context, arg GetUserFlashCardSetParams) (FlashcardSet, error) {
+	row := q.db.QueryRow(ctx, getUserFlashCardSet, arg.ID, arg.UserID)
 	var i FlashcardSet
 	err := row.Scan(
 		&i.ID,
@@ -232,15 +244,16 @@ func (q *Queries) UpdateFlashCard(ctx context.Context, arg UpdateFlashCardParams
 }
 
 const updateUserFlashCardSet = `-- name: UpdateUserFlashCardSet :exec
-UPDATE flashcard_sets SET name = $1 WHERE id = $2
+UPDATE flashcard_sets SET name = $1, description = $2 WHERE id = $3
 `
 
 type UpdateUserFlashCardSetParams struct {
-	Name string
-	ID   int32
+	Name        string
+	Description string
+	ID          int32
 }
 
 func (q *Queries) UpdateUserFlashCardSet(ctx context.Context, arg UpdateUserFlashCardSetParams) error {
-	_, err := q.db.Exec(ctx, updateUserFlashCardSet, arg.Name, arg.ID)
+	_, err := q.db.Exec(ctx, updateUserFlashCardSet, arg.Name, arg.Description, arg.ID)
 	return err
 }
