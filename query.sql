@@ -1,11 +1,20 @@
 -- name: GetClasses :many
 SELECT * FROM classes;
 
--- name: GetUsersFlashCardSets :many
-SELECT * FROM flashcard_sets WHERE user_id = $1;
+-- name: GetFlashCardSet :one
+SELECT * FROM flashcard_sets WHERE id = $1;
+
+-- name: CreateFlashCardSet :exec
+INSERT INTO flashcard_sets (id, name, description) VALUES ($1, $2, $3);
+
+-- name: UpdateFlashCardSet :exec
+UPDATE flashcard_sets SET name = $1, description = $2 WHERE id = $3;
+
+-- name: DeleteFlashCardSet :exec
+DELETE FROM flashcard_sets WHERE id = $1;
 
 -- name: CreateFlashCard :exec
-INSERT INTO flashcards (front, back, set_id, user_id) VALUES ($1, $2, $3, $4);
+INSERT INTO flashcards (front, back, set_id) VALUES ($1, $2, $3);
 
 -- name: GetFlashCard :one
 SELECT * FROM flashcards WHERE id = $1;
