@@ -19,10 +19,12 @@ func Routes(r *chi.Mux, cfg *controllers.Config) {
 		r.Delete("/", cfg.DeleteFlashCardSet)
 	})
 
-	r.Get("/flashcard", cfg.GetFlashCard)
-	r.Post("/flashcard", cfg.CreateFlashCard)
-	r.Put("/flashcard", cfg.UpdateFlashCard)
-	r.Delete("/flashcard", cfg.DeleteFlashCard)
+	r.Route("/flashcard", func(r chi.Router) {
+		r.Post("/", cfg.CreateFlashCard)
+		r.Get("/", cfg.GetFlashCard)
+		r.Put("/", cfg.UpdateFlashCard)
+		r.Delete("/", cfg.DeleteFlashCard)
+	})
 
 	r.Get("/users", cfg.GetUsers)
 	r.Get("/user", cfg.GetUser)
