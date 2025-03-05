@@ -80,7 +80,7 @@ const TeacherDashboard = () => {
         </NavbarTitle>
         <NavbarButton onClick={() => setIsDialogOpen(true)}>
           <Plus className="mr-2 h-4 w-4" />
-          <div className="hidden md:block">Create New Class</div>
+          <div>Create New Class</div>
         </NavbarButton>
       </Navbar>
       
@@ -136,7 +136,7 @@ const TeacherDashboard = () => {
             </DialogFooter>
         </DialogContent>
       </Dialog>
-      <div className="container mx-auto px-4 py-8 pt-24">
+      <div id="main-content" className="container mx-auto px-4 py-8">
         <div className="flex justify-between items-center mb-8">
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogContent>

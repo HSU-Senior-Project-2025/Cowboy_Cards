@@ -39,11 +39,11 @@ const Home = () => {
         <NavbarButton onClick={() => {}}>
           <div className="flex items-center">
             <Plus className="h-4 w-4" />
-            <div className="hidden md:block ml-2">Join Class</div>
+            <div className="ml-2">Join Class</div>
           </div>
         </NavbarButton>
       </Navbar>
-      <div className="container mx-auto px-4 py-8 pt-24">
+      <div id="main-content" className="container mx-auto px-4 py-8">
         <Tabs value={tab} onValueChange={setTab} className="w-full mb-6">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="classes">

@@ -31,7 +31,7 @@ const PublicFlashcards = () => {
           </div>
         </NavbarTitle>
       </Navbar>
-      <div className="container mx-auto px-4 py-8 pt-24">
+      <div id="main-content" className="container mx-auto px-4 py-8">
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {flashcardSets.map((set) => (
             <Card key={set.id}>

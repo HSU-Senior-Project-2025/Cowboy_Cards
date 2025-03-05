@@ -1,62 +1,79 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Menu, X, CircleUser } from 'lucide-react';
+import { menu, close, personCircle } from 'ionicons/icons';
 import { Button } from '@/components/ui/button';
+import { IonHeader, IonToolbar, IonButtons, IonButton, IonMenu, IonContent, IonList, IonItem, IonIcon, IonTitle, IonMenuButton, IonMenuToggle, useIonRouter} from '@ionic/react';
+
 
 const Navbar = ({ children }) => {
-    const [nav, setNav] = useState(false);
-
-    const handleNav = () => {
-        setNav(!nav);
-    };
-
     // Ensure children is always an array
     const childrenArray = React.Children.toArray(children);
 
     // Get left and right children, or defaults to null if not available
     const leftChild = childrenArray[0] || null;
     const rightChild = childrenArray[1] || null;
+    
+    const router = useIonRouter();
+
+    // Function to handle menu item clicks and close the menu
+    const handleMenuItemClick = (route: string) => {
+        router.push(route);
+        // Close the menu manually after navigating
+        document.querySelector('ion-menu')?.close();
+    };
 
     return (
         <>
-            {/* Full Navbar */}
-            <div className="fixed top-0 left-0 w-full z-30 flex items-center justify-between bg-white p-4">
-                {/* Left Side (Menu Button) */}
-                <div className="flex items-center space-x-4">
-                    <button onClick={handleNav} className="text-2xl bg-white p-2">
-                        {!nav ? <Menu /> : <X />}
-                    </button>
-                </div>
+            {/* Sidebar Navigation (IonMenu) */}
+            <IonMenu side="start" contentId="main-content">
+                <IonHeader>
+                    <IonToolbar>
+                        {/* Close icon will automatically show when the menu is open */}
+                        <IonButtons slot="start">
+                            <IonMenuToggle>
+                                <IonButton>
+                                    <IonIcon icon={close} />
+                                </IonButton>
+                            </IonMenuToggle>
+                        </IonButtons>
+                    </IonToolbar>
+                </IonHeader>
+                <IonContent>
+                    <IonList>
+                        <IonItem button onClick={() => handleMenuItemClick("/home")}>My Dashboard</IonItem>
+                        <IonItem button onClick={() => handleMenuItemClick("/public-cards")}>Public Cards</IonItem>
+                        <IonItem button onClick={() => handleMenuItemClick("/account")}>My Account</IonItem>
+                    </IonList>
+                </IonContent>
+            </IonMenu>
 
-                {/* Middle (Children) */}
-                <div className="flex-1 flex justify-between mx-4">
-                    {/* Left-aligned child */}
-                    <div className="flex items-center">
-                        {leftChild}
-                    </div>
+            {/* Navbar */}
+            <IonHeader>
+                <IonToolbar>
+                    {/* Left Side (Menu Button) */}
+                    <IonButtons slot="start">
+                        {/* Left Side (Menu Button - FIXED) */}
+                        <IonMenuToggle>
+                            <IonButton>
+                                <IonIcon icon={menu} />
+                            </IonButton>
+                        </IonMenuToggle>
+                    </IonButtons>
 
-                    {/* Right-aligned child */}
-                    <div className="flex items-center justify-end">
-                        {rightChild}
-                    </div>
-                </div>
+                    {/* Middle Section (Title / Children) */}
+                    <IonTitle>{leftChild}</IonTitle>
 
-                {/* Right Side (Account) */}
-                <div className="flex items-center space-x-4">
-                    <Link to="/home" className="hover:opacity-75">
-                        <CircleUser size={32} />
-                    </Link>
-                </div>
-            </div>
+                    {/* Right Side (Custom Button / Children) */}
+                    <IonButtons slot="end" className='hidden md:block'>{rightChild}</IonButtons>
 
-            {/* Sidebar Navigation */}
-            <div className={`fixed pt-2 top-0 left-0 h-full w-72 md:w-96 bg-white border-r transition-transform duration-300 ${nav ? 'translate-x-0' : '-translate-x-96'}`}>
-                <ul className='w-full text-center pt-16'>
-                    <Link to="/home"><li className='p-4 border-b border-t border-gray-300 hover:text-gray-500 cursor-pointer'>My Dashboard</li></Link>
-                    <Link to="/public-cards"><li className='p-4 border-b border-gray-300 hover:text-gray-500 cursor-pointer'>Public Cards</li></Link>
-                    <Link to="#"><li className='p-4 border-b border-gray-300 hover:text-gray-500 cursor-pointer'>My Account</li></Link>
-                </ul>
-            </div>
+                    {/* Profile Icon */}
+                    <IonButtons slot="end">
+                        <IonButton routerLink="/home">
+                            <IonIcon icon={personCircle} size="large" />
+                        </IonButton>
+                    </IonButtons>
+                </IonToolbar>
+            </IonHeader>
         </>
     );
 };
