@@ -10,23 +10,32 @@ import (
 )
 
 const createFlashCard = `-- name: CreateFlashCard :exec
-INSERT INTO flashcards (front, back, set_id, user_id) VALUES ($1, $2, $3, $4)
+INSERT INTO flashcards (front, back, set_id) VALUES ($1, $2, $3)
 `
 
 type CreateFlashCardParams struct {
-	Front  string
-	Back   string
-	SetID  int32
-	UserID int32
+	Front string
+	Back  string
+	SetID int32
 }
 
 func (q *Queries) CreateFlashCard(ctx context.Context, arg CreateFlashCardParams) error {
-	_, err := q.db.Exec(ctx, createFlashCard,
-		arg.Front,
-		arg.Back,
-		arg.SetID,
-		arg.UserID,
-	)
+	_, err := q.db.Exec(ctx, createFlashCard, arg.Front, arg.Back, arg.SetID)
+	return err
+}
+
+const createFlashCardSet = `-- name: CreateFlashCardSet :exec
+INSERT INTO flashcard_sets (id, name, description) VALUES ($1, $2, $3)
+`
+
+type CreateFlashCardSetParams struct {
+	ID          int32
+	Name        string
+	Description string
+}
+
+func (q *Queries) CreateFlashCardSet(ctx context.Context, arg CreateFlashCardSetParams) error {
+	_, err := q.db.Exec(ctx, createFlashCardSet, arg.ID, arg.Name, arg.Description)
 	return err
 }
 
@@ -39,8 +48,18 @@ func (q *Queries) DeleteFlashCard(ctx context.Context, id int32) error {
 	return err
 }
 
+const deleteFlashCardSet = `-- name: DeleteFlashCardSet :exec
+DELETE FROM flashcard_sets WHERE id = $1
+`
+
+func (q *Queries) DeleteFlashCardSet(ctx context.Context, id int32) error {
+	_, err := q.db.Exec(ctx, deleteFlashCardSet, id)
+
+	return err
+}
+
 const getClasses = `-- name: GetClasses :many
-SELECT id, name, description, student_ids, join_code, teacher_id, created_at, updated_at FROM classes
+SELECT id, name, description, join_code, teacher_id, created_at, updated_at FROM classes
 `
 
 func (q *Queries) GetClasses(ctx context.Context) ([]Class, error) {
@@ -56,7 +75,6 @@ func (q *Queries) GetClasses(ctx context.Context) ([]Class, error) {
 			&i.ID,
 			&i.Name,
 			&i.Description,
-			&i.StudentIds,
 			&i.JoinCode,
 			&i.TeacherID,
 			&i.CreatedAt,
@@ -73,7 +91,7 @@ func (q *Queries) GetClasses(ctx context.Context) ([]Class, error) {
 }
 
 const getFlashCard = `-- name: GetFlashCard :one
-SELECT id, front, back, set_id, user_id, created_at, updated_at FROM flashcards WHERE id = $1
+SELECT id, front, back, set_id, created_at, updated_at FROM flashcards WHERE id = $1
 `
 
 func (q *Queries) GetFlashCard(ctx context.Context, id int32) (Flashcard, error) {
@@ -84,7 +102,23 @@ func (q *Queries) GetFlashCard(ctx context.Context, id int32) (Flashcard, error)
 		&i.Front,
 		&i.Back,
 		&i.SetID,
-		&i.UserID,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
+const getFlashCardSet = `-- name: GetFlashCardSet :one
+SELECT id, name, description, created_at, updated_at FROM flashcard_sets WHERE id = $1
+`
+
+func (q *Queries) GetFlashCardSet(ctx context.Context, id int32) (FlashcardSet, error) {
+	row := q.db.QueryRow(ctx, getFlashCardSet, id)
+	var i FlashcardSet
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.Description,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
@@ -92,7 +126,7 @@ func (q *Queries) GetFlashCard(ctx context.Context, id int32) (Flashcard, error)
 }
 
 const getUser = `-- name: GetUser :one
-SELECT id, username, first_name, last_name, role, created_at, updated_at FROM users WHERE id = $1
+SELECT id, username, first_name, last_name, email, password, created_at, updated_at FROM users WHERE id = $1
 `
 
 func (q *Queries) GetUser(ctx context.Context, id int32) (User, error) {
@@ -103,7 +137,8 @@ func (q *Queries) GetUser(ctx context.Context, id int32) (User, error) {
 		&i.Username,
 		&i.FirstName,
 		&i.LastName,
-		&i.Role,
+		&i.Email,
+		&i.Password,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
@@ -111,7 +146,7 @@ func (q *Queries) GetUser(ctx context.Context, id int32) (User, error) {
 }
 
 const getUsers = `-- name: GetUsers :many
-SELECT id, username, first_name, last_name, role, created_at, updated_at FROM users
+SELECT id, username, first_name, last_name, email, password, created_at, updated_at FROM users
 `
 
 func (q *Queries) GetUsers(ctx context.Context) ([]User, error) {
@@ -128,39 +163,8 @@ func (q *Queries) GetUsers(ctx context.Context) ([]User, error) {
 			&i.Username,
 			&i.FirstName,
 			&i.LastName,
-			&i.Role,
-			&i.CreatedAt,
-			&i.UpdatedAt,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
-}
-
-const getUsersFlashCardSets = `-- name: GetUsersFlashCardSets :many
-SELECT id, name, description, user_id, class_id, created_at, updated_at FROM flashcard_sets WHERE user_id = $1
-`
-
-func (q *Queries) GetUsersFlashCardSets(ctx context.Context, userID int32) ([]FlashcardSet, error) {
-	rows, err := q.db.Query(ctx, getUsersFlashCardSets, userID)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	var items []FlashcardSet
-	for rows.Next() {
-		var i FlashcardSet
-		if err := rows.Scan(
-			&i.ID,
-			&i.Name,
-			&i.Description,
-			&i.UserID,
-			&i.ClassID,
+			&i.Email,
+			&i.Password,
 			&i.CreatedAt,
 			&i.UpdatedAt,
 		); err != nil {
@@ -186,5 +190,20 @@ type UpdateFlashCardParams struct {
 
 func (q *Queries) UpdateFlashCard(ctx context.Context, arg UpdateFlashCardParams) error {
 	_, err := q.db.Exec(ctx, updateFlashCard, arg.Front, arg.Back, arg.ID)
+	return err
+}
+
+const updateFlashCardSet = `-- name: UpdateFlashCardSet :exec
+UPDATE flashcard_sets SET name = $1, description = $2 WHERE id = $3
+`
+
+type UpdateFlashCardSetParams struct {
+	Name        string
+	Description string
+	ID          int32
+}
+
+func (q *Queries) UpdateFlashCardSet(ctx context.Context, arg UpdateFlashCardSetParams) error {
+	_, err := q.db.Exec(ctx, updateFlashCardSet, arg.Name, arg.Description, arg.ID)
 	return err
 }
