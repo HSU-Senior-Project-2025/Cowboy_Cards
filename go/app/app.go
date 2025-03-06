@@ -1,6 +1,9 @@
 package app
 
 import (
+	"context"
+	"fmt"
+	"crypto/tls"
 	"log"
 	"net/http"
 	"os"
@@ -10,21 +13,39 @@ import (
 	"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/controllers"
 	"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/routes"
 	"github.com/go-chi/chi/v5"
-	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 	_ "github.com/joho/godotenv/autoload"
 	"github.com/urfave/negroni/v3"
 )
 
 func LoadConfig() (*controllers.Config, error) {
-	conn, err := pgx.ParseConfig(os.Getenv("DATABASE_URL"))
-	conn.User = os.Getenv("DBUSER")
-	conn.Host = os.Getenv("DBHOST")
-
-	if err != nil {
-		log.Fatalf("error parsing config: %v", err)
+	dbURL := os.Getenv("DATABASE_URL")
+	if dbURL == "" {
+		return nil, fmt.Errorf("DATABASE_URL environment variable is not set")
 	}
+
+	// Create a connection pool
+	ctx := context.Background()
+	pool, err := pgxpool.New(ctx, dbURL)
+	if err != nil {
+		return nil, fmt.Errorf("error creating connection pool: %v", err)
+	}
+
+	// Test the connection
+	if err := pool.Ping(ctx); err != nil {
+		return nil, fmt.Errorf("error connecting to database: %v", err)
+	}
+
+	log.Printf("Successfully connected to database")
+
+
+	// Enable SSL for Supabase
+	conn.TLSConfig = &tls.Config{
+		MinVersion: tls.VersionTLS12,
+	}
+
 	cfg := &controllers.Config{
-		DB: conn,
+		DB: pool,
 	}
 
 	return cfg, nil

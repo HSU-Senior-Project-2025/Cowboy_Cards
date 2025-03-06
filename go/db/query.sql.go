@@ -39,6 +39,57 @@ func (q *Queries) CreateFlashCardSet(ctx context.Context, arg CreateFlashCardSet
 	return err
 }
 
+const createFlashCardSet = `-- name: CreateFlashCardSet :exec
+INSERT INTO flashcard_sets (name, description, user_id) VALUES ($1, $2, $3)
+`
+
+type CreateFlashCardSetParams struct {
+	Name        string
+	Description string
+	UserID      int32
+}
+
+func (q *Queries) CreateFlashCardSet(ctx context.Context, arg CreateFlashCardSetParams) error {
+	_, err := q.db.Exec(ctx, createFlashCardSet, arg.Name, arg.Description, arg.UserID)
+	return err
+}
+
+const createUser = `-- name: CreateUser :one
+INSERT INTO users (username, email, password, first_name, last_name)
+VALUES ($1, $2, $3, $4, $5)
+RETURNING id, username, email, password, first_name, last_name, created_at, updated_at
+`
+
+type CreateUserParams struct {
+	Username  string
+	Email     string
+	Password  string
+	FirstName string
+	LastName  string
+}
+
+func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, error) {
+	row := q.db.QueryRow(ctx, createUser,
+		arg.Username,
+		arg.Email,
+		arg.Password,
+		arg.FirstName,
+		arg.LastName,
+	)
+	var i User
+	err := row.Scan(
+		&i.ID,
+		&i.Username,
+		&i.Email,
+		&i.Password,
+		&i.FirstName,
+		&i.LastName,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
 const deleteFlashCard = `-- name: DeleteFlashCard :exec
 DELETE FROM flashcards WHERE id = $1
 `
@@ -54,6 +105,18 @@ DELETE FROM flashcard_sets WHERE id = $1
 
 func (q *Queries) DeleteFlashCardSet(ctx context.Context, id int32) error {
 	_, err := q.db.Exec(ctx, deleteFlashCardSet, id)
+
+
+//	return err
+//}
+
+//const deleteUser = `-- name: DeleteUser :exec
+//DELETE FROM users WHERE id = $1
+//`
+
+//func (q *Queries) DeleteUser(ctx context.Context, id int32) error {
+//	_, err := q.db.Exec(ctx, deleteUser, id)
+
 	return err
 }
 
@@ -134,6 +197,70 @@ func (q *Queries) GetUser(ctx context.Context, id int32) (User, error) {
 	err := row.Scan(
 		&i.ID,
 		&i.Username,
+		&i.Email,
+		&i.Password,
+		&i.FirstName,
+		&i.LastName,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
+const getUserByEmail = `-- name: GetUserByEmail :one
+SELECT id, username, email, password, first_name, last_name, created_at, updated_at 
+FROM users WHERE email = $1 LIMIT 1
+`
+
+func (q *Queries) GetUserByEmail(ctx context.Context, email string) (User, error) {
+	row := q.db.QueryRow(ctx, getUserByEmail, email)
+	var i User
+	err := row.Scan(
+		&i.ID,
+		&i.Username,
+		&i.Email,
+		&i.Password,
+		&i.FirstName,
+		&i.LastName,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
+const getUserByID = `-- name: GetUserByID :one
+SELECT id, username, email, password, first_name, last_name, created_at, updated_at FROM users WHERE id = $1
+`
+
+func (q *Queries) GetUserByID(ctx context.Context, id int32) (User, error) {
+	row := q.db.QueryRow(ctx, getUserByID, id)
+	var i User
+	err := row.Scan(
+		&i.ID,
+		&i.Username,
+		&i.Email,
+		&i.Password,
+		&i.FirstName,
+		&i.LastName,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
+const getUserByUsername = `-- name: GetUserByUsername :one
+SELECT id, username, email, password, first_name, last_name, created_at, updated_at 
+FROM users WHERE username = $1 LIMIT 1
+`
+
+func (q *Queries) GetUserByUsername(ctx context.Context, username string) (User, error) {
+	row := q.db.QueryRow(ctx, getUserByUsername, username)
+	var i User
+	err := row.Scan(
+		&i.ID,
+		&i.Username,
+		&i.Email,
+		&i.Password,
 		&i.FirstName,
 		&i.LastName,
 		&i.Email,
@@ -160,6 +287,8 @@ func (q *Queries) GetUsers(ctx context.Context) ([]User, error) {
 		if err := rows.Scan(
 			&i.ID,
 			&i.Username,
+			&i.Email,
+			&i.Password,
 			&i.FirstName,
 			&i.LastName,
 			&i.Email,
@@ -206,3 +335,48 @@ func (q *Queries) UpdateFlashCardSet(ctx context.Context, arg UpdateFlashCardSet
 	_, err := q.db.Exec(ctx, updateFlashCardSet, arg.Name, arg.Description, arg.ID)
 	return err
 }
+
+
+const updateUser = `-- name: UpdateUser :exec
+UPDATE users 
+SET username = $1, 
+    email = $2, 
+    first_name = $3, 
+    last_name = $4, 
+    updated_at = NOW() 
+WHERE id = $5
+`
+
+type UpdateUserParams struct {
+	Username  string
+	Email     string
+	FirstName string
+	LastName  string
+	ID        int32
+}
+
+func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) error {
+	_, err := q.db.Exec(ctx, updateUser,
+		arg.Username,
+		arg.Email,
+		arg.FirstName,
+		arg.LastName,
+		arg.ID,
+	)
+	return err
+}
+
+const updateUserPassword = `-- name: UpdateUserPassword :exec
+UPDATE users SET password = $1, updated_at = NOW() WHERE id = $2
+`
+
+type UpdateUserPasswordParams struct {
+	Password string
+	ID       int32
+}
+
+func (q *Queries) UpdateUserPassword(ctx context.Context, arg UpdateUserPasswordParams) error {
+	_, err := q.db.Exec(ctx, updateUserPassword, arg.Password, arg.ID)
+	return err
+}
+
