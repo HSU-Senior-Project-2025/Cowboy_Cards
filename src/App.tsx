@@ -4,13 +4,15 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Route } from 'react-router-dom';
+import { Route, BrowserRouter as Router } from 'react-router-dom';
 import ClassDetail from './pages/ClassDetail';
 import Home from './pages/Home';
 import Index from './pages/Index';
 import NotFound from './pages/NotFound';
 import PublicCards from './pages/PublicCards';
 import TeacherDashboard from './pages/TeacherDashboard';
+import { AuthForm } from '@/components/auth/AuthForm'; // Import AuthForm
+import { ResetPass } from '@/components/auth/ResetPass'; // Import ResetPass
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -50,9 +52,7 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <IonApp>
-        {/* @ts-expect-error --types bug on this element*/}
-        <IonReactRouter>
-          {/* @ts-expect-error --types bug on this element*/}
+        <Router>
           <IonRouterOutlet>
             <Route exact path="/" component={Index} />
             <Route exact path="/home" component={Home} />
@@ -60,9 +60,11 @@ const App = () => (
             <Route exact path="/teacher" component={TeacherDashboard} />
             <Route exact path="/teacher/class/:id" component={ClassDetail} />
             <Route exact path="/public-cards" component={PublicCards} />
+            <Route exact path="/auth" component={AuthForm} /> {/* Add AuthForm route */}
+            <Route exact path="/reset-password" component={ResetPass} /> {/* Add ResetPass route */}
             <Route component={NotFound} />
           </IonRouterOutlet>
-        </IonReactRouter>
+        </Router>
       </IonApp>
       <Toaster />
       <Sonner />

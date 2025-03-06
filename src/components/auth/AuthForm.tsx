@@ -11,7 +11,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/components/ui/use-toast';
 import { useIonRouter } from '@ionic/react';
-import { LogIn } from 'lucide-react';
+import { MdLogin } from 'react-icons/md'; // Corrected import
 import { useState } from 'react';
 import {
   Select,
@@ -21,7 +21,8 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { AlertCircle } from 'lucide-react';
+import { MdError } from 'react-icons/md'; // Corrected import
+import { useHistory } from 'react-router-dom'; // Import useHistory
 
 // Backend API URL
 const API_URL = 'http://localhost:8000';
@@ -50,6 +51,7 @@ export const AuthForm = () => {
   
   const ionRouter = useIonRouter();
   const { toast } = useToast();
+  const history = useHistory(); // Initialize useHistory
 
   // Basic validation before submitting
   const validateForm = () => {
@@ -211,7 +213,7 @@ export const AuthForm = () => {
         <CardContent className="space-y-4">
           {errors.general && (
             <Alert variant="destructive" className="mb-4">
-              <AlertCircle className="h-4 w-4" />
+              <MdError className="h-4 w-4" />
               <AlertDescription>{errors.general}</AlertDescription>
             </Alert>
           )}
@@ -311,14 +313,18 @@ export const AuthForm = () => {
             )}
           </div>
           {isLogin && (
-            <Button variant="link" className="px-0 text-sm">
+            <Button 
+              variant="link" 
+              className="px-0 text-sm"
+              onClick={() => history.push('/reset-password')} // Navigate to ResetPass
+            >
               Forgot password?
             </Button>
           )}
         </CardContent>
         <CardFooter className="flex flex-col space-y-4">
           <Button type="submit" className="w-full" disabled={isLoading}>
-            <LogIn className="mr-2 h-4 w-4" />
+            <MdLogin className="mr-2 h-4 w-4" />
             {isLoading 
               ? (isLogin ? 'Signing in...' : 'Signing up...') 
               : (isLogin ? 'Sign in' : 'Sign up')}
