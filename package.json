@@ -8,7 +8,7 @@
     "dev": "vite",
     "backend": "go run go/main.go",
     "sqlc:gen": "sqlc generate",
-    "build": "vite build && echo '/* /index.html  200' | cat >dist/_redirects ",
+    "build": "vite build && echo /*    /index.html   200 | cat >dist/_redirects ",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview"
