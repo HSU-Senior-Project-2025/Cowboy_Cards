@@ -75,7 +75,7 @@ const Home = () => {
           </div>
         </NavbarButton>
       </Navbar>
-      <div className="container mx-auto px-4 py-8">
+      <div id="main-content" className="container mx-auto px-4 py-8">
         <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-8">
           <h1 className="text-3xl font-bold">
             {tab === 'classes' ? 'My Classes' : 'Personal Flashcard Sets'}
