@@ -11,6 +11,8 @@ import Index from './pages/Index';
 import NotFound from './pages/NotFound';
 import PublicCards from './pages/PublicCards';
 import TeacherDashboard from './pages/TeacherDashboard';
+import { AuthForm } from '@/components/auth/AuthForm';
+import ResetPass from '@/components/auth/ResetPass';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -35,24 +37,11 @@ setupIonicReact();
 
 const queryClient = new QueryClient();
 
-/**
- * Main App component
- *
- * Defines the routing structure for the application.
- * Routes include:
- * - / : Index page
- * - /home : Home page
- * - /class/:id : Class detail page for students
- * - /teacher : Teacher dashboard
- * - /teacher/class/:id : Class management page for teachers
- */
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <IonApp>
-        {/* @ts-expect-error --types bug on this element*/}
         <IonReactRouter>
-          {/* @ts-expect-error --types bug on this element*/}
           <IonRouterOutlet>
             <Route exact path="/" component={Index} />
             <Route exact path="/home" component={Home} />
@@ -60,6 +49,8 @@ const App = () => (
             <Route exact path="/teacher" component={TeacherDashboard} />
             <Route exact path="/teacher/class/:id" component={ClassDetail} />
             <Route exact path="/public-cards" component={PublicCards} />
+            <Route exact path="/login" component={AuthForm} />
+            <Route exact path="/reset-password" component={ResetPass} />
             <Route component={NotFound} />
           </IonRouterOutlet>
         </IonReactRouter>
