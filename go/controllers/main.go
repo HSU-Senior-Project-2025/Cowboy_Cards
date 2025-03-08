@@ -11,7 +11,12 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgtype"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
+
+type Config struct {
+	DB *pgxpool.Config
+}
 
 /* GetClasses retrieves all classes from the database and returns them as a JSON response */
 func (cfg *Config) GetClasses(w http.ResponseWriter, r *http.Request) {
@@ -134,20 +139,19 @@ func (cfg *Config) GetFlashCardSet(w http.ResponseWriter, r *http.Request) {
 		log.Println("error:", err)
 		http.Error(w, "Invalid 'id' header", http.StatusBadRequest)
 
-//		return
-//	}
+		//		return
+		//	}
 
-	//ctx := context.Background()
+		//ctx := context.Background()
 
-	//conn, err := cfg.DB.Acquire(ctx)
-//	if err != nil {
-	//	log.Printf("could not connect to db... %v", err)
-	//	http.Error(w, "Database connection error", http.StatusInternalServerError)
+		//conn, err := cfg.DB.Acquire(ctx)
+		//	if err != nil {
+		//	log.Printf("could not connect to db... %v", err)
+		//	http.Error(w, "Database connection error", http.StatusInternalServerError)
 
 		return
 	}
 	defer conn.Release()
-
 
 	ctx := context.Background()
 	conn, err := pgx.ConnectConfig(ctx, cfg.DB)
@@ -190,15 +194,15 @@ func (cfg *Config) UpdateFlashCardSet(w http.ResponseWriter, r *http.Request) {
 		log.Println("error:", err)
 		http.Error(w, "Invalid 'id' header", http.StatusBadRequest)
 
-//	querier := db.New(conn)
+		//	querier := db.New(conn)
 
-	//err = querier.CreateFlashCardSet(ctx, db.CreateFlashCardSetParams{
-	//	Name:        name,
-	//	Description: description,
-	//})
-	//if err != nil {
-	//	log.Printf("error creating flashcard set in db: %v", err)
-	//	http.Error(w, "Failed to create flashcard set", http.StatusInternalServerError)
+		//err = querier.CreateFlashCardSet(ctx, db.CreateFlashCardSetParams{
+		//	Name:        name,
+		//	Description: description,
+		//})
+		//if err != nil {
+		//	log.Printf("error creating flashcard set in db: %v", err)
+		//	http.Error(w, "Failed to create flashcard set", http.StatusInternalServerError)
 
 		return
 	}
@@ -230,7 +234,6 @@ func (cfg *Config) GetFlashCardSet(w http.ResponseWriter, r *http.Request) {
 	defer conn.Release()
 	query := db.New(conn)
 
-
 	error := query.UpdateFlashCardSet(ctx, db.UpdateFlashCardSetParams{
 		ID:          int32(id),
 		Name:        name,
@@ -255,22 +258,21 @@ func (cfg *Config) DeleteFlashCardSet(w http.ResponseWriter, r *http.Request) {
 
 	id, err := strconv.Atoi(idStr)
 
-//	flashcard_set, err := query.GetFlashCardSet(ctx, int32(id))
-//	if err != nil {
-//		log.Printf("error getting flash card set from db: %v", err)
-//		http.Error(w, "Failed to get flashcard set", http.StatusInternalServerError)
-//		return
-//	}
-//	log.Println("data: ", flashcard_set)
-//	log.Println()
-//	b, err := json.Marshal(flashcard_set)
+	//	flashcard_set, err := query.GetFlashCardSet(ctx, int32(id))
+	//	if err != nil {
+	//		log.Printf("error getting flash card set from db: %v", err)
+	//		http.Error(w, "Failed to get flashcard set", http.StatusInternalServerError)
+	//		return
+	//	}
+	//	log.Println("data: ", flashcard_set)
+	//	log.Println()
+	//	b, err := json.Marshal(flashcard_set)
 
 	if err != nil {
 		log.Println("error:", err)
 		http.Error(w, "Invalid 'id' header", http.StatusBadRequest)
 		return
 	}
-
 
 	ctx := context.Background()
 
@@ -424,9 +426,7 @@ func (cfg *Config) CreateFlashCard(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-
 	setIDInt := int32(setID)
-
 
 	//ctx := context.Background()
 
@@ -440,19 +440,22 @@ func (cfg *Config) CreateFlashCard(w http.ResponseWriter, r *http.Request) {
 
 	//querier := db.New(conn)
 
-//	err = querier.CreateFlashCard(ctx, db.CreateFlashCardParams{
+	//	err = querier.CreateFlashCard(ctx, db.CreateFlashCardParams{
 	//	Front: front,
-		//Back:  back,
-	//	SetID: int32(setID),
-	//})
-	//if err != nil {
-	//	log.Printf("error creating flash card: %v", err)
-	//	http.Error(w, "Failed to create flash card", http.StatusInternalServerError)
-	//	return
-	//}
-	//w.WriteHeader(http.StatusCreated)
-//}
-
+	//
+	// Back:  back,
+	//
+	//		SetID: int32(setID),
+	//	})
+	//
+	//	if err != nil {
+	//		log.Printf("error creating flash card: %v", err)
+	//		http.Error(w, "Failed to create flash card", http.StatusInternalServerError)
+	//		return
+	//	}
+	//
+	// w.WriteHeader(http.StatusCreated)
+}
 
 /* GetFlashCard retrieves a flash card by ID */
 func (cfg *Config) GetFlashCard(w http.ResponseWriter, r *http.Request) {
@@ -473,7 +476,6 @@ func (cfg *Config) GetFlashCard(w http.ResponseWriter, r *http.Request) {
 
 	querier := db.New(conn)
 
-
 	error := query.CreateFlashCard(ctx, db.CreateFlashCardParams{
 		Front: front,
 		Back:  back,
@@ -483,14 +485,14 @@ func (cfg *Config) GetFlashCard(w http.ResponseWriter, r *http.Request) {
 		log.Printf("error creating flashcard in db: %v", err)
 		http.Error(w, "Failed to create flashcard", http.StatusInternalServerError)
 
-//	flashcard, err := querier.GetFlashCard(ctx, int32(id))
-//	if err != nil {
-//		if err == pgx.ErrNoRows {
-//			http.Error(w, "Flash card not found", http.StatusNotFound)
-//			return
-//		}
-//		log.Printf("error getting flash card: %v", err)
-//		http.Error(w, "Database error", http.StatusInternalServerError)
+		//	flashcard, err := querier.GetFlashCard(ctx, int32(id))
+		//	if err != nil {
+		//		if err == pgx.ErrNoRows {
+		//			http.Error(w, "Flash card not found", http.StatusNotFound)
+		//			return
+		//		}
+		//		log.Printf("error getting flash card: %v", err)
+		//		http.Error(w, "Database error", http.StatusInternalServerError)
 
 		return
 	}
@@ -656,7 +658,7 @@ func (cfg *Config) DeleteFlashCardSets(w http.ResponseWriter, r *http.Request) {
 
 	// Delete the flashcard set
 	err = query.DeleteFlashCardSet(ctx, int32(setID))
-	
+
 	if err != nil {
 		log.Printf("error deleting flashcard set: %v", err)
 		http.Error(w, "Failed to delete flashcard set", http.StatusInternalServerError)
@@ -670,27 +672,27 @@ func (cfg *Config) DeleteFlashCardSets(w http.ResponseWriter, r *http.Request) {
 func (cfg *Config) CreateClass(w http.ResponseWriter, r *http.Request) {
 	// curl -X POST localhost:8000/class -H "name: class name" -H "description: class description" -H "joincode: join code" -H "teacherid: 1"
 
-	name := r.Header.Get("name");
+	name := r.Header.Get("name")
 	if name == "" {
-		http.Error(w, "No class name given", http.StatusBadRequest);
+		http.Error(w, "No class name given", http.StatusBadRequest)
 		return
 	}
 
-	description := r.Header.Get("description");
+	description := r.Header.Get("description")
 	if description == "" {
-		http.Error(w, "No class description given", http.StatusBadRequest);
+		http.Error(w, "No class description given", http.StatusBadRequest)
 		return
 	}
 
-	joincode := r.Header.Get("joincode");
+	joincode := r.Header.Get("joincode")
 	if joincode == "" {
-		http.Error(w, "No class join code given", http.StatusBadRequest);
+		http.Error(w, "No class join code given", http.StatusBadRequest)
 		return
 	}
 
-	idStr := r.Header.Get("teacherid");
+	idStr := r.Header.Get("teacherid")
 	if idStr == "" {
-		http.Error(w, "No teacher id given", http.StatusBadRequest);
+		http.Error(w, "No teacher id given", http.StatusBadRequest)
 		return
 	}
 
@@ -718,10 +720,10 @@ func (cfg *Config) CreateClass(w http.ResponseWriter, r *http.Request) {
 	query := db.New(conn)
 
 	error := query.CreateClass(ctx, db.CreateClassParams{
-		Name: name,
+		Name:        name,
 		Description: description,
-		JoinCode: joincode,
-		TeacherID: id,
+		JoinCode:    joincode,
+		TeacherID:   id,
 	})
 
 	if error != nil {
@@ -735,9 +737,9 @@ func (cfg *Config) CreateClass(w http.ResponseWriter, r *http.Request) {
 func (cfg *Config) GetClass(w http.ResponseWriter, r *http.Request) {
 	// curl -X GET localhost:8000/class -H "id: 1"
 
-	idStr := r.Header.Get("id");
+	idStr := r.Header.Get("id")
 	if idStr == "" {
-		http.Error(w, "No class id given", http.StatusBadRequest);
+		http.Error(w, "No class id given", http.StatusBadRequest)
 		return
 	}
 
@@ -763,7 +765,7 @@ func (cfg *Config) GetClass(w http.ResponseWriter, r *http.Request) {
 	defer conn.Close(ctx)
 
 	query := db.New(conn)
-	
+
 	class, error := query.GetClass(ctx, classId)
 
 	if error != nil {
@@ -789,7 +791,7 @@ func (cfg *Config) UpdateClass(w http.ResponseWriter, r *http.Request) {
 	cIdStr := r.Header.Get("id")
 	if cIdStr == "" {
 		http.Error(w, "No class id given", http.StatusBadRequest)
-		return;
+		return
 	}
 
 	cId, err := strconv.Atoi(cIdStr)
@@ -798,33 +800,33 @@ func (cfg *Config) UpdateClass(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	cId32:= int32(cId)
+	cId32 := int32(cId)
 	if cId32 == 0 {
 		http.Error(w, "Invalid class id", http.StatusBadRequest)
 		return
 	}
 
-	name := r.Header.Get("name");
+	name := r.Header.Get("name")
 	if name == "" {
-		http.Error(w, "No class name given", http.StatusBadRequest);
+		http.Error(w, "No class name given", http.StatusBadRequest)
 		return
 	}
 
-	description := r.Header.Get("description");
+	description := r.Header.Get("description")
 	if description == "" {
-		http.Error(w, "No class description given", http.StatusBadRequest);
+		http.Error(w, "No class description given", http.StatusBadRequest)
 		return
 	}
 
-	joincode := r.Header.Get("joincode");
+	joincode := r.Header.Get("joincode")
 	if joincode == "" {
-		http.Error(w, "No class join code given", http.StatusBadRequest);
+		http.Error(w, "No class join code given", http.StatusBadRequest)
 		return
 	}
 
-	tIdStr := r.Header.Get("teacherid");
+	tIdStr := r.Header.Get("teacherid")
 	if tIdStr == "" {
-		http.Error(w, "No teacher id given", http.StatusBadRequest);
+		http.Error(w, "No teacher id given", http.StatusBadRequest)
 		return
 	}
 
@@ -852,11 +854,11 @@ func (cfg *Config) UpdateClass(w http.ResponseWriter, r *http.Request) {
 	query := db.New(conn)
 
 	error := query.UpdateClass(ctx, db.UpdateClassParams{
-		Name: name,
+		Name:        name,
 		Description: description,
-		JoinCode: joincode,
-		TeacherID: tId,
-		ID: cId32,
+		JoinCode:    joincode,
+		TeacherID:   tId,
+		ID:          cId32,
 	})
 
 	if error != nil {
@@ -874,16 +876,16 @@ func (cfg *Config) DeleteClass(w http.ResponseWriter, r *http.Request) {
 
 	if idStr == "" {
 		http.Error(w, "No class id given", http.StatusBadRequest)
-		return;
+		return
 	}
 
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
 		http.Error(w, "Invalid class id given", http.StatusBadRequest)
-		return;
+		return
 	}
 
-	classId := int32(id);
+	classId := int32(id)
 
 	ctx := context.Background()
 
@@ -900,7 +902,7 @@ func (cfg *Config) DeleteClass(w http.ResponseWriter, r *http.Request) {
 	if error != nil {
 		log.Printf("Error deleting class in db: %v", error)
 		http.Error(w, "Failed to delete class", http.StatusInternalServerError)
-		return;
+		return
 	}
 	log.Println("Class deleted successfully")
 }
