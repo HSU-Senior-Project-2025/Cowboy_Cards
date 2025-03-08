@@ -12,16 +12,21 @@ type Class struct {
 	ID          int32
 	Name        string
 	Description string
-	StudentIds  []int32
 	JoinCode    string
-	TeacherID   int32
+	TeacherID   pgtype.Int4
 	CreatedAt   pgtype.Timestamp
 	UpdatedAt   pgtype.Timestamp
+}
+
+type ClassSet struct {
+	ClassID int32
+	SetID   int32
 }
 
 type ClassUser struct {
 	UserID  int32
 	ClassID int32
+	Role    string
 }
 
 type Flashcard struct {
@@ -29,7 +34,6 @@ type Flashcard struct {
 	Front     string
 	Back      string
 	SetID     int32
-	UserID    int32
 	CreatedAt pgtype.Timestamp
 	UpdatedAt pgtype.Timestamp
 }
@@ -38,8 +42,6 @@ type FlashcardSet struct {
 	ID          int32
 	Name        string
 	Description string
-	UserID      int32
-	ClassID     int32
 	CreatedAt   pgtype.Timestamp
 	UpdatedAt   pgtype.Timestamp
 }
@@ -47,9 +49,12 @@ type FlashcardSet struct {
 type User struct {
 	ID        int32
 	Username  string
+	Email     string
+	Password  string
 	FirstName string
 	LastName  string
-	Role      string
+	Email     string
+	Password  string
 	CreatedAt pgtype.Timestamp
 	UpdatedAt pgtype.Timestamp
 }

@@ -1,6 +1,8 @@
 package app
 
 import (
+	"errors"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -10,21 +12,45 @@ import (
 	"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/controllers"
 	"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/routes"
 	"github.com/go-chi/chi/v5"
-	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 	_ "github.com/joho/godotenv/autoload"
 	"github.com/urfave/negroni/v3"
 )
 
-func LoadConfig() (*controllers.Config, error) {
-	conn, err := pgx.ParseConfig(os.Getenv("DATABASE_URL"))
-	conn.User = os.Getenv("DBUSER")
-	conn.Host = os.Getenv("DBHOST")
+func LoadPoolConfig() (*controllers.Config, error) {
+	var (
+		dburl  = os.Getenv("DATABASE_URL")
+		dbuser = os.Getenv("DBUSER")
+		dbhost = os.Getenv("DBHOST")
+	)
 
-	if err != nil {
-		log.Fatalf("error parsing config: %v", err)
+	if dburl == "" || dbuser == "" || dbhost == "" {
+		return nil, errors.New("env vars not available")
 	}
+
+	config, err := pgxpool.ParseConfig(dburl)
+	if err != nil {
+		return nil, fmt.Errorf("error parsing config: %v", err)
+	}
+	config.ConnConfig.User = dbuser
+	config.ConnConfig.Host = dbhost
+
+	// pool, err := pgxpool.NewWithConfig(context.Background(), config)
+	// if err != nil {
+	// 	log.Fatalf("error creating connection pool: %v", err)
+	// }
+	// if err := pool.Ping(ctx); err != nil {
+	// 	log.Fatalf("error connecting to database: %v", err)
+	// }
+	// log.Println("Successfully connected to database")
+
+	// Enable SSL for Supabase
+	// conn.TLSConfig = &tls.Config{
+	// 	MinVersion: tls.VersionTLS12,
+	// }
+
 	cfg := &controllers.Config{
-		DB: conn,
+		DB: config,
 	}
 
 	return cfg, nil
@@ -44,7 +70,7 @@ func setCacheControlHeader(w http.ResponseWriter, r *http.Request, next http.Han
 }
 
 func Init() {
-	cfg, err := LoadConfig()
+	cfg, err := LoadPoolConfig()
 	if err != nil {
 		log.Fatalf("error getting config: %v", err)
 	}

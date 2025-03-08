@@ -13,23 +13,36 @@ type Class = {
 };
 
 async function fetchClasses(url: string): Promise<Class[]> {
-  const response = await fetch(url);
-  const data = await response.json();
-  return data;
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching classes:', error);
+    throw error;
+  }
 }
 
 const Index = () => {
   const [buttonClicked, setButtonClicked] = useState(false);
   const [classes, setClasses] = useState<Class[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
+      setLoading(true);
+      setError(null);
       try {
         const data = await fetchClasses('http://localhost:8000/classes');
         setClasses(data);
       } catch (error) {
-        setError(error.message);
+        setError(`Failed to fetch classes: ${error.message}`);
+      } finally {
+        setLoading(false);
       }
     }
     if (buttonClicked) {
@@ -49,7 +62,8 @@ const Index = () => {
         >
           clickme!
         </button>
-        {error && <div>Error: {error}</div>}
+        {loading && <div>Loading...</div>}
+        {error && <div className="text-red-500 mt-2">{error}</div>}
         <div>
           {classes.map((cls) => (
             <div key={cls.ID}>
