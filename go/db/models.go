@@ -42,7 +42,6 @@ type FlashcardSet struct {
 	ID          int32
 	Name        string
 	Description string
-	UserID      int32
 	CreatedAt   pgtype.Timestamp
 	UpdatedAt   pgtype.Timestamp
 }
@@ -54,6 +53,8 @@ type User struct {
 	Password  string
 	FirstName string
 	LastName  string
+	Email     string
+	Password  string
 	CreatedAt pgtype.Timestamp
 	UpdatedAt pgtype.Timestamp
 }

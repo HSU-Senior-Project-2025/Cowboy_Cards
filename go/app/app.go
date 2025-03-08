@@ -1,9 +1,8 @@
 package app
 
 import (
-	"context"
+	"errors"
 	"fmt"
-	"crypto/tls"
 	"log"
 	"net/http"
 	"os"
@@ -18,34 +17,40 @@ import (
 	"github.com/urfave/negroni/v3"
 )
 
-func LoadConfig() (*controllers.Config, error) {
-	dbURL := os.Getenv("DATABASE_URL")
-	if dbURL == "" {
-		return nil, fmt.Errorf("DATABASE_URL environment variable is not set")
+func LoadPoolConfig() (*controllers.Config, error) {
+	var (
+		dburl  = os.Getenv("DATABASE_URL")
+		dbuser = os.Getenv("DBUSER")
+		dbhost = os.Getenv("DBHOST")
+	)
+
+	if dburl == "" || dbuser == "" || dbhost == "" {
+		return nil, errors.New("env vars not available")
 	}
 
-	// Create a connection pool
-	ctx := context.Background()
-	pool, err := pgxpool.New(ctx, dbURL)
+	config, err := pgxpool.ParseConfig(dburl)
 	if err != nil {
-		return nil, fmt.Errorf("error creating connection pool: %v", err)
+		return nil, fmt.Errorf("error parsing config: %v", err)
 	}
+	config.ConnConfig.User = dbuser
+	config.ConnConfig.Host = dbhost
 
-	// Test the connection
-	if err := pool.Ping(ctx); err != nil {
-		return nil, fmt.Errorf("error connecting to database: %v", err)
-	}
-
-	log.Printf("Successfully connected to database")
-
+	// pool, err := pgxpool.NewWithConfig(context.Background(), config)
+	// if err != nil {
+	// 	log.Fatalf("error creating connection pool: %v", err)
+	// }
+	// if err := pool.Ping(ctx); err != nil {
+	// 	log.Fatalf("error connecting to database: %v", err)
+	// }
+	// log.Println("Successfully connected to database")
 
 	// Enable SSL for Supabase
-	conn.TLSConfig = &tls.Config{
-		MinVersion: tls.VersionTLS12,
-	}
+	// conn.TLSConfig = &tls.Config{
+	// 	MinVersion: tls.VersionTLS12,
+	// }
 
 	cfg := &controllers.Config{
-		DB: pool,
+		DB: config,
 	}
 
 	return cfg, nil
@@ -65,7 +70,7 @@ func setCacheControlHeader(w http.ResponseWriter, r *http.Request, next http.Han
 }
 
 func Init() {
-	cfg, err := LoadConfig()
+	cfg, err := LoadPoolConfig()
 	if err != nil {
 		log.Fatalf("error getting config: %v", err)
 	}
