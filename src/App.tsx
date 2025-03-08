@@ -35,17 +35,6 @@ setupIonicReact();
 
 const queryClient = new QueryClient();
 
-/**
- * Main App component
- *
- * Defines the routing structure for the application.
- * Routes include:
- * - / : Index page
- * - /home : Home page
- * - /class/:id : Class detail page for students
- * - /teacher : Teacher dashboard
- * - /teacher/class/:id : Class management page for teachers
- */
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>

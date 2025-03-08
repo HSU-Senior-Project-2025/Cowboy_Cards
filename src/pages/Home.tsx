@@ -7,10 +7,6 @@ import {
   IonCardContent,
   IonIcon,
   IonButton,
-  IonPage,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
   IonSegment,
   IonSegmentButton,
   IonLabel,
@@ -107,7 +103,7 @@ const Home = () => {
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {classes.map((cls) => (
               <Link key={cls.id} to={`/class/${cls.id}`}>
-                <IonCard className="p-6 cursor-pointer hover:shadow-lg hover:-translate-y-1 transition-all duration-200 rounded-lg border shadow-sm">
+                <IonCard className="p-6 cursor-pointer hover:shadow-lg hover:-translate-y-1 transition-all duration-200 rounded-lg shadow-sm">
                   <IonCardHeader>
                     <IonCardTitle className="text-2xl font-semibold leading-none tracking-tight">
                       {cls.name}
@@ -129,7 +125,7 @@ const Home = () => {
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {personalFlashcardSets.map((set) => (
               <Link key={set.id} to={`/class/${set.id}`}>
-                <IonCard className="p-6 cursor-pointer hover:shadow-lg hover:-translate-y-1 transition-all duration-200 rounded-lg border shadow-sm">
+                <IonCard className="p-6 cursor-pointer hover:shadow-lg hover:-translate-y-1 transition-all duration-200 rounded-lg shadow-sm">
                   <IonCardHeader>
                     <IonCardTitle className="text-2xl font-semibold leading-none tracking-tight">
                       {set.name}
