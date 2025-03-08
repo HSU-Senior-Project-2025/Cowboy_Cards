@@ -11,6 +11,7 @@ import { IonContent } from '@ionic/react';
 import { BookOpen, List, Plus } from 'lucide-react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Navbar, NavbarTitle, NavbarButton } from "@/components/navbar";
 
 const Home = () => {
   const [tab, setTab] = useState('classes');
@@ -29,17 +30,20 @@ const Home = () => {
 
   return (
     <IonContent>
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-8">
-          <h1 className="text-3xl font-bold">
-            {tab === 'classes' ? 'My Classes' : 'Personal Flashcard Sets'}
-          </h1>
-          <Button>
-            <Plus className="mr-2 h-4 w-4" /> Add{' '}
-            {tab === 'classes' ? 'Class' : 'Flashcard Set'}
-          </Button>
-        </div>
-
+      <Navbar>
+        <NavbarTitle>
+          <div className="text-xl md:text-2xl lg:text-3xl font-bold">
+            Dashboard
+          </div>
+        </NavbarTitle>
+        <NavbarButton onClick={() => {}}>
+          <div className="flex items-center">
+            <Plus className="h-4 w-4" />
+            <div className="ml-2">Join Class</div>
+          </div>
+        </NavbarButton>
+      </Navbar>
+      <div id="main-content" className="container mx-auto px-4 py-8">
         <Tabs value={tab} onValueChange={setTab} className="w-full mb-6">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="classes">

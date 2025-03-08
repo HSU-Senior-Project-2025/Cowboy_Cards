@@ -22,6 +22,7 @@ import { IonContent } from '@ionic/react';
 import { Plus } from 'lucide-react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Navbar, NavbarTitle, NavbarButton } from "@/components/navbar";
 
 const TeacherDashboard = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -71,15 +72,73 @@ const TeacherDashboard = () => {
 
   return (
     <IonContent>
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold">Teacher Dashboard</h1>
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogTrigger asChild>
-              <Button>
-                <Plus className="mr-2 h-4 w-4" /> Create New Class
+      <Navbar>
+        <NavbarTitle>
+          <div className="text-xl md:text-2xl lg:text-3xl font-bold">
+            Teacher Dashboard
+          </div>
+        </NavbarTitle>
+        <NavbarButton onClick={() => setIsDialogOpen(true)}>
+          <Plus className="mr-2 h-4 w-4" />
+          <div>Create New Class</div>
+        </NavbarButton>
+      </Navbar>
+      
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+              <DialogTitle>Create New Class</DialogTitle>
+              <DialogDescription>
+                Enter the details for your new class. You can add students and
+                flashcard sets after creation.
+              </DialogDescription>
+            </DialogHeader>
+            <ScrollArea className="max-h-[60vh]">
+              <div className="grid gap-4 py-4">
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="className" className="text-right">
+                    Class Name
+                  </Label>
+                  <div className="col-span-3">
+                    <Input id="className" placeholder="Biology 101" />
+                  </div>
+                </div>
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label className="text-right">Class ID</Label>
+                  <div className="col-span-3">
+                    <p className="text-sm text-muted-foreground">
+                      A unique ID will be automatically assigned when the
+                      class is created.
+                    </p>
+                  </div>
+                </div>
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label className="text-right">Note</Label>
+                  <div className="col-span-3">
+                    <p className="text-sm text-muted-foreground">
+                      After creating the class, you'll be able to add students
+                      and flashcard sets from the class detail page.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </ScrollArea>
+            <DialogFooter>
+              <Button
+                onClick={() => {
+                  console.log('backend call');
+                  alert('backend call');
+                  setIsDialogOpen(false);
+                }}
+              >
+                Create Class
               </Button>
-            </DialogTrigger>
+            </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      <div id="main-content" className="container mx-auto px-4 py-8">
+        <div className="flex justify-between items-center mb-8">
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogContent>
               <DialogHeader>
                 <DialogTitle>Create New Class</DialogTitle>

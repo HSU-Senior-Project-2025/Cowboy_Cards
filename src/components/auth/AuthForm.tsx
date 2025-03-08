@@ -22,6 +22,7 @@ import {
 } from '@/components/ui/select';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AlertCircle } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 // Backend API URL
 const API_URL = 'http://localhost:8000';
@@ -311,9 +312,9 @@ export const AuthForm = () => {
             )}
           </div>
           {isLogin && (
-            <Button variant="link" className="px-0 text-sm">
+            <Link to="/reset-password" className="text-sm text-purple-500">
               Forgot password?
-            </Button>
+            </Link>
           )}
         </CardContent>
         <CardFooter className="flex flex-col space-y-4">

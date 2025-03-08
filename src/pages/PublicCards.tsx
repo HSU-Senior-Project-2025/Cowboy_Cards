@@ -8,6 +8,7 @@ import {
 } from '@/components/ui/card';
 import { IonContent } from '@ionic/react';
 import { Link } from 'react-router-dom';
+import { Navbar, NavbarTitle, NavbarButton } from "@/components/navbar";
 
 const PublicFlashcards = () => {
   const flashcardSets = [
@@ -23,11 +24,14 @@ const PublicFlashcards = () => {
 
   return (
     <IonContent>
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold">Public Flashcards</h1>
-        </div>
-
+      <Navbar>
+        <NavbarTitle>
+          <div className="text-xl md:text-2xl lg:text-3xl font-bold">
+            Public Flashcards
+          </div>
+        </NavbarTitle>
+      </Navbar>
+      <div id="main-content" className="container mx-auto px-4 py-8">
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {flashcardSets.map((set) => (
             <Card key={set.id}>
