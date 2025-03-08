@@ -6,46 +6,41 @@ import (
 )
 
 func Routes(r *chi.Mux, cfg *controllers.Config) {
-	// Mount all routes under /api
 	r.Route("/api", func(r chi.Router) {
-		// r.Use(cfg.AuthMiddleware)
 
-		// Auth routes
+		r.Get("/classes", cfg.GetClasses)
+		r.Get("/users", cfg.GetUsers)
+
 		r.Route("/auth", func(r chi.Router) {
 			r.Post("/signup", cfg.Signup)
 			r.Post("/login", cfg.Login)
 		})
 
 		r.Route("/user", func(r chi.Router) {
-			r.Use(cfg.AuthMiddleware)
 			r.Get("/", cfg.GetUser)
 			r.Put("/", cfg.UpdateUser)
 			r.Delete("/", cfg.DeleteUser)
 		})
 
-		r.Get("/users", cfg.GetUsers)
-
 		r.Route("/class", func(r chi.Router) {
-			r.Post("/", cfg.CreateClass)
 			r.Get("/", cfg.GetClass)
+			r.Post("/", cfg.CreateClass)
 			r.Put("/", cfg.UpdateClass)
 			r.Delete("/", cfg.DeleteClass)
 		})
 
-		r.Get("/classes", cfg.GetClasses)
-
 		r.Route("/flashcard", func(r chi.Router) {
-			r.Post("/", cfg.CreateFlashCard)
 			r.Get("/", cfg.GetFlashCard)
+			r.Post("/", cfg.CreateFlashCard)
 			r.Put("/", cfg.UpdateFlashCard)
 			r.Delete("/", cfg.DeleteFlashCard)
-		})
 
-		r.Route("/flashcard_set", func(r chi.Router) {
-			r.Post("/", cfg.CreateFlashCardSet)
-			r.Get("/", cfg.GetFlashCardSet)
-			r.Put("/", cfg.UpdateFlashCardSet)
-			r.Delete("/", cfg.DeleteFlashCardSet)
+			r.Route("/set", func(r chi.Router) {
+				r.Get("/", cfg.GetFlashCardSet)
+				r.Post("/", cfg.CreateFlashCardSet)
+				r.Put("/", cfg.UpdateFlashCardSet)
+				r.Delete("/", cfg.DeleteFlashCardSet)
+			})
 		})
 	})
 }
