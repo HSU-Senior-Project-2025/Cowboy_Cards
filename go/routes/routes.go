@@ -12,8 +12,8 @@ func Routes(r *chi.Mux, cfg *controllers.Config) {
 		r.Get("/users", cfg.GetUsers)
 
 		r.Route("/auth", func(r chi.Router) {
-			r.Post("/signup", cfg.Signup)
 			r.Post("/login", cfg.Login)
+			r.Post("/signup", cfg.Signup)
 		})
 
 		r.Route("/user", func(r chi.Router) {
