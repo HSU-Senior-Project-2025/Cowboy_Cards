@@ -9,8 +9,32 @@ import (
 	"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/db"
 )
 
+func (pool *Pool) GetUsers(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+
+	conn, err := pool.DB.Acquire(ctx)
+	if err != nil {
+		log.Printf("could not connect to db... %v", err)
+		http.Error(w, "Database connection error", http.StatusInternalServerError)
+		return
+	}
+	defer conn.Release()
+
+	query := db.New(conn)
+
+	users, err := query.GetUsers(ctx)
+	if err != nil {
+		log.Printf("error getting users from db... %v", err)
+		http.Error(w, "Failed to get users", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(users)
+}
+
 // GetUser handles retrieving user information
-func (cfg *Config) GetUser(w http.ResponseWriter, r *http.Request) {
+func (pool *Pool) GetUser(w http.ResponseWriter, r *http.Request) {
 	// Get user_id from context (set by AuthMiddleware)
 	userID, ok := r.Context().Value("user_id").(int32)
 	if !ok {
@@ -19,7 +43,7 @@ func (cfg *Config) GetUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	ctx := context.Background()
-	query := db.New(cfg.DB)
+	query := db.New(pool.DB)
 
 	user, err := query.GetUserByID(ctx, userID)
 	if err != nil {
@@ -44,7 +68,7 @@ func (cfg *Config) GetUser(w http.ResponseWriter, r *http.Request) {
 }
 
 // UpdateUser handles updating user information
-func (cfg *Config) UpdateUser(w http.ResponseWriter, r *http.Request) {
+func (pool *Pool) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	// Get user_id from context (set by AuthMiddleware)
 	userID, ok := r.Context().Value("user_id").(int32)
 	if !ok {
@@ -65,7 +89,7 @@ func (cfg *Config) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	ctx := context.Background()
-	conn, err := cfg.DB.Acquire(ctx)
+	conn, err := pool.DB.Acquire(ctx)
 	if err != nil {
 		log.Printf("could not connect to db... %v", err)
 		http.Error(w, "Database connection error", http.StatusInternalServerError)
@@ -127,7 +151,7 @@ func (cfg *Config) UpdateUser(w http.ResponseWriter, r *http.Request) {
 }
 
 // DeleteUser handles user account deletion
-func (cfg *Config) DeleteUser(w http.ResponseWriter, r *http.Request) {
+func (pool *Pool) DeleteUser(w http.ResponseWriter, r *http.Request) {
 	// Get user_id from context (set by AuthMiddleware)
 	userID, ok := r.Context().Value("user_id").(int32)
 	if !ok {
@@ -136,7 +160,7 @@ func (cfg *Config) DeleteUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	ctx := context.Background()
-	query := db.New(cfg.DB)
+	query := db.New(pool.DB)
 
 	err := query.DeleteUser(ctx, userID)
 	if err != nil {

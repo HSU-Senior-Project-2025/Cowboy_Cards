@@ -76,7 +76,7 @@ type Claims struct {
 var jwtKey = []byte(os.Getenv("JWT_SECRET"))
 
 // Login handles user authentication
-func (cfg *Config) Login(w http.ResponseWriter, r *http.Request) {
+func (pool *Pool) Login(w http.ResponseWriter, r *http.Request) {
 	var req LoginRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		http.Error(w, "Invalid request body", http.StatusBadRequest)
@@ -84,7 +84,7 @@ func (cfg *Config) Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	ctx := context.Background()
-	query := db.New(cfg.DB)
+	query := db.New(pool.DB)
 
 	user, err := query.GetUserByEmail(ctx, req.Email)
 	if err != nil {
@@ -128,7 +128,7 @@ func (cfg *Config) Login(w http.ResponseWriter, r *http.Request) {
 }
 
 // Signup handles user registration
-func (cfg *Config) Signup(w http.ResponseWriter, r *http.Request) {
+func (pool *Pool) Signup(w http.ResponseWriter, r *http.Request) {
 	var req SignupRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		http.Error(w, "Invalid request body", http.StatusBadRequest)
@@ -149,7 +149,7 @@ func (cfg *Config) Signup(w http.ResponseWriter, r *http.Request) {
 	}
 
 	ctx := context.Background()
-	query := db.New(cfg.DB)
+	query := db.New(pool.DB)
 
 	// Check if username already exists
 	_, err = query.GetUserByUsername(ctx, req.Username)
@@ -220,7 +220,7 @@ func (cfg *Config) Signup(w http.ResponseWriter, r *http.Request) {
 }
 
 // AuthMiddleware handles authentication for incoming requests
-func (cfg *Config) AuthMiddleware(next http.Handler) http.Handler {
+func (pool *Pool) AuthMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		authHeader := r.Header.Get("Authorization")
 		if authHeader == "" {

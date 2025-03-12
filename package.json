@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "vite",
     "backend": "go run go/main.go",
-    "sqlc:gen": "sqlc generate",
+    "sqlc:gen": "sqlc generate -f sqlc/sqlc.yaml",
     "build": "vite build",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",

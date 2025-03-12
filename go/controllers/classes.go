@@ -10,9 +10,42 @@ import (
 	"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/db"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgtype"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-func (cfg *Config) CreateClass(w http.ResponseWriter, r *http.Request) {
+type Pool struct {
+	DB *pgxpool.Pool
+}
+
+/* GetClasses retrieves all classes from the database and returns them as a JSON response */
+func (pool *Pool) GetClasses(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+
+	conn, err := pool.DB.Acquire(ctx)
+	if err != nil {
+		log.Printf("could not connect to db... %v", err)
+		http.Error(w, "Database connection error", http.StatusInternalServerError)
+		return
+	}
+	defer conn.Release()
+
+	query := db.New(conn)
+
+	classes, err := query.GetClasses(ctx)
+	if err != nil {
+		log.Printf("error getting classes from db... %v", err)
+		http.Error(w, "Database error", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	if err := json.NewEncoder(w).Encode(classes); err != nil {
+		log.Printf("error encoding response: %v", err)
+		http.Error(w, "Error encoding response", http.StatusInternalServerError)
+	}
+}
+
+func (pool *Pool) CreateClass(w http.ResponseWriter, r *http.Request) {
 	// curl -X POST localhost:8000/class -H "name: class name" -H "description: class description" -H "joincode: join code" -H "teacherid: 1"
 
 	name := r.Header.Get("name")
@@ -54,7 +87,7 @@ func (cfg *Config) CreateClass(w http.ResponseWriter, r *http.Request) {
 
 	ctx := context.Background()
 
-	conn, err := pgx.ConnectConfig(ctx, cfg.DB)
+	conn, err := pgx.ConnectConfig(ctx, pool.DB)
 	if err != nil {
 		log.Fatalf("could not connect to db... %v", err)
 	}
@@ -77,7 +110,7 @@ func (cfg *Config) CreateClass(w http.ResponseWriter, r *http.Request) {
 	log.Println("Class created successfully")
 }
 
-func (cfg *Config) GetClass(w http.ResponseWriter, r *http.Request) {
+func (pool *Pool) GetClass(w http.ResponseWriter, r *http.Request) {
 	// curl -X GET localhost:8000/class -H "id: 1"
 
 	idStr := r.Header.Get("id")
@@ -101,7 +134,7 @@ func (cfg *Config) GetClass(w http.ResponseWriter, r *http.Request) {
 
 	ctx := context.Background()
 
-	conn, err := pgx.ConnectConfig(ctx, cfg.DB)
+	conn, err := pgx.ConnectConfig(ctx, pool.DB)
 	if err != nil {
 		log.Fatalf("could not connect to db... %v", err)
 	}
@@ -128,7 +161,7 @@ func (cfg *Config) GetClass(w http.ResponseWriter, r *http.Request) {
 	w.Write(append(b, 10)) //add newline
 }
 
-func (cfg *Config) UpdateClass(w http.ResponseWriter, r *http.Request) {
+func (pool *Pool) UpdateClass(w http.ResponseWriter, r *http.Request) {
 	// curl -X PUT localhost:8000/class -H "id: 1" -H "name: class name" -H "description: class description" -H "joincode: join code" -H "teacherid: 1"
 
 	cIdStr := r.Header.Get("id")
@@ -188,7 +221,7 @@ func (cfg *Config) UpdateClass(w http.ResponseWriter, r *http.Request) {
 
 	ctx := context.Background()
 
-	conn, err := pgx.ConnectConfig(ctx, cfg.DB)
+	conn, err := pgx.ConnectConfig(ctx, pool.DB)
 	if err != nil {
 		log.Fatalf("could not connect to db... %v", err)
 	}
@@ -212,7 +245,7 @@ func (cfg *Config) UpdateClass(w http.ResponseWriter, r *http.Request) {
 	log.Println("Class updated successfully")
 }
 
-func (cfg *Config) DeleteClass(w http.ResponseWriter, r *http.Request) {
+func (pool *Pool) DeleteClass(w http.ResponseWriter, r *http.Request) {
 	// curl -X DELETE localhost:8000/class -H "id: 1"
 
 	idStr := r.Header.Get("id")
@@ -232,7 +265,7 @@ func (cfg *Config) DeleteClass(w http.ResponseWriter, r *http.Request) {
 
 	ctx := context.Background()
 
-	conn, err := pgx.ConnectConfig(ctx, cfg.DB)
+	conn, err := pgx.ConnectConfig(ctx, pool.DB)
 	if err != nil {
 		log.Fatalf("Could not connect to db... %v", err)
 	}

@@ -1,8 +1,7 @@
 package app
 
 import (
-	"errors"
-	"fmt"
+	"context"
 	"log"
 	"net/http"
 	"os"
@@ -17,7 +16,7 @@ import (
 	"github.com/urfave/negroni/v3"
 )
 
-func LoadPoolConfig() (*controllers.Config, error) {
+func LoadPoolConfig() (config *pgxpool.Config) {
 	var (
 		dburl  = os.Getenv("DATABASE_URL")
 		dbuser = os.Getenv("DBUSER")
@@ -25,35 +24,42 @@ func LoadPoolConfig() (*controllers.Config, error) {
 	)
 
 	if dburl == "" || dbuser == "" || dbhost == "" {
-		return nil, errors.New("env vars not available")
+		log.Fatalf("env vars not loaded")
 	}
 
 	config, err := pgxpool.ParseConfig(dburl)
 	if err != nil {
-		return nil, fmt.Errorf("error parsing config: %v", err)
+		log.Fatalf("error parsing config: %v", err)
 	}
+
 	config.ConnConfig.User = dbuser
 	config.ConnConfig.Host = dbhost
 
-	// pool, err := pgxpool.NewWithConfig(context.Background(), config)
-	// if err != nil {
-	// 	log.Fatalf("error creating connection pool: %v", err)
-	// }
-	// if err := pool.Ping(ctx); err != nil {
-	// 	log.Fatalf("error connecting to database: %v", err)
-	// }
-	// log.Println("Successfully connected to database")
+	return
+}
+
+func CreatePool(config *pgxpool.Config) (pool *controllers.Pool) {
+	ctx := context.Background()
+
+	pgpool, err := pgxpool.NewWithConfig(ctx, config)
+	if err != nil {
+		log.Fatalf("error creating connection pool: %v", err)
+	}
+
+	if err := pgpool.Ping(ctx); err != nil {
+		log.Fatalf("error connecting to database: %v", err)
+	}
+
+	log.Println("Successfully connected to database")
+
+	pool = &controllers.Pool{DB: pgpool}
 
 	// Enable SSL for Supabase
 	// conn.TLSConfig = &tls.Config{
 	// 	MinVersion: tls.VersionTLS12,
 	// }
 
-	cfg := &controllers.Config{
-		DB: config,
-	}
-
-	return cfg, nil
+	return
 }
 
 func setCacheControlHeader(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
@@ -70,10 +76,8 @@ func setCacheControlHeader(w http.ResponseWriter, r *http.Request, next http.Han
 }
 
 func Init() {
-	cfg, err := LoadPoolConfig()
-	if err != nil {
-		log.Fatalf("error getting config: %v", err)
-	}
+	cfg := LoadPoolConfig()
+	pool := CreatePool(cfg)
 
 	n := negroni.New()
 	n.Use(negroni.NewLogger())
@@ -82,7 +86,7 @@ func Init() {
 	n.Use(negroni.NewStatic(http.Dir("./dist")))
 
 	r := chi.NewRouter()
-	routes.Routes(r, cfg)
+	routes.Routes(r, pool)
 
 	n.UseHandler(r)
 

@@ -49,8 +49,6 @@ type FlashcardSet struct {
 type User struct {
 	ID        int32
 	Username  string
-	Email     string
-	Password  string
 	FirstName string
 	LastName  string
 	Email     string

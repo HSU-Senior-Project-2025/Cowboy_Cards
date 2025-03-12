@@ -1,10 +1,27 @@
 version: '2'
 sql:
-  - engine: 'postgresql'
-    queries: 'query.sql'
+  - name: 'cowboy_cards'
+    engine: 'postgresql'
     schema: 'schema.sql'
+    queries: 'queries/simple'
     gen:
       go:
         package: 'db'
-        out: 'go/db'
+        out: '../go/db'
         sql_package: 'pgx/v5'
+        # emit_json_tags: true
+        # json_tags_case_style: 'camel'
+        # query_parameter_limit: 3
+        # overrides:
+        #   - column: 'users.id'
+        #     go_type:
+        #       type: 'uint32'
+        #   - column: 'flashcard_sets.id'
+        #     go_type:
+        #       type: 'uint32'
+        #   - column: 'flashcards.id'
+        #     go_type:
+        #       type: 'uint32'
+        #   - column: 'classes.id'
+        #     go_type:
+        #       type: 'uint32'

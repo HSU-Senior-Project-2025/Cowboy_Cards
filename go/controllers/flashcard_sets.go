@@ -11,7 +11,7 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
-func (cfg *Config) CreateFlashCardSet(w http.ResponseWriter, r *http.Request) {
+func (pool *Pool) CreateFlashCardSet(w http.ResponseWriter, r *http.Request) {
 	// curl -X POST localhost:8000/flashcard/set -H "name: test" -H "description: test"
 
 	name := r.Header.Get("name")
@@ -23,7 +23,7 @@ func (cfg *Config) CreateFlashCardSet(w http.ResponseWriter, r *http.Request) {
 
 	ctx := context.Background()
 
-	conn, err := pgx.ConnectConfig(ctx, cfg.DB)
+	conn, err := pgx.ConnectConfig(ctx, pool.DB)
 	if err != nil {
 		log.Fatalf("could not connect to db... %v", err)
 	}
@@ -43,7 +43,7 @@ func (cfg *Config) CreateFlashCardSet(w http.ResponseWriter, r *http.Request) {
 	log.Println("Flashcard set created successfully")
 }
 
-func (cfg *Config) GetFlashCardSet(w http.ResponseWriter, r *http.Request) {
+func (pool *Pool) GetFlashCardSet(w http.ResponseWriter, r *http.Request) {
 	// curl -X GET localhost:8000/flashcard/set -H "id: 1"
 	idStr := r.Header.Get("id")
 	if idStr == "" {
@@ -59,7 +59,7 @@ func (cfg *Config) GetFlashCardSet(w http.ResponseWriter, r *http.Request) {
 	}
 
 	ctx := context.Background()
-	conn, err := pgx.ConnectConfig(ctx, cfg.DB)
+	conn, err := pgx.ConnectConfig(ctx, pool.DB)
 	if err != nil {
 		log.Fatalf("could not connect to db... %v", err)
 	}
@@ -78,7 +78,7 @@ func (cfg *Config) GetFlashCardSet(w http.ResponseWriter, r *http.Request) {
 	w.Write(append(b, 10)) //add newline
 }
 
-func (cfg *Config) UpdateFlashCardSet(w http.ResponseWriter, r *http.Request) {
+func (pool *Pool) UpdateFlashCardSet(w http.ResponseWriter, r *http.Request) {
 	// curl -X PUT localhost:8000/flashcard/set -H "id: 1" -H "name: test" -H "description: test"
 
 	idStr := r.Header.Get("id")
@@ -103,7 +103,7 @@ func (cfg *Config) UpdateFlashCardSet(w http.ResponseWriter, r *http.Request) {
 
 	ctx := context.Background()
 
-	conn, err := pgx.ConnectConfig(ctx, cfg.DB)
+	conn, err := pgx.ConnectConfig(ctx, pool.DB)
 	if err != nil {
 		log.Fatalf("could not connect to db... %v", err)
 	}
@@ -124,7 +124,7 @@ func (cfg *Config) UpdateFlashCardSet(w http.ResponseWriter, r *http.Request) {
 	log.Println("Flashcard set updated successfully")
 }
 
-func (cfg *Config) DeleteFlashCardSet(w http.ResponseWriter, r *http.Request) {
+func (pool *Pool) DeleteFlashCardSet(w http.ResponseWriter, r *http.Request) {
 	// curl -X DELETE localhost:8000/flashcard/set -H "id: 1"
 
 	idStr := r.Header.Get("id")
@@ -142,7 +142,7 @@ func (cfg *Config) DeleteFlashCardSet(w http.ResponseWriter, r *http.Request) {
 
 	ctx := context.Background()
 
-	conn, err := pgx.ConnectConfig(ctx, cfg.DB)
+	conn, err := pgx.ConnectConfig(ctx, pool.DB)
 	if err != nil {
 		log.Fatalf("could not connect to db... %v", err)
 	}
