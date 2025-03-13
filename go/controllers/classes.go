@@ -13,12 +13,12 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-type Pool struct {
+type Handler struct {
 	DB *pgxpool.Pool
 }
 
 /* GetClasses retrieves all classes from the database and returns them as a JSON response */
-func (pool *Pool) GetClasses(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) GetClasses(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
 
 	conn, err := pool.DB.Acquire(ctx)
@@ -45,7 +45,7 @@ func (pool *Pool) GetClasses(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (pool *Pool) CreateClass(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) CreateClass(w http.ResponseWriter, r *http.Request) {
 	// curl -X POST localhost:8000/class -H "name: class name" -H "description: class description" -H "joincode: join code" -H "teacherid: 1"
 
 	name := r.Header.Get("name")
@@ -110,7 +110,7 @@ func (pool *Pool) CreateClass(w http.ResponseWriter, r *http.Request) {
 	log.Println("Class created successfully")
 }
 
-func (pool *Pool) GetClass(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) GetClass(w http.ResponseWriter, r *http.Request) {
 	// curl -X GET localhost:8000/class -H "id: 1"
 
 	idStr := r.Header.Get("id")
@@ -161,7 +161,7 @@ func (pool *Pool) GetClass(w http.ResponseWriter, r *http.Request) {
 	w.Write(append(b, 10)) //add newline
 }
 
-func (pool *Pool) UpdateClass(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) UpdateClass(w http.ResponseWriter, r *http.Request) {
 	// curl -X PUT localhost:8000/class -H "id: 1" -H "name: class name" -H "description: class description" -H "joincode: join code" -H "teacherid: 1"
 
 	cIdStr := r.Header.Get("id")
@@ -245,7 +245,7 @@ func (pool *Pool) UpdateClass(w http.ResponseWriter, r *http.Request) {
 	log.Println("Class updated successfully")
 }
 
-func (pool *Pool) DeleteClass(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) DeleteClass(w http.ResponseWriter, r *http.Request) {
 	// curl -X DELETE localhost:8000/class -H "id: 1"
 
 	idStr := r.Header.Get("id")

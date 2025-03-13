@@ -9,7 +9,7 @@ import (
 	"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/db"
 )
 
-func (pool *Pool) GetUsers(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) GetUsers(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
 
 	conn, err := pool.DB.Acquire(ctx)
@@ -34,7 +34,7 @@ func (pool *Pool) GetUsers(w http.ResponseWriter, r *http.Request) {
 }
 
 // GetUser handles retrieving user information
-func (pool *Pool) GetUser(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) GetUser(w http.ResponseWriter, r *http.Request) {
 	// Get user_id from context (set by AuthMiddleware)
 	userID, ok := r.Context().Value("user_id").(int32)
 	if !ok {
@@ -68,7 +68,7 @@ func (pool *Pool) GetUser(w http.ResponseWriter, r *http.Request) {
 }
 
 // UpdateUser handles updating user information
-func (pool *Pool) UpdateUser(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	// Get user_id from context (set by AuthMiddleware)
 	userID, ok := r.Context().Value("user_id").(int32)
 	if !ok {
@@ -151,7 +151,7 @@ func (pool *Pool) UpdateUser(w http.ResponseWriter, r *http.Request) {
 }
 
 // DeleteUser handles user account deletion
-func (pool *Pool) DeleteUser(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) DeleteUser(w http.ResponseWriter, r *http.Request) {
 	// Get user_id from context (set by AuthMiddleware)
 	userID, ok := r.Context().Value("user_id").(int32)
 	if !ok {

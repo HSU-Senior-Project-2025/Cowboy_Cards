@@ -5,41 +5,41 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
-func Routes(r *chi.Mux, pool *controllers.Pool) {
+func Routes(r *chi.Mux, h *controllers.Handler) {
 	r.Route("/api", func(r chi.Router) {
 
-		r.Get("/classes", pool.GetClasses)
-		r.Get("/users", pool.GetUsers)
+		r.Get("/classes", h.GetClasses)
+		r.Get("/users", h.GetUsers)
 
 		r.Route("/auth", func(r chi.Router) {
-			r.Post("/login", pool.Login)
-			r.Post("/signup", pool.Signup)
+			r.Post("/login", h.Login)
+			r.Post("/signup", h.Signup)
 		})
 
 		r.Route("/user", func(r chi.Router) {
-			r.Get("/", pool.GetUser)
-			r.Put("/", pool.UpdateUser)
-			r.Delete("/", pool.DeleteUser)
+			r.Get("/", h.GetUser)
+			r.Put("/", h.UpdateUser)
+			r.Delete("/", h.DeleteUser)
 		})
 
 		r.Route("/class", func(r chi.Router) {
-			r.Get("/", pool.GetClass)
-			r.Post("/", pool.CreateClass)
-			r.Put("/", pool.UpdateClass)
-			r.Delete("/", pool.DeleteClass)
+			r.Get("/", h.GetClass)
+			r.Post("/", h.CreateClass)
+			r.Put("/", h.UpdateClass)
+			r.Delete("/", h.DeleteClass)
 		})
 
 		r.Route("/flashcard", func(r chi.Router) {
-			r.Get("/", pool.GetFlashCard)
-			r.Post("/", pool.CreateFlashCard)
-			r.Put("/", pool.UpdateFlashCard)
-			r.Delete("/", pool.DeleteFlashCard)
+			r.Get("/", h.GetFlashCard)
+			r.Post("/", h.CreateFlashCard)
+			r.Put("/", h.UpdateFlashCard)
+			r.Delete("/", h.DeleteFlashCard)
 
 			r.Route("/set", func(r chi.Router) {
-				r.Get("/", pool.GetFlashCardSet)
-				r.Post("/", pool.CreateFlashCardSet)
-				r.Put("/", pool.UpdateFlashCardSet)
-				r.Delete("/", pool.DeleteFlashCardSet)
+				r.Get("/", h.GetFlashCardSet)
+				r.Post("/", h.CreateFlashCardSet)
+				r.Put("/", h.UpdateFlashCardSet)
+				r.Delete("/", h.DeleteFlashCardSet)
 			})
 		})
 	})

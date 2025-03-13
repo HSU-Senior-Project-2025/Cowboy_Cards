@@ -11,6 +11,8 @@ import (
 	"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/controllers"
 	"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/routes"
 	"github.com/go-chi/chi/v5"
+	"github.com/golang-jwt/jwt/v5"
+	"github.com/golang-jwt/jwt/v5/request"
 	"github.com/jackc/pgx/v5/pgxpool"
 	_ "github.com/joho/godotenv/autoload"
 	"github.com/urfave/negroni/v3"
@@ -24,7 +26,7 @@ func LoadPoolConfig() (config *pgxpool.Config) {
 	)
 
 	if dburl == "" || dbuser == "" || dbhost == "" {
-		log.Fatalf("env vars not loaded")
+		log.Fatalf("db env vars not loaded")
 	}
 
 	config, err := pgxpool.ParseConfig(dburl)
@@ -38,7 +40,7 @@ func LoadPoolConfig() (config *pgxpool.Config) {
 	return
 }
 
-func CreatePool(config *pgxpool.Config) (pool *controllers.Pool) {
+func CreatePool(config *pgxpool.Config) (h *controllers.Handler) {
 	ctx := context.Background()
 
 	pgpool, err := pgxpool.NewWithConfig(ctx, config)
@@ -52,7 +54,7 @@ func CreatePool(config *pgxpool.Config) (pool *controllers.Pool) {
 
 	log.Println("Successfully connected to database")
 
-	pool = &controllers.Pool{DB: pgpool}
+	h = &controllers.Handler{DB: pgpool}
 
 	// Enable SSL for Supabase
 	// conn.TLSConfig = &tls.Config{
@@ -75,9 +77,62 @@ func setCacheControlHeader(w http.ResponseWriter, r *http.Request, next http.Han
 	next(w, r)
 }
 
+var (
+	jwtKey  = []byte(os.Getenv("JWT_SECRET"))
+	keyFunc = func(token *jwt.Token) (interface{}, error) { return jwtKey, nil }
+)
+
+// Define a custom key type to prevent collisions
+// type contextKey string
+
+// const userIdKey contextKey = "userId"
+
+// func authMiddleware(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+//     // Set value in context
+//     ctx := context.WithValue(r.Context(), userIdKey, "12345")
+//     r = r.WithContext(ctx)
+
+//     // Call next handler
+//     next(w, r)
+// }
+
+// func handler(w http.ResponseWriter, r *http.Request) {
+//     // Retrieve value directly from request
+//     userId := context.Get(r, "userId").(string)
+//     w.Write([]byte("Hello, User " + userId))
+// }
+
+// func main() {
+//     n := negroni.Classic()
+//     n.Use(negroni.HandlerFunc(authMiddleware))
+//     n.UseHandler(http.HandlerFunc(handler))
+
+//     http.ListenAndServe(":3000", n)
+// }
+
+// authMiddleware handles authentication for incoming requests
+func authMiddleware(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+
+	token, err := request.ParseFromRequest(r, request.AuthorizationHeaderExtractor, keyFunc)
+
+	// claims := &Claims{}
+	// token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
+	// 	return jwtKey, nil
+	// })
+
+	if err != nil || !token.Valid {
+		http.Error(w, "Invalid token", http.StatusUnauthorized)
+		return
+	}
+
+	ctx := context.WithValue(r.Context(), "user_id", claims.UserID)
+	next.ServeHTTP(w, r.WithContext(ctx))
+
+}
+
 func Init() {
 	cfg := LoadPoolConfig()
-	pool := CreatePool(cfg)
+	h := CreatePool(cfg)
 
 	n := negroni.New()
 	n.Use(negroni.NewLogger())
@@ -86,7 +141,7 @@ func Init() {
 	n.Use(negroni.NewStatic(http.Dir("./dist")))
 
 	r := chi.NewRouter()
-	routes.Routes(r, pool)
+	routes.Routes(r, h)
 
 	n.UseHandler(r)
 
