@@ -10,18 +10,13 @@ import (
 	"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/db"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgtype"
-	"github.com/jackc/pgx/v5/pgxpool"
 )
-
-type Handler struct {
-	DB *pgxpool.Pool
-}
 
 /* GetClasses retrieves all classes from the database and returns them as a JSON response */
 func (h *Handler) GetClasses(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
 
-	conn, err := pool.DB.Acquire(ctx)
+	conn, err := h.DB.Acquire(ctx)
 	if err != nil {
 		log.Printf("could not connect to db... %v", err)
 		http.Error(w, "Database connection error", http.StatusInternalServerError)

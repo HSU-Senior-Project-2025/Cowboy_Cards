@@ -10,8 +10,13 @@ import (
 
 	"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/db"
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"golang.org/x/crypto/bcrypt"
 )
+
+type Handler struct {
+	DB *pgxpool.Pool
+}
 
 // User represents the user data that will be sent to the client
 type User struct {
@@ -137,6 +142,11 @@ func (h *Handler) Signup(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// *************
+	// needs more validation here
+	// usual min pw len: 8, bcrypt max: 72 bytes
+	// *************
+
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
 	if err != nil {
 		log.Printf("Error hashing password: %v", err)
@@ -144,8 +154,16 @@ func (h *Handler) Signup(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	ctx := context.Background()
-	query := db.New(pool.DB)
+	ctx := r.Context()
+	// query := db.New(pool.DB)
+
+	conn, err := h.DB.Acquire(ctx)
+	if err != nil {
+		log.Printf("could not connect to db... %v", err)
+		http.Error(w, "Database connection error", http.StatusInternalServerError)
+		return
+	}
+	defer conn.Release()
 
 	// Check if username already exists
 	_, err = query.GetUserByUsername(ctx, req.Username)

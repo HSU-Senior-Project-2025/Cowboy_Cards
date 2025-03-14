@@ -5,42 +5,41 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
-func Routes(r *chi.Mux, h *controllers.Handler) {
-	r.Route("/api", func(r chi.Router) {
+func Protected(r *chi.Mux, h *controllers.Handler) {
 
-		r.Get("/classes", h.GetClasses)
-		r.Get("/users", h.GetUsers)
+	r.Route("/users", func(r chi.Router) {
+		r.Get("/list", h.ListUsers)
+		r.Get("/", h.GetUser)
+		r.Put("/", h.UpdateUser)
+		r.Delete("/", h.DeleteUser)
+	})
 
-		r.Route("/auth", func(r chi.Router) {
-			r.Post("/login", h.Login)
-			r.Post("/signup", h.Signup)
-		})
+	r.Route("/classes", func(r chi.Router) {
+		r.Get("/list", h.ListClasses)
+		r.Get("/", h.GetClass)
+		r.Post("/", h.CreateClass)
+		r.Put("/", h.UpdateClass)
+		r.Delete("/", h.DeleteClass)
+	})
 
-		r.Route("/user", func(r chi.Router) {
-			r.Get("/", h.GetUser)
-			r.Put("/", h.UpdateUser)
-			r.Delete("/", h.DeleteUser)
-		})
+	r.Route("/flashcards", func(r chi.Router) {
+		r.Get("/", h.GetFlashCard)
+		r.Post("/", h.CreateFlashCard)
+		r.Put("/", h.UpdateFlashCard)
+		r.Delete("/", h.DeleteFlashCard)
 
-		r.Route("/class", func(r chi.Router) {
-			r.Get("/", h.GetClass)
-			r.Post("/", h.CreateClass)
-			r.Put("/", h.UpdateClass)
-			r.Delete("/", h.DeleteClass)
-		})
-
-		r.Route("/flashcard", func(r chi.Router) {
-			r.Get("/", h.GetFlashCard)
-			r.Post("/", h.CreateFlashCard)
-			r.Put("/", h.UpdateFlashCard)
-			r.Delete("/", h.DeleteFlashCard)
-
-			r.Route("/set", func(r chi.Router) {
-				r.Get("/", h.GetFlashCardSet)
-				r.Post("/", h.CreateFlashCardSet)
-				r.Put("/", h.UpdateFlashCardSet)
-				r.Delete("/", h.DeleteFlashCardSet)
-			})
+		r.Route("/sets", func(r chi.Router) {
+			r.Get("/", h.GetFlashCardSet)
+			r.Post("/", h.CreateFlashCardSet)
+			r.Put("/", h.UpdateFlashCardSet)
+			r.Delete("/", h.DeleteFlashCardSet)
 		})
 	})
+}
+
+func Unprotected(r *chi.Mux, h *controllers.Handler) {
+
+	r.Post("/login", h.Login)
+	r.Post("/signup", h.Signup)
+
 }
