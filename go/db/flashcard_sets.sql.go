@@ -7,11 +7,9 @@ package db
 
 import (
 	"context"
-
-	"github.com/jackc/pgx/v5/pgconn"
 )
 
-const createFlashcardSet = `-- name: CreateFlashcardSet :execresult
+const createFlashcardSet = `-- name: CreateFlashcardSet :exec
 INSERT INTO flashcard_sets (name, description) VALUES ($1, $2)
 `
 
@@ -20,16 +18,18 @@ type CreateFlashcardSetParams struct {
 	Description string
 }
 
-func (q *Queries) CreateFlashcardSet(ctx context.Context, arg CreateFlashcardSetParams) (pgconn.CommandTag, error) {
-	return q.db.Exec(ctx, createFlashcardSet, arg.Name, arg.Description)
+func (q *Queries) CreateFlashcardSet(ctx context.Context, arg CreateFlashcardSetParams) error {
+	_, err := q.db.Exec(ctx, createFlashcardSet, arg.Name, arg.Description)
+	return err
 }
 
-const deleteFlashcardSet = `-- name: DeleteFlashcardSet :execresult
+const deleteFlashcardSet = `-- name: DeleteFlashcardSet :exec
 DELETE FROM flashcard_sets WHERE id = $1
 `
 
-func (q *Queries) DeleteFlashcardSet(ctx context.Context, id int32) (pgconn.CommandTag, error) {
-	return q.db.Exec(ctx, deleteFlashcardSet, id)
+func (q *Queries) DeleteFlashcardSet(ctx context.Context, id int32) error {
+	_, err := q.db.Exec(ctx, deleteFlashcardSet, id)
+	return err
 }
 
 const getFlashcardSetById = `-- name: GetFlashcardSetById :one
@@ -49,7 +49,7 @@ func (q *Queries) GetFlashcardSetById(ctx context.Context, id int32) (FlashcardS
 	return i, err
 }
 
-const updateFlashcardSet = `-- name: UpdateFlashcardSet :execresult
+const updateFlashcardSet = `-- name: UpdateFlashcardSet :exec
 UPDATE flashcard_sets SET name = $1, description = $2, updated_at = NOW() WHERE id = $3
 `
 
@@ -59,6 +59,7 @@ type UpdateFlashcardSetParams struct {
 	ID          int32
 }
 
-func (q *Queries) UpdateFlashcardSet(ctx context.Context, arg UpdateFlashcardSetParams) (pgconn.CommandTag, error) {
-	return q.db.Exec(ctx, updateFlashcardSet, arg.Name, arg.Description, arg.ID)
+func (q *Queries) UpdateFlashcardSet(ctx context.Context, arg UpdateFlashcardSetParams) error {
+	_, err := q.db.Exec(ctx, updateFlashcardSet, arg.Name, arg.Description, arg.ID)
+	return err
 }

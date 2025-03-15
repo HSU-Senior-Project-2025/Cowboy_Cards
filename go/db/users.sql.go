@@ -7,8 +7,6 @@ package db
 
 import (
 	"context"
-
-	"github.com/jackc/pgx/v5/pgconn"
 )
 
 const createUser = `-- name: CreateUser :one
@@ -45,12 +43,13 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 	return i, err
 }
 
-const deleteUser = `-- name: DeleteUser :execresult
+const deleteUser = `-- name: DeleteUser :exec
 DELETE FROM users WHERE id = $1
 `
 
-func (q *Queries) DeleteUser(ctx context.Context, id int32) (pgconn.CommandTag, error) {
-	return q.db.Exec(ctx, deleteUser, id)
+func (q *Queries) DeleteUser(ctx context.Context, id int32) error {
+	_, err := q.db.Exec(ctx, deleteUser, id)
+	return err
 }
 
 const getUserByEmail = `-- name: GetUserByEmail :one
@@ -146,7 +145,7 @@ func (q *Queries) ListUsers(ctx context.Context) ([]User, error) {
 	return items, nil
 }
 
-const updateUser = `-- name: UpdateUser :execresult
+const updateUser = `-- name: UpdateUser :exec
 UPDATE users SET username = $1, first_name = $2, last_name = $3, email = $4, password = $5, updated_at = NOW() WHERE id = $6
 `
 
@@ -159,8 +158,8 @@ type UpdateUserParams struct {
 	ID        int32
 }
 
-func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (pgconn.CommandTag, error) {
-	return q.db.Exec(ctx, updateUser,
+func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) error {
+	_, err := q.db.Exec(ctx, updateUser,
 		arg.Username,
 		arg.FirstName,
 		arg.LastName,
@@ -168,4 +167,5 @@ func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (pgconn.
 		arg.Password,
 		arg.ID,
 	)
+	return err
 }

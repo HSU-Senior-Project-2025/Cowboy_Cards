@@ -7,7 +7,6 @@ import (
 	"os"
 	"path"
 
-	"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/controllers"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/golang-jwt/jwt/v5/request"
 )
@@ -30,15 +29,17 @@ type contextKey string
 const userIdKey contextKey = "userId"
 
 var (
+	jwtAud  = []byte(os.Getenv("JWT_AUD"))
+	jwtIss  = []byte(os.Getenv("JWT_ISS"))
 	jwtKey  = []byte(os.Getenv("JWT_SECRET"))
-	keyFunc = func(token *jwt.Token) (interface{}, error) { return jwtKey, nil }
+	keyFunc = func(token *jwt.Token) (any, error) { return jwtKey, nil }
 )
 
 func Auth(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
-	claims := &controllers.Claims{}
+	registeredClaims := &jwt.RegisteredClaims{}
 
-	token, err := request.ParseFromRequest(r, request.AuthorizationHeaderExtractor, keyFunc, request.WithClaims(claims))
+	token, err := request.ParseFromRequest(r, request.AuthorizationHeaderExtractor, keyFunc, request.WithClaims(registeredClaims))
 
 	if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 		log.Printf("Unexpected signing method: %v", token.Header["alg"])
@@ -50,39 +51,34 @@ func Auth(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 		log.Printf("alg: %v\n", v)
 	}
 
-	auds, err := claims.GetAudience()
+	auds, err := registeredClaims.GetAudience()
 	for _, v := range auds {
 		log.Printf("aud: %v\n", v)
 	}
 
-	expTime, err := claims.GetExpirationTime()
+	expTime, err := registeredClaims.GetExpirationTime()
 	log.Printf("expTime: %v\n", expTime.String())
 
-	issAt, err := claims.GetIssuedAt()
+	issAt, err := registeredClaims.GetIssuedAt()
 	log.Printf("issAt: %v\n", issAt.String())
 
-	issuer, err := claims.GetIssuer()
+	issuer, err := registeredClaims.GetIssuer()
 	log.Printf("issuer: %v\n", issuer)
 
-	notBefore, err := claims.GetNotBefore()
+	notBefore, err := registeredClaims.GetNotBefore()
 	log.Printf("notBefore: %v\n", notBefore.String())
 
-	sub, err := claims.GetSubject()
+	sub, err := registeredClaims.GetSubject()
 	log.Printf("sub: %v\n", sub)
 
-	if err != nil {
+	if err != nil || !token.Valid {
 		log.Printf("problem with token claims... %v", err)
 		http.Error(w, "Invalid token", http.StatusUnauthorized)
 		return
 	}
 
-	if err != nil || !token.Valid {
-		http.Error(w, "Invalid token", http.StatusUnauthorized)
-		return
-	}
+	log.Printf("id claim: %v\n", registeredClaims.ID)
 
-	log.Printf("custom claims: %v, %v, %v\n", claims.Email, claims.ID, claims.UserID)
-
-	ctx := context.WithValue(r.Context(), userIdKey, claims.UserID)
+	ctx := context.WithValue(r.Context(), userIdKey, registeredClaims.Subject)
 	next(w, r.WithContext(ctx))
 }

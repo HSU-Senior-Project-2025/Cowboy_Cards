@@ -13,8 +13,12 @@ SELECT * FROM users WHERE username = $1;
 -- name: CreateUser :one
 INSERT INTO users (username, first_name, last_name, email, password) VALUES ($1, $2, $3, $4, $5) RETURNING *;
 
--- name: UpdateUser :execresult
+-- name: UpdateUser :exec
 UPDATE users SET username = $1, first_name = $2, last_name = $3, email = $4, password = $5, updated_at = NOW() WHERE id = $6;
 
--- name: DeleteUser :execresult
+-- name: DeleteUser :exec
 DELETE FROM users WHERE id = $1;
+
+
+-- execresult annotation is buggy, trying exec https://github.com/sqlc-dev/sqlc/issues/3699#issuecomment-2486892414
+

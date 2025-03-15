@@ -8,11 +8,10 @@ package db
 import (
 	"context"
 
-	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
-const createClass = `-- name: CreateClass :execresult
+const createClass = `-- name: CreateClass :exec
 INSERT INTO classes (name, description, join_code, teacher_id) VALUES ($1, $2, $3, $4)
 `
 
@@ -23,21 +22,23 @@ type CreateClassParams struct {
 	TeacherID   pgtype.Int4
 }
 
-func (q *Queries) CreateClass(ctx context.Context, arg CreateClassParams) (pgconn.CommandTag, error) {
-	return q.db.Exec(ctx, createClass,
+func (q *Queries) CreateClass(ctx context.Context, arg CreateClassParams) error {
+	_, err := q.db.Exec(ctx, createClass,
 		arg.Name,
 		arg.Description,
 		arg.JoinCode,
 		arg.TeacherID,
 	)
+	return err
 }
 
-const deleteClass = `-- name: DeleteClass :execresult
+const deleteClass = `-- name: DeleteClass :exec
 DELETE FROM classes WHERE id = $1
 `
 
-func (q *Queries) DeleteClass(ctx context.Context, id int32) (pgconn.CommandTag, error) {
-	return q.db.Exec(ctx, deleteClass, id)
+func (q *Queries) DeleteClass(ctx context.Context, id int32) error {
+	_, err := q.db.Exec(ctx, deleteClass, id)
+	return err
 }
 
 const getClassById = `-- name: GetClassById :one
@@ -91,7 +92,7 @@ func (q *Queries) ListClasses(ctx context.Context) ([]Class, error) {
 	return items, nil
 }
 
-const updateClass = `-- name: UpdateClass :execresult
+const updateClass = `-- name: UpdateClass :exec
 UPDATE classes SET name = $1, description = $2, join_code = $3, teacher_id = $4, updated_at = NOW() WHERE id = $5
 `
 
@@ -103,12 +104,13 @@ type UpdateClassParams struct {
 	ID          int32
 }
 
-func (q *Queries) UpdateClass(ctx context.Context, arg UpdateClassParams) (pgconn.CommandTag, error) {
-	return q.db.Exec(ctx, updateClass,
+func (q *Queries) UpdateClass(ctx context.Context, arg UpdateClassParams) error {
+	_, err := q.db.Exec(ctx, updateClass,
 		arg.Name,
 		arg.Description,
 		arg.JoinCode,
 		arg.TeacherID,
 		arg.ID,
 	)
+	return err
 }

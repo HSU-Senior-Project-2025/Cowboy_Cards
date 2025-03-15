@@ -7,11 +7,9 @@ package db
 
 import (
 	"context"
-
-	"github.com/jackc/pgx/v5/pgconn"
 )
 
-const createFlashcard = `-- name: CreateFlashcard :execresult
+const createFlashcard = `-- name: CreateFlashcard :exec
 INSERT INTO flashcards (front, back, set_id) VALUES ($1, $2, $3)
 `
 
@@ -21,16 +19,18 @@ type CreateFlashcardParams struct {
 	SetID int32
 }
 
-func (q *Queries) CreateFlashcard(ctx context.Context, arg CreateFlashcardParams) (pgconn.CommandTag, error) {
-	return q.db.Exec(ctx, createFlashcard, arg.Front, arg.Back, arg.SetID)
+func (q *Queries) CreateFlashcard(ctx context.Context, arg CreateFlashcardParams) error {
+	_, err := q.db.Exec(ctx, createFlashcard, arg.Front, arg.Back, arg.SetID)
+	return err
 }
 
-const deleteFlashcard = `-- name: DeleteFlashcard :execresult
+const deleteFlashcard = `-- name: DeleteFlashcard :exec
 DELETE FROM flashcards WHERE id = $1
 `
 
-func (q *Queries) DeleteFlashcard(ctx context.Context, id int32) (pgconn.CommandTag, error) {
-	return q.db.Exec(ctx, deleteFlashcard, id)
+func (q *Queries) DeleteFlashcard(ctx context.Context, id int32) error {
+	_, err := q.db.Exec(ctx, deleteFlashcard, id)
+	return err
 }
 
 const getFlashcardById = `-- name: GetFlashcardById :one
@@ -51,7 +51,7 @@ func (q *Queries) GetFlashcardById(ctx context.Context, id int32) (Flashcard, er
 	return i, err
 }
 
-const updateFlashcard = `-- name: UpdateFlashcard :execresult
+const updateFlashcard = `-- name: UpdateFlashcard :exec
 UPDATE flashcards SET front = $1, back = $2, set_id = $3, updated_at = NOW() WHERE id = $4
 `
 
@@ -62,11 +62,12 @@ type UpdateFlashcardParams struct {
 	ID    int32
 }
 
-func (q *Queries) UpdateFlashcard(ctx context.Context, arg UpdateFlashcardParams) (pgconn.CommandTag, error) {
-	return q.db.Exec(ctx, updateFlashcard,
+func (q *Queries) UpdateFlashcard(ctx context.Context, arg UpdateFlashcardParams) error {
+	_, err := q.db.Exec(ctx, updateFlashcard,
 		arg.Front,
 		arg.Back,
 		arg.SetID,
 		arg.ID,
 	)
+	return err
 }
