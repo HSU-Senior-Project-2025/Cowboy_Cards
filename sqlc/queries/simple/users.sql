@@ -13,8 +13,20 @@ SELECT * FROM users WHERE username = $1;
 -- name: CreateUser :one
 INSERT INTO users (username, first_name, last_name, email, password) VALUES ($1, $2, $3, $4, $5) RETURNING *;
 
--- name: UpdateUser :exec
-UPDATE users SET username = $1, first_name = $2, last_name = $3, email = $4, password = $5, updated_at = NOW() WHERE id = $6;
+-- name: UpdateUsername :one
+UPDATE users SET username = $1, updated_at = NOW() WHERE id = $2 RETURNING username;
+
+-- name: UpdateEmail :one
+UPDATE users SET email = $1, updated_at = NOW() WHERE id = $2 RETURNING email;
+
+-- name: UpdateFirstname :one
+UPDATE users SET first_name = $1, updated_at = NOW() WHERE id = $2 RETURNING first_name;
+
+-- name: UpdateLastname :one
+UPDATE users SET last_name = $1, updated_at = NOW() WHERE id = $2 RETURNING last_name;
+
+-- name: UpdatePassword :exec
+UPDATE users SET password = $1, updated_at = NOW() WHERE id = $2;
 
 -- name: DeleteUser :exec
 DELETE FROM users WHERE id = $1;

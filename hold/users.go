@@ -3,52 +3,52 @@ package controllers
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"log"
 	"net/http"
 
 	"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/db"
+	"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/middleware"
+	"golang.org/x/crypto/bcrypt"
 )
 
-func (h *Handler) GetUsers(w http.ResponseWriter, r *http.Request) {
-	ctx := context.Background()
-
-	conn, err := pool.DB.Acquire(ctx)
+func (h *Handler) ListUsers(w http.ResponseWriter, r *http.Request) {
+	query, ctx, err := getQueryAndContext(r, h)
 	if err != nil {
-		log.Printf("could not connect to db... %v", err)
-		http.Error(w, "Database connection error", http.StatusInternalServerError)
-		return
-	}
-	defer conn.Release()
-
-	query := db.New(conn)
-
-	users, err := query.GetUsers(ctx)
-	if err != nil {
-		log.Printf("error getting users from db... %v", err)
-		http.Error(w, "Failed to get users", http.StatusInternalServerError)
+		logAndSendError(w, err, "Database connection error", http.StatusInternalServerError)
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(users)
+	users, err := query.ListUsers(ctx)
+	if err != nil {
+		logAndSendError(w, err, "Error getting users from DB", http.StatusInternalServerError)
+		return
+	}
+
+	// w.Header().Set("Content-Type", "application/json")
+	if err := json.NewEncoder(w).Encode(users); err != nil {
+		logAndSendError(w, err, "Error encoding response", http.StatusInternalServerError)
+	}
 }
 
 // GetUser handles retrieving user information
-func (h *Handler) GetUser(w http.ResponseWriter, r *http.Request) {
-	// Get user_id from context (set by AuthMiddleware)
-	userID, ok := r.Context().Value("user_id").(int32)
-	if !ok {
-		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+func (h *Handler) GetUserById(w http.ResponseWriter, r *http.Request) {
+	query, ctx, err := getQueryAndContext(r, h)
+	if err != nil {
+		logAndSendError(w, err, "Database connection error", http.StatusInternalServerError)
 		return
 	}
 
-	ctx := context.Background()
-	query := db.New(pool.DB)
+	// Get user_id from context (set by AuthMiddleware)
+	userID, ok := ctx.Value(middleware.UserIdKey).(int32)
+	if !ok {
+		logAndSendError(w, err, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
 
-	user, err := query.GetUserByID(ctx, userID)
+	user, err := query.GetUserById(ctx, userID)
 	if err != nil {
-		log.Printf("Error getting user: %v", err)
-		http.Error(w, "User not found", http.StatusNotFound)
+		logAndSendError(w, err, "User not found", http.StatusNotFound)
 		return
 	}
 
@@ -63,28 +63,47 @@ func (h *Handler) GetUser(w http.ResponseWriter, r *http.Request) {
 		UpdatedAt: user.UpdatedAt.Time,
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(response)
+	// w.Header().Set("Content-Type", "application/json")
+	if err := json.NewEncoder(w).Encode(response); err != nil {
+		logAndSendError(w, err, "Error encoding response", http.StatusInternalServerError)
+	}
 }
 
 // UpdateUser handles updating user information
 func (h *Handler) UpdateUser(w http.ResponseWriter, r *http.Request) {
-	// Get user_id from context (set by AuthMiddleware)
-	userID, ok := r.Context().Value("user_id").(int32)
-	if !ok {
-		http.Error(w, "Unauthorized", http.StatusUnauthorized)
-		return
-	}
-
-	var req UpdateUserRequest
+	var req SignupRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, "Invalid request body", http.StatusBadRequest)
+		logAndSendError(w, err, "Invalid request body", http.StatusBadRequest)
 		return
 	}
 
-	// Validate request
-	if req.Username == "" || req.Email == "" {
-		http.Error(w, "Username and email are required", http.StatusBadRequest)
+	// Validate required fields
+	if req.Username == "" || req.Email == "" || req.Password == "" || req.FirstName == "" || req.LastName == "" {
+		logAndSendError(w, errors.New("empty fields submitted"), "All fields are required", http.StatusBadRequest)
+		return
+	}
+
+	// *************
+	// needs more validation here
+	// usual min pw len: 8, bcrypt max: 72 bytes
+	// *************
+
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
+	if err != nil {
+		logAndSendError(w, err, "Error hashing password", http.StatusInternalServerError)
+		return
+	}
+
+	query, ctx, err := getQueryAndContext(r, h)
+	if err != nil {
+		logAndSendError(w, err, "Database connection error", http.StatusInternalServerError)
+		return
+	}
+
+	// Get user_id from context (set by AuthMiddleware)
+	userID, ok := ctx.Value(middleware.UserIdKey).(int32)
+	if !ok {
+		logAndSendError(w, err, "Unauthorized", http.StatusUnauthorized)
 		return
 	}
 

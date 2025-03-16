@@ -9,9 +9,9 @@ sql:
         package: 'db'
         out: '../go/db'
         sql_package: 'pgx/v5'
+        # query_parameter_limit: 2
         # emit_json_tags: true
         # json_tags_case_style: 'camel'
-        # query_parameter_limit: 3
         # overrides:
         #   - column: 'users.id'
         #     go_type:

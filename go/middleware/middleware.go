@@ -26,7 +26,7 @@ func SetCacheControlHeader(w http.ResponseWriter, r *http.Request, next http.Han
 
 type contextKey string
 
-const userIdKey contextKey = "userId"
+const UserIdKey contextKey = "userId"
 
 var (
 	jwtAud  = []byte(os.Getenv("JWT_AUD"))
@@ -79,6 +79,6 @@ func Auth(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	log.Printf("id claim: %v\n", registeredClaims.ID)
 
-	ctx := context.WithValue(r.Context(), userIdKey, registeredClaims.Subject)
+	ctx := context.WithValue(r.Context(), UserIdKey, registeredClaims.Subject)
 	next(w, r.WithContext(ctx))
 }

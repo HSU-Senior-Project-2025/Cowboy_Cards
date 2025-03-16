@@ -6,40 +6,46 @@ import (
 )
 
 func Protected(r *chi.Mux, h *controllers.Handler) {
-
-	r.Route("/users", func(r chi.Router) {
-		r.Get("/list", h.ListUsers)
-		r.Get("/", h.GetUser)
-		r.Put("/", h.UpdateUser)
-		r.Delete("/", h.DeleteUser)
-	})
-
 	r.Route("/classes", func(r chi.Router) {
 		r.Get("/list", h.ListClasses)
-		r.Get("/", h.GetClass)
+		r.Get("/", h.GetClassById)
 		r.Post("/", h.CreateClass)
-		r.Put("/", h.UpdateClass)
+		r.Put("/name", h.UpdateClass)
+		r.Put("/description", h.UpdateClass)
+		r.Put("/teacherId", h.UpdateClass)
 		r.Delete("/", h.DeleteClass)
 	})
 
 	r.Route("/flashcards", func(r chi.Router) {
-		r.Get("/", h.GetFlashCard)
-		r.Post("/", h.CreateFlashCard)
-		r.Put("/", h.UpdateFlashCard)
-		r.Delete("/", h.DeleteFlashCard)
+		// r.Get("/", h.GetFlashcardById)
+		// r.Post("/", h.CreateFlashCard)
+		// r.Put("/front", h.UpdateFlashcardFront)
+		// r.Put("/back", h.UpdateFlashcardBack)
+		// r.Put("/sid", h.UpdateFlashcardSetId)
+		// r.Delete("/", h.DeleteFlashCard)
 
 		r.Route("/sets", func(r chi.Router) {
-			r.Get("/", h.GetFlashCardSet)
-			r.Post("/", h.CreateFlashCardSet)
-			r.Put("/", h.UpdateFlashCardSet)
-			r.Delete("/", h.DeleteFlashCardSet)
+			// r.Get("/", h.GetFlashcardSetById)
+			// r.Post("/", h.CreateFlashCardSet)
+			// r.Put("/name", h.UpdateFlashcardSetName)
+			// r.Put("/desc", h.UpdateFlashcardSetDescription)
+			// r.Delete("/", h.DeleteFlashCardSet)
 		})
+	})
+
+	r.Route("/users", func(r chi.Router) {
+		// r.Get("/list", h.ListUsers)
+		// r.Get("/", h.GetUserById)
+		// r.Put("/username", h.UpdateUsername)
+		// r.Put("/email", h.UpdateEmail)
+		// r.Put("/firstname", h.UpdateFirstname)
+		// r.Put("/lastname", h.UpdateLastname)
+		// r.Put("/password", h.UpdatePassword)
+		// r.Delete("/", h.DeleteUser)
 	})
 }
 
 func Unprotected(r *chi.Mux, h *controllers.Handler) {
-
 	r.Post("/login", h.Login)
 	r.Post("/signup", h.Signup)
-
 }

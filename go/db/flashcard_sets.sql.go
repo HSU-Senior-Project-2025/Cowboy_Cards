@@ -49,17 +49,34 @@ func (q *Queries) GetFlashcardSetById(ctx context.Context, id int32) (FlashcardS
 	return i, err
 }
 
-const updateFlashcardSet = `-- name: UpdateFlashcardSet :exec
-UPDATE flashcard_sets SET name = $1, description = $2, updated_at = NOW() WHERE id = $3
+const updateFlashcardSetDescription = `-- name: UpdateFlashcardSetDescription :one
+UPDATE flashcard_sets SET description = $1, updated_at = NOW() WHERE id = $2 RETURNING description
 `
 
-type UpdateFlashcardSetParams struct {
-	Name        string
+type UpdateFlashcardSetDescriptionParams struct {
 	Description string
 	ID          int32
 }
 
-func (q *Queries) UpdateFlashcardSet(ctx context.Context, arg UpdateFlashcardSetParams) error {
-	_, err := q.db.Exec(ctx, updateFlashcardSet, arg.Name, arg.Description, arg.ID)
-	return err
+func (q *Queries) UpdateFlashcardSetDescription(ctx context.Context, arg UpdateFlashcardSetDescriptionParams) (string, error) {
+	row := q.db.QueryRow(ctx, updateFlashcardSetDescription, arg.Description, arg.ID)
+	var description string
+	err := row.Scan(&description)
+	return description, err
+}
+
+const updateFlashcardSetName = `-- name: UpdateFlashcardSetName :one
+UPDATE flashcard_sets SET name = $1, updated_at = NOW() WHERE id = $2 RETURNING name
+`
+
+type UpdateFlashcardSetNameParams struct {
+	Name string
+	ID   int32
+}
+
+func (q *Queries) UpdateFlashcardSetName(ctx context.Context, arg UpdateFlashcardSetNameParams) (string, error) {
+	row := q.db.QueryRow(ctx, updateFlashcardSetName, arg.Name, arg.ID)
+	var name string
+	err := row.Scan(&name)
+	return name, err
 }

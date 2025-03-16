@@ -70,7 +70,7 @@ func Init() {
 	protectedRoutes := chi.NewRouter()
 	routes.Protected(protectedRoutes, h)
 	protectedRouteHandler := negroni.New()
-	protectedRouteHandler.Use(negroni.HandlerFunc(middleware.Auth))
+	// protectedRouteHandler.Use(negroni.HandlerFunc(middleware.Auth))
 	protectedRouteHandler.UseHandler(protectedRoutes)
 
 	//mw for every route

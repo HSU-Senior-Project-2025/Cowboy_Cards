@@ -4,8 +4,11 @@ SELECT * FROM flashcard_sets WHERE id = $1;
 -- name: CreateFlashcardSet :exec
 INSERT INTO flashcard_sets (name, description) VALUES ($1, $2);
 
--- name: UpdateFlashcardSet :exec
-UPDATE flashcard_sets SET name = $1, description = $2, updated_at = NOW() WHERE id = $3;
+-- name: UpdateFlashcardSetName :one
+UPDATE flashcard_sets SET name = $1, updated_at = NOW() WHERE id = $2 RETURNING name;
+
+-- name: UpdateFlashcardSetDescription :one
+UPDATE flashcard_sets SET description = $1, updated_at = NOW() WHERE id = $2 RETURNING description;
 
 -- name: DeleteFlashcardSet :exec
 DELETE FROM flashcard_sets WHERE id = $1;

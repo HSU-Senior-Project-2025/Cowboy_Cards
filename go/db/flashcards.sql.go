@@ -51,23 +51,50 @@ func (q *Queries) GetFlashcardById(ctx context.Context, id int32) (Flashcard, er
 	return i, err
 }
 
-const updateFlashcard = `-- name: UpdateFlashcard :exec
-UPDATE flashcards SET front = $1, back = $2, set_id = $3, updated_at = NOW() WHERE id = $4
+const updateFlashcardBack = `-- name: UpdateFlashcardBack :one
+UPDATE flashcards SET back = $1, updated_at = NOW() WHERE id = $2 RETURNING back
 `
 
-type UpdateFlashcardParams struct {
+type UpdateFlashcardBackParams struct {
+	Back string
+	ID   int32
+}
+
+func (q *Queries) UpdateFlashcardBack(ctx context.Context, arg UpdateFlashcardBackParams) (string, error) {
+	row := q.db.QueryRow(ctx, updateFlashcardBack, arg.Back, arg.ID)
+	var back string
+	err := row.Scan(&back)
+	return back, err
+}
+
+const updateFlashcardFront = `-- name: UpdateFlashcardFront :one
+UPDATE flashcards SET front = $1, updated_at = NOW() WHERE id = $2 RETURNING front
+`
+
+type UpdateFlashcardFrontParams struct {
 	Front string
-	Back  string
+	ID    int32
+}
+
+func (q *Queries) UpdateFlashcardFront(ctx context.Context, arg UpdateFlashcardFrontParams) (string, error) {
+	row := q.db.QueryRow(ctx, updateFlashcardFront, arg.Front, arg.ID)
+	var front string
+	err := row.Scan(&front)
+	return front, err
+}
+
+const updateFlashcardSetId = `-- name: UpdateFlashcardSetId :one
+UPDATE flashcards SET set_id = $1, updated_at = NOW() WHERE id = $2 RETURNING set_id
+`
+
+type UpdateFlashcardSetIdParams struct {
 	SetID int32
 	ID    int32
 }
 
-func (q *Queries) UpdateFlashcard(ctx context.Context, arg UpdateFlashcardParams) error {
-	_, err := q.db.Exec(ctx, updateFlashcard,
-		arg.Front,
-		arg.Back,
-		arg.SetID,
-		arg.ID,
-	)
-	return err
+func (q *Queries) UpdateFlashcardSetId(ctx context.Context, arg UpdateFlashcardSetIdParams) (int32, error) {
+	row := q.db.QueryRow(ctx, updateFlashcardSetId, arg.SetID, arg.ID)
+	var set_id int32
+	err := row.Scan(&set_id)
+	return set_id, err
 }

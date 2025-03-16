@@ -92,25 +92,50 @@ func (q *Queries) ListClasses(ctx context.Context) ([]Class, error) {
 	return items, nil
 }
 
-const updateClass = `-- name: UpdateClass :exec
-UPDATE classes SET name = $1, description = $2, join_code = $3, teacher_id = $4, updated_at = NOW() WHERE id = $5
+const updateClassDescription = `-- name: UpdateClassDescription :one
+UPDATE classes SET description = $1, updated_at = NOW() WHERE id = $2 RETURNING description
 `
 
-type UpdateClassParams struct {
-	Name        string
+type UpdateClassDescriptionParams struct {
 	Description string
-	JoinCode    string
-	TeacherID   pgtype.Int4
 	ID          int32
 }
 
-func (q *Queries) UpdateClass(ctx context.Context, arg UpdateClassParams) error {
-	_, err := q.db.Exec(ctx, updateClass,
-		arg.Name,
-		arg.Description,
-		arg.JoinCode,
-		arg.TeacherID,
-		arg.ID,
-	)
-	return err
+func (q *Queries) UpdateClassDescription(ctx context.Context, arg UpdateClassDescriptionParams) (string, error) {
+	row := q.db.QueryRow(ctx, updateClassDescription, arg.Description, arg.ID)
+	var description string
+	err := row.Scan(&description)
+	return description, err
+}
+
+const updateClassName = `-- name: UpdateClassName :one
+UPDATE classes SET name = $1, updated_at = NOW() WHERE id = $2 RETURNING name
+`
+
+type UpdateClassNameParams struct {
+	Name string
+	ID   int32
+}
+
+func (q *Queries) UpdateClassName(ctx context.Context, arg UpdateClassNameParams) (string, error) {
+	row := q.db.QueryRow(ctx, updateClassName, arg.Name, arg.ID)
+	var name string
+	err := row.Scan(&name)
+	return name, err
+}
+
+const updateClassTeacherId = `-- name: UpdateClassTeacherId :one
+UPDATE classes SET teacher_id = $1, updated_at = NOW() WHERE id = $2 RETURNING teacher_id
+`
+
+type UpdateClassTeacherIdParams struct {
+	TeacherID pgtype.Int4
+	ID        int32
+}
+
+func (q *Queries) UpdateClassTeacherId(ctx context.Context, arg UpdateClassTeacherIdParams) (pgtype.Int4, error) {
+	row := q.db.QueryRow(ctx, updateClassTeacherId, arg.TeacherID, arg.ID)
+	var teacher_id pgtype.Int4
+	err := row.Scan(&teacher_id)
+	return teacher_id, err
 }

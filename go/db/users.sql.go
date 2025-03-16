@@ -145,27 +145,80 @@ func (q *Queries) ListUsers(ctx context.Context) ([]User, error) {
 	return items, nil
 }
 
-const updateUser = `-- name: UpdateUser :exec
-UPDATE users SET username = $1, first_name = $2, last_name = $3, email = $4, password = $5, updated_at = NOW() WHERE id = $6
+const updateEmail = `-- name: UpdateEmail :one
+UPDATE users SET email = $1, updated_at = NOW() WHERE id = $2 RETURNING email
 `
 
-type UpdateUserParams struct {
-	Username  string
+type UpdateEmailParams struct {
+	Email string
+	ID    int32
+}
+
+func (q *Queries) UpdateEmail(ctx context.Context, arg UpdateEmailParams) (string, error) {
+	row := q.db.QueryRow(ctx, updateEmail, arg.Email, arg.ID)
+	var email string
+	err := row.Scan(&email)
+	return email, err
+}
+
+const updateFirstname = `-- name: UpdateFirstname :one
+UPDATE users SET first_name = $1, updated_at = NOW() WHERE id = $2 RETURNING first_name
+`
+
+type UpdateFirstnameParams struct {
 	FirstName string
-	LastName  string
-	Email     string
-	Password  string
 	ID        int32
 }
 
-func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) error {
-	_, err := q.db.Exec(ctx, updateUser,
-		arg.Username,
-		arg.FirstName,
-		arg.LastName,
-		arg.Email,
-		arg.Password,
-		arg.ID,
-	)
+func (q *Queries) UpdateFirstname(ctx context.Context, arg UpdateFirstnameParams) (string, error) {
+	row := q.db.QueryRow(ctx, updateFirstname, arg.FirstName, arg.ID)
+	var first_name string
+	err := row.Scan(&first_name)
+	return first_name, err
+}
+
+const updateLastname = `-- name: UpdateLastname :one
+UPDATE users SET last_name = $1, updated_at = NOW() WHERE id = $2 RETURNING last_name
+`
+
+type UpdateLastnameParams struct {
+	LastName string
+	ID       int32
+}
+
+func (q *Queries) UpdateLastname(ctx context.Context, arg UpdateLastnameParams) (string, error) {
+	row := q.db.QueryRow(ctx, updateLastname, arg.LastName, arg.ID)
+	var last_name string
+	err := row.Scan(&last_name)
+	return last_name, err
+}
+
+const updatePassword = `-- name: UpdatePassword :exec
+UPDATE users SET password = $1, updated_at = NOW() WHERE id = $2
+`
+
+type UpdatePasswordParams struct {
+	Password string
+	ID       int32
+}
+
+func (q *Queries) UpdatePassword(ctx context.Context, arg UpdatePasswordParams) error {
+	_, err := q.db.Exec(ctx, updatePassword, arg.Password, arg.ID)
 	return err
+}
+
+const updateUsername = `-- name: UpdateUsername :one
+UPDATE users SET username = $1, updated_at = NOW() WHERE id = $2 RETURNING username
+`
+
+type UpdateUsernameParams struct {
+	Username string
+	ID       int32
+}
+
+func (q *Queries) UpdateUsername(ctx context.Context, arg UpdateUsernameParams) (string, error) {
+	row := q.db.QueryRow(ctx, updateUsername, arg.Username, arg.ID)
+	var username string
+	err := row.Scan(&username)
+	return username, err
 }
