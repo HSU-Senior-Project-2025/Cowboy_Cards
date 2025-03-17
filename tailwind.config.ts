@@ -18,6 +18,9 @@ export default {
       },
     },
     extend: {
+      transitionProperty: {
+        'transform-shadow': 'transform, box-shadow',
+      },
       colors: {
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',

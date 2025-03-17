@@ -71,7 +71,7 @@ const TeacherDashboard = () => {
       <div id="main-content" className="container mx-auto px-4 py-8">
         <h2 className="text-xl font-bold mb-4">Overview</h2>
         <div className="grid gap-4 grid-cols-1 md:grid-cols-4 mb-8">
-          <IonCard className="rounded-lg border shadow-sm">
+          <IonCard className="rounded-lg border shadow-sm transition-transform-shadow duration-200">
             <IonCardHeader className="flex flex-col space-y-1.5 p-6">
               <IonCardTitle className="text-2xl font-semibold leading-none tracking-tight">
                 Total Classes
@@ -82,7 +82,7 @@ const TeacherDashboard = () => {
             </IonCardContent>
           </IonCard>
 
-          <IonCard className="rounded-lg border shadow-sm">
+          <IonCard className="rounded-lg border shadow-sm transition-transform-shadow duration-200">
             <IonCardHeader className="flex flex-col space-y-1.5 p-6">
               <IonCardTitle className="text-2xl font-semibold leading-none tracking-tight">
                 Total Students
@@ -93,7 +93,7 @@ const TeacherDashboard = () => {
             </IonCardContent>
           </IonCard>
 
-          <IonCard className="rounded-lg border shadow-sm">
+          <IonCard className="rounded-lg border shadow-sm transition-transform-shadow duration-200">
             <IonCardHeader className="flex flex-col space-y-1.5 p-6">
               <IonCardTitle className="text-2xl font-semibold leading-none tracking-tight">
                 Total Sets
@@ -104,7 +104,7 @@ const TeacherDashboard = () => {
             </IonCardContent>
           </IonCard>
 
-          <IonCard className="rounded-lg border shadow-sm">
+          <IonCard className="rounded-lg border shadow-sm transition-transform-shadow duration-200">
             <IonCardHeader className="flex flex-col space-y-1.5 p-6">
               <IonCardTitle className="text-2xl font-semibold leading-none tracking-tight">
                 Average Cards Mastered
@@ -122,7 +122,7 @@ const TeacherDashboard = () => {
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {teacherClasses.map((cls) => (
             <Link key={cls.id} to={`/teacher/class/${cls.id}`}>
-              <IonCard className="cursor-pointer hover:shadow-lg hover:-translate-y-1 transition-all duration-200 rounded-lg border shadow-sm">
+              <IonCard className="cursor-pointer hover:shadow-lg hover:-translate-y-1 transition-transform-shadow duration-200 rounded-lg border shadow-sm">
                 <IonCardHeader className="flex flex-col space-y-1.5 p-6">
                   <IonCardTitle className="text-2xl font-semibold leading-none tracking-tight">
                     {cls.name}
