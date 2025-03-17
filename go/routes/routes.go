@@ -5,6 +5,7 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
+// every protected route is preceded by /api
 func Protected(r *chi.Mux, h *controllers.Handler) {
 	r.Route("/classes", func(r chi.Router) {
 		r.Get("/list", h.ListClasses)
@@ -12,7 +13,7 @@ func Protected(r *chi.Mux, h *controllers.Handler) {
 		r.Post("/", h.CreateClass)
 		r.Put("/name", h.UpdateClass)
 		r.Put("/description", h.UpdateClass)
-		r.Put("/teacherId", h.UpdateClass)
+		r.Put("/teacherid", h.UpdateClass)
 		r.Delete("/", h.DeleteClass)
 	})
 
@@ -33,15 +34,16 @@ func Protected(r *chi.Mux, h *controllers.Handler) {
 		})
 	})
 
+	// CreateUser and GetUserBy{Email,Username} are called from the unprotected routes
 	r.Route("/users", func(r chi.Router) {
-		// r.Get("/list", h.ListUsers)
-		// r.Get("/", h.GetUserById)
-		// r.Put("/username", h.UpdateUsername)
-		// r.Put("/email", h.UpdateEmail)
-		// r.Put("/firstname", h.UpdateFirstname)
-		// r.Put("/lastname", h.UpdateLastname)
-		// r.Put("/password", h.UpdatePassword)
-		// r.Delete("/", h.DeleteUser)
+		r.Get("/list", h.ListUsers)
+		r.Get("/", h.GetUserById)
+		r.Put("/username", h.UpdateUser)
+		r.Put("/email", h.UpdateUser)
+		r.Put("/firstname", h.UpdateUser)
+		r.Put("/lastname", h.UpdateUser)
+		r.Put("/password", h.UpdateUser)
+		r.Delete("/", h.DeleteUser)
 	})
 }
 

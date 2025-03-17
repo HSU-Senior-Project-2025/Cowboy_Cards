@@ -7,7 +7,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"path"
 	"slices"
 	"strconv"
 	"strings"
@@ -59,29 +58,13 @@ type AuthResponse struct {
 	LastName  string `json:"last_name"`
 }
 
-type ZeroRowSuccessResponse struct {
-	Resp string `json:"resp"`
-}
-
-type updateHeaderVal struct {
-	id      int32
-	col     string
-	val     string
-	numeric bool
-	err     error
-}
-
-func getRowId(r *http.Request) (id int32, err error) {
-	idStr := r.Header.Get("id")
-	if idStr == "" {
-		err = errors.New("id header missing")
-		return
+func getInt32Id(val string) (id int32, err error) {
+	idInt, err := strconv.Atoi(val)
+	if err != nil {
+		return 0, err
 	}
-
-	idInt, err := strconv.Atoi(idStr)
-	if err != nil || idInt < 1 {
-		err = errors.Join(err, errors.New("invalid id"))
-		return
+	if idInt < 1 {
+		return 0, errors.New("invalid id")
 	}
 
 	id = int32(idInt)
@@ -89,7 +72,7 @@ func getRowId(r *http.Request) (id int32, err error) {
 	return
 }
 
-func getCreateHeaderVals(r *http.Request, headers []string) (map[string]string, error) {
+func getHeaderVals(r *http.Request, headers ...string) (map[string]string, error) {
 	reqHeaders := r.Header
 	vals := map[string]string{}
 
@@ -108,25 +91,6 @@ func getCreateHeaderVals(r *http.Request, headers []string) (map[string]string, 
 	}
 
 	return vals, nil
-}
-
-func getUpdateHeaderVal(r *http.Request) (u updateHeaderVal) {
-	u.id, u.err = getRowId(r)
-	if u.err != nil {
-		return
-	}
-
-	u.col = path.Base(r.URL.Path)
-
-	u.val = r.Header.Get(u.col)
-	if u.val == "" {
-		u.err = errors.New("column header missing")
-		return
-	}
-
-	u.numeric = strings.HasSuffix(u.col, "Id")
-
-	return
 }
 
 func logAndSendError(w http.ResponseWriter, err error, msg string, statusCode int) {

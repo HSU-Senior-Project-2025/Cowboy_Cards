@@ -81,7 +81,6 @@ func (h *Handler) Signup(w http.ResponseWriter, r *http.Request) {
 	defer conn.Release()
 
 	// Check if username already exists
-	//if user value is never used and we just need the error, change sqlc query annotation from 'one'
 	_, err = query.GetUserByUsername(ctx, req.Username)
 	if err == nil {
 		logAndSendError(w, err, "Username already exists", http.StatusConflict)
