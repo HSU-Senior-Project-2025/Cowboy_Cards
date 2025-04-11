@@ -1,4 +1,4 @@
-import { Navbar } from '@/components/navbar';
+import { Navbar } from '@/components/Navbar';
 import { IonContent } from '@ionic/react';
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';

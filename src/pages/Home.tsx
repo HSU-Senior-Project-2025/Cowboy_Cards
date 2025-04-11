@@ -1,4 +1,4 @@
-import { Navbar } from '@/components/navbar';
+import { Navbar } from '@/components/Navbar';
 import { makeHttpCall } from '@/utils/makeHttpCall';
 import {
   IonButton,
@@ -20,7 +20,7 @@ import {
 import { addOutline, bookOutline, listOutline } from 'ionicons/icons';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Footer } from '@/components/footer';
+import { Footer } from '@/components/Footer';
 import { useTheme } from '@/contexts/ThemeContext';
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
@@ -150,7 +150,7 @@ const Home = () => {
                 You are not part of any classes. Join a class to get started.
               </div>
             ) : (
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {classes.map((cls) => (
                   <Link key={cls.ClassID} to={`/class/${cls.ClassID}`}>
                     <IonCard className="cursor-pointer hover:shadow-lg hover:-translate-y-1 transition-transform-shadow duration-200 rounded-lg border shadow-sm">

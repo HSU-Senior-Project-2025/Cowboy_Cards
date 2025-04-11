@@ -1,6 +1,6 @@
-import { Navbar } from '@/components/navbar';
+import { Navbar } from '@/components/Navbar';
 import { useTheme } from '@/contexts/ThemeContext';
-import { EditableField } from '@/components/EditableField';
+import { EditableField } from '@/utils/EditableField';
 import { makeHttpCall } from '@/utils/makeHttpCall';
 import {
   IonAlert,
@@ -48,7 +48,7 @@ const UserAccount = () => {
   const [userInfo, setUserInfo] = useState<User>();
   const [loading, setLoading] = useState(true); // Start loading initially
   const [error, setError] = useState<string | null>(null);
-  
+
   // const [classHistory, setClassHistory] = useState([
   //   {
   //     id: 1,
@@ -256,8 +256,32 @@ const UserAccount = () => {
         {/* Content: Only show if not loading and no error */}
         {!loading && !error && userInfo && (
           <>
-            <UserAccountFirstRow isEditing={isEditing} errors={errors} handleChange={handleChange} handleSave={handleSave} updatedInfo={updatedInfo} userInfo={userInfo} handleEdit={handleEdit} />
-            <UserAccountSecondRow isEditing={isEditing} errors={errors} handleChange={handleChange} handleSave={handleSave} updatedInfo={updatedInfo} userInfo={userInfo} expandedClass={expandedClass} toggleClassDetails={toggleClassDetails} showPasswordAlert={showPasswordAlert} setShowPasswordAlert={setShowPasswordAlert} showDeleteAlert={showDeleteAlert} setShowDeleteAlert={setShowDeleteAlert} theme={theme} setTheme={setTheme} presentToast={presentToast} />
+            <UserAccountFirstRow
+              isEditing={isEditing}
+              errors={errors}
+              handleChange={handleChange}
+              handleSave={handleSave}
+              updatedInfo={updatedInfo}
+              userInfo={userInfo}
+              handleEdit={handleEdit}
+            />
+            <UserAccountSecondRow
+              isEditing={isEditing}
+              errors={errors}
+              handleChange={handleChange}
+              handleSave={handleSave}
+              updatedInfo={updatedInfo}
+              userInfo={userInfo}
+              expandedClass={expandedClass}
+              toggleClassDetails={toggleClassDetails}
+              showPasswordAlert={showPasswordAlert}
+              setShowPasswordAlert={setShowPasswordAlert}
+              showDeleteAlert={showDeleteAlert}
+              setShowDeleteAlert={setShowDeleteAlert}
+              theme={theme}
+              setTheme={setTheme}
+              presentToast={presentToast}
+            />
           </>
         )}
       </div>

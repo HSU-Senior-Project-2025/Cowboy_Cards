@@ -1,4 +1,4 @@
-import { Navbar } from '@/components/navbar';
+import { Navbar } from '@/components/Navbar';
 import { makeHttpCall } from '@/utils/makeHttpCall';
 import {
   IonCard,
@@ -24,9 +24,11 @@ const PublicFlashcards = () => {
   const [loading, setLoading] = useState(false);
   const [flashcardSets, setFlashcardSets] = useState<FlashcardSet[]>([]);
   const [searchText, setSearchText] = useState('');
-  const filteredFlashcardSets = flashcardSets.filter((set) =>
-    set.SetName.toLowerCase().includes(searchText.toLowerCase()) ||
-    (set.SetDescription && set.SetDescription.toLowerCase().includes(searchText.toLowerCase()))
+  const filteredFlashcardSets = flashcardSets.filter(
+    (set) =>
+      set.SetName.toLowerCase().includes(searchText.toLowerCase()) ||
+      (set.SetDescription &&
+        set.SetDescription.toLowerCase().includes(searchText.toLowerCase()))
   );
   useEffect(() => {
     async function fetchSets() {
@@ -56,12 +58,12 @@ const PublicFlashcards = () => {
           <h1 className="text-3xl font-bold pb-8">Public Flashcard Sets</h1>
           {loading && <div>Loading...</div>}
           {error && <div className="text-red-500 mt-2">{error}</div>}
-            <IonSearchbar
-              value={searchText}
-              onIonInput={(e: any) => setSearchText(e.target.value)} // Use onIonInput for real-time updates
-              placeholder="Search flashcard sets"
-              className="mb-4 w-1/2"
-            />
+          <IonSearchbar
+            value={searchText}
+            onIonInput={(e: any) => setSearchText(e.target.value)} // Use onIonInput for real-time updates
+            placeholder="Search flashcard sets"
+            className="mb-4 w-1/2"
+          />
         </div>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {filteredFlashcardSets.map((set) => (

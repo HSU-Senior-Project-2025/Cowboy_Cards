@@ -1,5 +1,5 @@
 import { FlashCard } from '@/components/FlashCard';
-import { Navbar } from '@/components/navbar';
+import { Navbar } from '@/components/Navbar';
 import {
   Carousel,
   type CarouselApi,
@@ -104,41 +104,41 @@ const Flashcard = () => {
   };
 
   return (
-    <IonContent className='ion-padding'>
+    <IonContent className="ion-padding">
       <Navbar />
 
-      <div id='main-content' className='container mx-auto px-4 py-8 max-w-4xl'>
+      <div id="main-content" className="container mx-auto px-4 py-8 max-w-4xl">
         {/* Flashcards */}
-        <div className='flex items-center gap-4 mb-6'>
+        <div className="flex items-center gap-4 mb-6">
           <IonButton
-            className='rounded-lg'
-            fill='outline'
+            className="rounded-lg"
+            fill="outline"
             style={{ '--border-radius': '0.5rem' }}
             routerLink={`/set-overview/${id}`}
           >
             Back
           </IonButton>
           <div>
-            <h1 className='text-2xl font-bold'>{title}</h1>
-            <p className='text-gray-500'>{description}</p>
+            <h1 className="text-2xl font-bold">{title}</h1>
+            <p className="text-gray-500">{description}</p>
           </div>
         </div>
 
-        <div className='w-full max-w-xl mx-auto relative py-8 min-h-[400px] flex items-center justify-center'>
+        <div className="w-full max-w-xl mx-auto relative py-8 min-h-[400px] flex items-center justify-center">
           {loading ? (
-            <IonSpinner name='circular' />
+            <IonSpinner name="circular" />
           ) : cards.length === 0 ? (
-            <div className='text-center text-gray-500 text-lg py-20'>
+            <div className="text-center text-gray-500 text-lg py-20">
               This set has no cards yet.
             </div>
           ) : (
             <>
               <Carousel
-                orientation='vertical'
+                orientation="vertical"
                 setApi={setCarouselApi}
-                className='w-full'
+                className="w-full"
               >
-                <CarouselContent className='-mt-1 h-[400px]'>
+                <CarouselContent className="-mt-1 h-[400px]">
                   {cards.map((card, index) => (
                     <CarouselItem key={index}>
                       <FlashCard
@@ -154,7 +154,7 @@ const Flashcard = () => {
                 </CarouselContent>
               </Carousel>
 
-              <div className='absolute right-[-50px] top-1/2 transform -translate-y-1/2 flex flex-col gap-2'>
+              <div className="absolute right-[-50px] top-1/2 transform -translate-y-1/2 flex flex-col gap-2">
                 {cards.map((_, index) => (
                   <div
                     key={index}

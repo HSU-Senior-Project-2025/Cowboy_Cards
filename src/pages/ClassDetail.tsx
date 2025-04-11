@@ -1,6 +1,6 @@
 import FlashcardCarousel from '@/components/FlashcardCarousel';
-import { Footer } from '@/components/footer';
-import { Navbar } from '@/components/navbar';
+import { Footer } from '@/components/Footer';
+import { Navbar } from '@/components/Navbar';
 import { type CarouselApi } from '@/components/ui/carousel';
 import Leaderboard from '@/components/Leaderboard';
 import StudentList from '@/components/StudentList';
@@ -27,6 +27,7 @@ import {
 } from 'ionicons/icons';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { EditableField } from '@/utils/EditableField';
 
 type Class = {
   ID: number;
@@ -295,34 +296,20 @@ const ClassDetail = () => {
               Update Class Information
             </h1>
             <div className="space-y-4">
-              <IonItem>
-                <IonLabel position="stacked">Class Name</IonLabel>
-                <IonInput
-                  type="text"
-                  name="class_name"
-                  placeholder="Enter class name"
-                  value={updatedInfo?.class_name}
-                  onIonChange={handleChange}
-                />
-              </IonItem>
-              {errors.className && (
-                <p className="text-red-500 text-xs mt-1">{errors.className}</p>
-              )}
-              <IonItem>
-                <IonLabel position="stacked">Class Description</IonLabel>
-                <IonInput
-                  type="text"
-                  name="class_description"
-                  placeholder="Enter class description"
-                  value={updatedInfo?.class_description}
-                  onIonChange={handleChange}
-                />
-              </IonItem>
-              {errors.classDescription && (
-                <p className="text-red-500 text-xs mt-1">
-                  {errors.classDescription}
-                </p>
-              )}
+              <EditableField
+                label="Class Name"
+                name="class_name"
+                value={updatedInfo?.class_name || ''}
+                error={errors.className}
+                onChange={handleChange}
+              />
+              <EditableField
+                label="Class Description"
+                name="class_description"
+                value={updatedInfo?.class_description || ''}
+                error={errors.classDescription}
+                onChange={handleChange}
+              />
               <div className="flex justify-end">
                 <IonButton
                   onClick={handleCancel}
