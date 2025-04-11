@@ -17,7 +17,7 @@
   "author": "senior project class",
   "homepage": "https://github.com/HSU-Senior-Project-2025/Cowboy_Cards#readme",
   "dependencies": {
-    "@capacitor/android": "7.0.1",
+    "@capacitor/android": "7.2.0",
     "@capacitor/core": "^7.0.1",
     "@capacitor/ios": "7.0.1",
     "@hookform/resolvers": "^3.9.0",
