@@ -26,12 +26,10 @@ import { useTheme } from '@/contexts/ThemeContext';
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 type Class = {
-  ID: number;
+  ClassID: number;
+  Role: string;
   ClassName: string;
   ClassDescription: string;
-  JoinCode: string;
-  CreatedAt: string;
-  UpdatedAt: string;
 };
 
 type Set = {
@@ -49,6 +47,10 @@ const Home = () => {
   const [classesLoading, setClassesLoading] = useState(false);
   const [setsLoading, setSetsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    console.log('Classes state updated:', classes);
+  }, [classes]);
 
   // Currently getting all classes, but should be getting only the classes the user is in. waiting on backend to implement this.
   useEffect(() => {
@@ -150,7 +152,7 @@ const Home = () => {
             ) : (
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {classes.map((cls) => (
-                  <Link key={cls.ID} to={`/class/${cls.ID}`}>
+                  <Link key={cls.ClassID} to={`/class/${cls.ClassID}`}>
                     <IonCard className="cursor-pointer hover:shadow-lg hover:-translate-y-1 transition-transform-shadow duration-200 rounded-lg border shadow-sm">
                       <IonCardHeader className="flex flex-col space-y-1.5 p-6">
                         <IonCardTitle className="text-2xl font-semibold leading-none tracking-tight">

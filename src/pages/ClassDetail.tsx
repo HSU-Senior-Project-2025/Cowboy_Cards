@@ -70,6 +70,7 @@ const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 const ClassDetail = () => {
   const { id } = useParams();
+  console.log("id", id);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [carouselApi, setCarouselApi] = useState<CarouselApi>();
   const [tab, setTab] = useState('flashcards');
