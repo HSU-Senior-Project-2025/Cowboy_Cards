@@ -68,7 +68,7 @@ const ClassDetail = () => {
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [carouselApi, setCarouselApi] = useState<CarouselApi>();
   const [tab, setTab] = useState('flashcards');
-  const [isTeacher, setIsTeacher] = useState(true);
+  const [isTeacher, setIsTeacher] = useState(false);
   const [classData, setClassData] = useState<Class>();
   const [flashcardSets, setFlashcardSets] = useState<FlashcardSet[]>([]);
   const [classUsers, setClassUsers] = useState<ClassUser[]>([]);
@@ -192,6 +192,7 @@ const ClassDetail = () => {
           },
         });
         console.log('data', data);
+        setIsTeacher(data.Role === 'teacher');
         setClassData(data);
       } catch (error) {
         setError(`Error fetching class: ${error.message}`);
