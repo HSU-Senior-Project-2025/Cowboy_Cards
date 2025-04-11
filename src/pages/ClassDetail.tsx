@@ -1,9 +1,9 @@
-import FlashcardCarousel from '@/components/flashcards/FlashcardCarousel';
+import FlashcardCarousel from '@/components/FlashcardCarousel';
 import { Footer } from '@/components/footer';
 import { Navbar } from '@/components/navbar';
 import { type CarouselApi } from '@/components/ui/carousel';
 import Leaderboard from '@/components/Leaderboard';
-import StudentList from '@/components/ui/StudentList';
+import StudentList from '@/components/StudentList';
 import { makeHttpCall } from '@/utils/makeHttpCall';
 import {
   IonAlert,
@@ -433,7 +433,6 @@ const ClassDetail = () => {
             ) : (
               <Leaderboard
                 leaderboard={leaderboardData}
-                classUsers={classUsers}
               />
             )}
           </>
