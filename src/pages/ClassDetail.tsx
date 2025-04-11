@@ -58,13 +58,11 @@ type ClassUser = {
   LastName: string;
 };
 
-type SetScore = {
-  SetName: string;
-  Correct: number;
-  Incorrect: number;
-  NetScore: number;
-  TimesAttempted: number;
-};
+type GetClassScoresRow = {
+  UserID: number;
+  Username: string;
+  ClassScore: number;
+}
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
@@ -80,9 +78,7 @@ const ClassDetail = () => {
   const [classUsers, setClassUsers] = useState<ClassUser[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [leaderboardData, setLeaderboardData] = useState<
-    Array<{ name: string; totalScore: number }>
-  >([]);
+  const [leaderboardData, setLeaderboardData] = useState<GetClassScoresRow[]>([]);
   const [loadingScores, setLoadingScores] = useState(false);
 
   // Update Class Name and Description Form
@@ -240,85 +236,20 @@ const ClassDetail = () => {
     fetchClassUsers();
   }, [id]);
 
-  // New useEffect for score calculation
+
   useEffect(() => {
-    async function calculateLeaderboardScores() {
-      if (!classUsers.length || !flashcardSets.length) return;
-
-      setLoadingScores(true);
-      setError(null);
-      const userScores = new Map<number, number>();
-
-      try {
-        // Process all users concurrently
-        await Promise.all(
-          classUsers.map(async (user) => {
-            try {
-              // Fetch scores for all sets concurrently for this user
-              const setScores = await Promise.all(
-                flashcardSets.map(async (set) => {
-                  try {
-                    const setScoresResponse = await makeHttpCall<SetScore[]>(
-                      `${API_BASE}/api/card_history/set`,
-                      {
-                        method: 'GET',
-                        headers: {
-                          user_id: user.UserID.toString(),
-                          set_id: set.ID.toString(),
-                        },
-                      }
-                    );
-
-                    // Calculate total NetScore for this set
-                    if (Array.isArray(setScoresResponse)) {
-                      return setScoresResponse.reduce(
-                        (sum, score) => sum + (score.NetScore || 0),
-                        0
-                      );
-                    }
-                    return 0;
-                  } catch (error) {
-                    console.error(
-                      `Error fetching scores for set ${set.ID}:`,
-                      error
-                    );
-                    return 0;
-                  }
-                })
-              );
-
-              // Sum up all set scores for this user
-              const totalUserScore = setScores.reduce(
-                (sum, score) => sum + score,
-                0
-              );
-              userScores.set(user.UserID, totalUserScore);
-            } catch (error) {
-              console.error(`Error processing user ${user.UserID}:`, error);
-              userScores.set(user.UserID, 0);
-            }
-          })
-        );
-
-        // Create and sort final leaderboard data
-        const finalLeaderboard = classUsers
-          .map((user) => ({
-            name: `${user.FirstName} ${user.LastName}`,
-            totalScore: userScores.get(user.UserID) || 0,
-          }))
-          .sort((a, b) => b.totalScore - a.totalScore);
-
-        setLeaderboardData(finalLeaderboard);
-      } catch (error) {
-        setError('Error calculating leaderboard scores');
-        console.error('Leaderboard calculation error:', error);
-      } finally {
-        setLoadingScores(false);
-      }
+    async function getLeaderboardScores() {
+      const scores = await makeHttpCall<GetClassScoresRow[]>(`${API_BASE}/api/classes/leaderboard/`, {
+        method: 'GET',
+        headers: {
+          class_id: id,
+        },
+      });
+      console.log('scores', scores);
+      setLeaderboardData(scores);
     }
-
-    calculateLeaderboardScores();
-  }, [classUsers, flashcardSets]);
+    getLeaderboardScores();
+  }, []);
 
   // TODO: get the user role from the backend, this code is currently not functional
   // need a way to get the user role from the backend, maybe through auth, RLS, or a query
