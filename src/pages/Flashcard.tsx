@@ -1,4 +1,4 @@
-import { FlashCard } from '@/components/flashcards/FlashCard';
+import { FlashCard } from '@/components/FlashCard';
 import { Navbar } from '@/components/navbar';
 import {
   Carousel,

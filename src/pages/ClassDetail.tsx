@@ -2,7 +2,7 @@ import FlashcardCarousel from '@/components/flashcards/FlashcardCarousel';
 import { Footer } from '@/components/footer';
 import { Navbar } from '@/components/navbar';
 import { type CarouselApi } from '@/components/ui/carousel';
-import Leaderboard from '@/components/ui/Leaderboard';
+import Leaderboard from '@/components/Leaderboard';
 import StudentList from '@/components/ui/StudentList';
 import { makeHttpCall } from '@/utils/makeHttpCall';
 import {

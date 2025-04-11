@@ -19,7 +19,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '../ui/carousel';
-import { FlashCard } from './FlashCard';
+import { FlashCard } from '../FlashCard';
 import { useHistory } from 'react-router-dom';
 
 type Flashcards = {
