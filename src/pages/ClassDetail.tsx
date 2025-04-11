@@ -58,13 +58,13 @@ type GetClassScoresRow = {
   UserID: number;
   Username: string;
   ClassScore: number;
-}
+};
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 const ClassDetail = () => {
   const { id } = useParams();
-  console.log("id", id);
+  console.log('id', id);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [carouselApi, setCarouselApi] = useState<CarouselApi>();
   const [tab, setTab] = useState('flashcards');
@@ -74,8 +74,14 @@ const ClassDetail = () => {
   const [classUsers, setClassUsers] = useState<ClassUser[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [leaderboardData, setLeaderboardData] = useState<GetClassScoresRow[]>([]);
+  const [leaderboardData, setLeaderboardData] = useState<GetClassScoresRow[]>(
+    []
+  );
   const [loadingScores, setLoadingScores] = useState(false);
+  const [showDeleteAlert, setShowDeleteAlert] = useState({
+    isOpen: false,
+    studentId: null,
+  });
 
   // Update Class Name and Description Form
   const [isEditing, setIsEditing] = useState(false);
@@ -167,8 +173,8 @@ const ClassDetail = () => {
     }
   };
 
-  const handleChange = (e: any) => {
-    const { name } = e.target;
+  const handleChange = (e: CustomEvent) => {
+    const { name } = e.target as HTMLInputElement;
     const value = e.detail.value;
     setUpdatedInfo((prev) => ({
       ...prev,
@@ -180,98 +186,64 @@ const ClassDetail = () => {
     setIsEditing(false);
   };
 
+  // Single useEffect to fetch all data for the class
   useEffect(() => {
-    async function fetchClass() {
+    async function fetchDataForClass() {
       setLoading(true);
       setError(null);
       try {
-        const data = await makeHttpCall<Class>(`${API_BASE}/api/classes/`, {
-          method: 'GET',
-          headers: {
-            id: id,
-          },
-        });
-        console.log('data', data);
-        setIsTeacher(data.Role === 'teacher');
-        setClassData(data);
+        const [classDetails, sets, users, scores] = await Promise.all([
+          // Fetch class information
+          makeHttpCall<Class>(`${API_BASE}/api/classes/`, {
+            method: 'GET',
+            headers: { id: id },
+          }),
+
+          // Fetch flashcard sets
+          makeHttpCall<FlashcardSet[]>(`${API_BASE}/api/class_set/get_sets`, {
+            method: 'GET',
+            headers: { class_id: id },
+          }),
+
+          // Fetch class users
+          makeHttpCall<ClassUser[]>(`${API_BASE}/api/class_user/members`, {
+            method: 'GET',
+            headers: { class_id: id },
+          }),
+
+          // Fetch class leaderboard
+          makeHttpCall<GetClassScoresRow[]>(
+            `${API_BASE}/api/classes/leaderboard`,
+            {
+              method: 'GET',
+              headers: { id: id },
+            }
+          ),
+        ]);
+
+        console.log('data', classDetails);
+        setIsTeacher(classDetails.Role === 'teacher');
+        setClassData(classDetails);
+
+        console.log('sets', sets);
+        setFlashcardSets(sets);
+
+        console.log('users', users);
+        setClassUsers(users);
+
+        console.log('scores', scores);
+        setLeaderboardData(scores);
       } catch (error) {
-        setError(`Error fetching class: ${error.message}`);
+        setError(`Error fetching class data: ${error.message}`);
       } finally {
         setLoading(false);
       }
     }
 
-    async function fetchFlashcardSets() {
-      const sets = await makeHttpCall<FlashcardSet[]>(
-        `${API_BASE}/api/class_set/get_sets`,
-        {
-          method: 'GET',
-          headers: {
-            class_id: id,
-          },
-        }
-      );
-      console.log('sets', sets);
-      setFlashcardSets(sets);
+    if (id) {
+      fetchDataForClass();
     }
-
-    async function fetchClassUsers() {
-      const users = await makeHttpCall<ClassUser[]>(
-        `${API_BASE}/api/class_user/members`,
-        {
-          method: 'GET',
-          headers: {
-            class_id: id,
-          },
-        }
-      );
-      console.log('users', users);
-      setClassUsers(users);
-    }
-    fetchClass();
-    fetchFlashcardSets();
-    fetchClassUsers();
   }, [id]);
-
-
-  useEffect(() => {
-    async function getLeaderboardScores() {
-      const scores = await makeHttpCall<GetClassScoresRow[]>(`${API_BASE}/api/classes/leaderboard/`, {
-        method: 'GET',
-        headers: {
-          class_id: id,
-        },
-      });
-      console.log('scores', scores);
-      setLeaderboardData(scores);
-    }
-    getLeaderboardScores();
-  }, []);
-
-  // TODO: get the user role from the backend, this code is currently not functional
-  // need a way to get the user role from the backend, maybe through auth, RLS, or a query
-  // useEffect(() => {
-  //   async function fetchUser() {
-  //     const user = await api.get<User>(
-  //       `${API_BASE}/api/class_user/`,
-  //       {
-  //         headers: {
-  //           user_id: id,
-  //         },
-  //       }
-  //     );
-  //     if (user.role === 'teacher') {
-  //       setIsTeacher(true);
-  //     }
-  //   }
-  //   fetchUser();
-  // }, []);
-
-  // Should hold the id of the student to be deleted and the state of the alert
-  const [showDeleteAlert, setShowDeleteAlert] = useState({
-    isOpen: false,
-    studentId: null,
-  });
 
   const showDeleteStudentAlert = (studentId) => {
     setShowDeleteAlert((prev) => ({
@@ -282,13 +254,16 @@ const ClassDetail = () => {
   };
 
   // Handler to delete a student
-  const handleDeleteStudent = (studentId) => {
+  const handleDeleteStudent = async (studentId) => {
+    if (studentId === null) return;
     try {
-      makeHttpCall(`${API_BASE}/api/class_user/`, {
+      // TODO: Usees the wrong endpoint for deleting a student, deletes the current user from the  class
+      // TODO: Need endpoint for deleting a student from a class, should verify that the user is a teacher in the backend
+      await makeHttpCall(`${API_BASE}/api/class_user/`, {
         method: 'DELETE',
         headers: {
           class_id: id,
-          user_id: studentId,
+          student_id: studentId,
         },
       });
     } catch (error) {
@@ -431,9 +406,7 @@ const ClassDetail = () => {
                 <span className="ml-2">Calculating scores...</span>
               </div>
             ) : (
-              <Leaderboard
-                leaderboard={leaderboardData}
-              />
+              <Leaderboard leaderboard={leaderboardData} />
             )}
           </>
         )}
@@ -492,7 +465,7 @@ const ClassDetail = () => {
                 isOpen: false,
                 studentId: null,
               }));
-              console.log('Account deleted');
+              console.log('Student deletion initiated');
             },
           },
         ]}
