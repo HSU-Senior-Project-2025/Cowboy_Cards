@@ -16,41 +16,55 @@ type DBHandler struct {
 
 // User represents the user data that will be sent to the client
 type User struct {
-	// ID        int32     `json:"id"`
-	Username  string `json:"username"`
-	Email     string `json:"email"`
-	FirstName string `json:"first_name"`
-	LastName  string `json:"last_name"`
-	CreatedAt string `json:"created_at"`
-	// UpdatedAt time.Time `json:"updated_at"`
-	NumClasses int `json:"numClasses"`
+	// ID        int32
+	Username  string
+	Email     string
+	FirstName string
+	LastName  string
+	CreatedAt string
+	// UpdatedAt time.Time
+	NumClasses int
+}
+
+// Class represents the class data that will be sent to the client in a getclassbyid req
+type Class struct {
+	ID               int32
+	ClassName        string
+	ClassDescription string
+	CreatedAt        string
+	UpdatedAt        string
+	Role             string
 }
 
 // LoginRequest represents the login request body
 type LoginRequest struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
+	Email    string
+	Password string
 }
 
 // SignupRequest represents the signup request body
 type SignupRequest struct {
-	Username  string `json:"username"`
-	Email     string `json:"email"`
-	Password  string `json:"password"`
-	FirstName string `json:"first_name"`
-	LastName  string `json:"last_name"`
+	Username  string
+	Email     string
+	Password  string
+	FirstName string
+	LastName  string
 }
 
 // AuthResponse represents the response sent after successful authentication
 type AuthResponse struct {
-	// Token     string `json:"token"`
-	// UserID    int32  `json:"user_id"`
-	Username  string `json:"username"`
-	Email     string `json:"email"`
-	FirstName string `json:"first_name"`
-	LastName  string `json:"last_name"`
-	// CSRFToken string `json:"csrf_token,omitempty"`
+	// Token     string
+	// UserID    int32
+	Username  string
+	Email     string
+	FirstName string
+	LastName  string
+	// CSRFToken string
 }
+
+const (
+	timeFormat string = "2006/01/02"
+)
 
 func logAndSendError(w http.ResponseWriter, err error, msg string, statusCode int) {
 	middleware.LogAndSendError(w, err, msg, statusCode)

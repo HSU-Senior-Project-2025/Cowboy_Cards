@@ -3,7 +3,6 @@ package controllers
 import (
 	"encoding/json"
 	"errors"
-	"log"
 	"net/http"
 	"path"
 
@@ -12,27 +11,27 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
-// func (h *DBHandler) ListClasses(w http.ResponseWriter, r *http.Request) {
-// 	// curl http://localhost:8000/api/classes/list | jq
+func (h *DBHandler) ListClasses(w http.ResponseWriter, r *http.Request) {
+	// curl http://localhost:8000/api/classes/list | jq
 
-// 	query, ctx, conn, err := getQueryConnAndContext(r, h)
-// 	if err != nil {
-// 		logAndSendError(w, err, "Database connection error", http.StatusInternalServerError)
-// 		return
-// 	}
-// 	defer conn.Release()
+	query, ctx, conn, err := getQueryConnAndContext(r, h)
+	if err != nil {
+		logAndSendError(w, err, "Database connection error", http.StatusInternalServerError)
+		return
+	}
+	defer conn.Release()
 
-// 	classes, err := query.ListClasses(ctx)
-// 	if err != nil {
-// 		logAndSendError(w, err, "Error getting classes from DB", http.StatusInternalServerError)
-// 		return
-// 	}
+	classes, err := query.ListClasses(ctx)
+	if err != nil {
+		logAndSendError(w, err, "Error getting classes from DB", http.StatusInternalServerError)
+		return
+	}
 
-// 	w.Header().Set("Content-Type", "application/json")
-// 	if err := json.NewEncoder(w).Encode(classes); err != nil {
-// 		logAndSendError(w, err, "Error encoding response", http.StatusInternalServerError)
-// 	}
-// }
+	w.Header().Set("Content-Type", "application/json")
+	if err := json.NewEncoder(w).Encode(classes); err != nil {
+		logAndSendError(w, err, "Error encoding response", http.StatusInternalServerError)
+	}
+}
 
 func (h *DBHandler) GetClassById(w http.ResponseWriter, r *http.Request) {
 	// curl http://localhost:8000/api/classes/ -H "id: 1"
@@ -44,26 +43,35 @@ func (h *DBHandler) GetClassById(w http.ResponseWriter, r *http.Request) {
 	}
 	defer conn.Release()
 
-	headerVals, err := getHeaderVals(r, "id")
-	if err != nil {
-		logAndSendError(w, err, "Header error", http.StatusBadRequest)
+	classID, ok := middleware.GetClassIDFromContext(ctx)
+	if !ok {
+		logAndSendError(w, err, "Unauthorized", http.StatusUnauthorized)
 		return
 	}
 
-	id, err := getInt32Id(headerVals["id"])
-	if err != nil {
-		logAndSendError(w, err, "Invalid id", http.StatusBadRequest)
+	role, ok := middleware.GetRoleFromContext(ctx)
+	if !ok {
+		logAndSendError(w, err, "Unauthorized", http.StatusUnauthorized)
 		return
 	}
 
-	class, err := query.GetClassById(ctx, id)
+	class, err := query.GetClassById(ctx, classID)
 	if err != nil {
 		logAndSendError(w, err, "Failed to get class", http.StatusInternalServerError)
 		return
 	}
 
+	response := Class{
+		ID:               class.ID,
+		ClassName:        class.ClassName,
+		ClassDescription: class.ClassDescription,
+		CreatedAt:        class.CreatedAt.Time.Format(timeFormat),
+		UpdatedAt:        class.UpdatedAt.Time.Format(timeFormat),
+		Role:             role,
+	}
+
 	w.Header().Set("Content-Type", "application/json")
-	if err := json.NewEncoder(w).Encode(class); err != nil {
+	if err := json.NewEncoder(w).Encode(response); err != nil {
 		logAndSendError(w, err, "Error encoding response", http.StatusInternalServerError)
 	}
 }
@@ -78,15 +86,9 @@ func (h *DBHandler) GetClassLeaderboard(w http.ResponseWriter, r *http.Request) 
 	}
 	defer conn.Release()
 
-	headerVals, err := getHeaderVals(r, "class_id")
-	if err != nil {
-		logAndSendError(w, err, "Header error", http.StatusBadRequest)
-		return
-	}
-
-	classID, err := getInt32Id(headerVals["class_id"])
-	if err != nil {
-		logAndSendError(w, err, "Invalid class id", http.StatusBadRequest)
+	classID, ok := middleware.GetClassIDFromContext(ctx)
+	if !ok {
+		logAndSendError(w, err, "Unauthorized", http.StatusUnauthorized)
 		return
 	}
 
@@ -170,6 +172,16 @@ func (h *DBHandler) UpdateClass(w http.ResponseWriter, r *http.Request) {
 	}
 	defer conn.Release()
 
+	role, ok := middleware.GetRoleFromContext(ctx)
+	if !ok {
+		logAndSendError(w, err, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
+	if role != "teacher" {
+		logAndSendError(w, err, "Invalid permissions", http.StatusUnauthorized)
+		return
+	}
+
 	route := path.Base(r.URL.Path)
 
 	headerVals, err := getHeaderVals(r, route)
@@ -185,12 +197,6 @@ func (h *DBHandler) UpdateClass(w http.ResponseWriter, r *http.Request) {
 		logAndSendError(w, errors.New("class id lookup error"), "context error", http.StatusInternalServerError)
 		return
 	}
-
-	// id, err := getInt32Id(headerVals["id"])
-	// if err != nil {
-	// 	logAndSendError(w, err, "Invalid id", http.StatusBadRequest)
-	// 	return
-	// }
 
 	var res string
 	switch route {
@@ -228,25 +234,21 @@ func (h *DBHandler) DeleteClass(w http.ResponseWriter, r *http.Request) {
 	}
 	defer conn.Release()
 
-	// headerVals, err := getHeaderVals(r, "id")
-	// if err != nil {
-	// 	logAndSendError(w, err, "Header error", http.StatusBadRequest)
-	// 	return
-	// }
-
-	// id, err := getInt32Id(headerVals["id"])
-	// if err != nil {
-	// 	logAndSendError(w, err, "Invalid id", http.StatusBadRequest)
-	// 	return
-	// }
+	role, ok := middleware.GetRoleFromContext(ctx)
+	if !ok {
+		logAndSendError(w, err, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
+	if role != "teacher" {
+		logAndSendError(w, err, "Invalid permissions", http.StatusUnauthorized)
+		return
+	}
 
 	classID, ok := middleware.GetClassIDFromContext(ctx)
 	if !ok {
 		logAndSendError(w, errors.New("class id lookup error"), "context error", http.StatusInternalServerError)
 		return
 	}
-
-	log.Println(classID)
 
 	err = query.DeleteClass(ctx, classID)
 	if err != nil {
@@ -259,36 +261,36 @@ func (h *DBHandler) DeleteClass(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte{})
 }
 
-func (h *DBHandler) GetClassScores(w http.ResponseWriter, r *http.Request) {
-	// curl -GET http://localhost:8000/classes/get_scores -H "class_id: 1"
+// func (h *DBHandler) GetClassScores(w http.ResponseWriter, r *http.Request) {
+// 	// curl -GET http://localhost:8000/classes/get_scores -H "class_id: 1"
 
-	query, ctx, conn, err := getQueryConnAndContext(r, h)
-	if err != nil {
-		logAndSendError(w, err, "Error connecting to database", http.StatusInternalServerError)
-		return
-	}
-	defer conn.Release()
+// 	query, ctx, conn, err := getQueryConnAndContext(r, h)
+// 	if err != nil {
+// 		logAndSendError(w, err, "Error connecting to database", http.StatusInternalServerError)
+// 		return
+// 	}
+// 	defer conn.Release()
 
-	headerVals, err := getHeaderVals(r, "class_id")
-	if err != nil {
-		logAndSendError(w, err, "Header error", http.StatusBadRequest)
-		return
-	}
+// 	headerVals, err := getHeaderVals(r, "class_id")
+// 	if err != nil {
+// 		logAndSendError(w, err, "Header error", http.StatusBadRequest)
+// 		return
+// 	}
 
-	classID, err := getInt32Id(headerVals["class_id"])
-	if err != nil {
-		logAndSendError(w, err, "Invalid class id", http.StatusBadRequest)
-		return
-	}
+// 	classID, err := getInt32Id(headerVals["class_id"])
+// 	if err != nil {
+// 		logAndSendError(w, err, "Invalid class id", http.StatusBadRequest)
+// 		return
+// 	}
 
-	scores, err := query.GetClassScores(ctx, classID)
-	if err != nil {
-		logAndSendError(w, err, "Error getting scores", http.StatusInternalServerError)
-		return
-	}
+// 	scores, err := query.GetClassScores(ctx, classID)
+// 	if err != nil {
+// 		logAndSendError(w, err, "Error getting scores", http.StatusInternalServerError)
+// 		return
+// 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	if err = json.NewEncoder(w).Encode(scores); err != nil {
-		logAndSendError(w, err, "Error encoding response", http.StatusInternalServerError)
-	}
-}
+// 	w.Header().Set("Content-Type", "application/json")
+// 	if err = json.NewEncoder(w).Encode(scores); err != nil {
+// 		logAndSendError(w, err, "Error encoding response", http.StatusInternalServerError)
+// 	}
+// }

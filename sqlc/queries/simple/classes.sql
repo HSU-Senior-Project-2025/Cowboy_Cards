@@ -16,9 +16,6 @@ UPDATE classes SET class_description = $1, updated_at = NOW() WHERE id = $2 RETU
 -- name: DeleteClass :exec
 DELETE FROM classes WHERE id = $1;
 
--- name: VerifyTeacher :one
-SELECT * FROM class_user WHERE class_id = $1 AND user_id = $2 AND role = 'teacher';
-
 -- name: VerifyClassMember :one
 SELECT * FROM class_user WHERE class_id = $1 AND user_id = $2;
 

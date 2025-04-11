@@ -44,9 +44,9 @@ func SetCredsHeaders(w http.ResponseWriter, r *http.Request, next http.HandlerFu
 	next(w, r)
 }
 
-func (h *Handler) VerifyTeacherMW(next http.Handler) http.Handler {
+func (h *Handler) VerifyClassMemberMW(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		log.Printf("DEBUG: VerifyTeacherMW called for path: %s", r.URL.Path)
+		log.Printf("DEBUG: VerifyClassMemberMW called for path: %s", r.URL.Path)
 
 		query, ctx, conn, err := GetQueryConnAndContext(r, h)
 		if err != nil {
@@ -68,65 +68,7 @@ func (h *Handler) VerifyTeacherMW(next http.Handler) http.Handler {
 			return
 		}
 
-		// id, err := GetInt32Id(headerVals["user_id"])
-		// if err != nil {
-		// 	LogAndSendError(w, err, "Invalid id", http.StatusBadRequest)
-		// 	return
-		// }
-
 		classID, err := GetInt32Id(headerVals["id"])
-		if err != nil {
-			LogAndSendError(w, err, "Invalid class id", http.StatusBadRequest)
-			return
-		}
-
-		teacher, err := query.VerifyTeacher(ctx, db.VerifyTeacherParams{
-			ClassID: classID,
-			UserID:  userID,
-		})
-		if err != nil {
-			LogAndSendError(w, err, "Invalid permissions", http.StatusUnauthorized)
-			return
-		}
-
-		log.Println("teacher: ", teacher)
-
-		ctx = context.WithValue(ctx, classKey, classID)
-		next.ServeHTTP(w, r.WithContext(ctx))
-	})
-}
-
-func (h *Handler) VerifyClassMemberMW(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		log.Printf("DEBUG: VerifyClassMemberMW called for path: %s", r.URL.Path)
-
-		query, ctx, conn, err := GetQueryConnAndContext(r, h)
-		if err != nil {
-			LogAndSendError(w, err, "Database connection error", http.StatusInternalServerError)
-			return
-		}
-		defer conn.Release()
-
-		// Get user_id from context (set by AuthMiddleware)
-		userID, ok := GetUserIDFromContext(ctx)
-		if !ok {
-			LogAndSendError(w, err, "Unauthorized", http.StatusUnauthorized)
-			return
-		}
-
-		headerVals, err := GetHeaderVals(r, "class_id")
-		if err != nil {
-			LogAndSendError(w, err, "Header error", http.StatusBadRequest)
-			return
-		}
-
-		// id, err := GetInt32Id(headerVals["user_id"])
-		// if err != nil {
-		// 	LogAndSendError(w, err, "Invalid id", http.StatusBadRequest)
-		// 	return
-		// }
-
-		classID, err := GetInt32Id(headerVals["class_id"])
 		if err != nil {
 			LogAndSendError(w, err, "Invalid class id", http.StatusBadRequest)
 			return
@@ -144,6 +86,7 @@ func (h *Handler) VerifyClassMemberMW(next http.Handler) http.Handler {
 		log.Println("member: ", member)
 
 		ctx = context.WithValue(ctx, classKey, classID)
+		ctx = context.WithValue(ctx, roleKey, member.Role)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }

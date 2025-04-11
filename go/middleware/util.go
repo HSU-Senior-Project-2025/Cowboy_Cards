@@ -22,12 +22,14 @@ type userIDKey string
 type classIDKey string
 type flashcardIDKey string
 type setIDKey string
+type userRoleKey string
 
 const (
 	userKey      userIDKey      = "userID"
 	classKey     classIDKey     = "classID"
 	flashcardKey flashcardIDKey = "flashcardID"
 	setKey       setIDKey       = "setID"
+	roleKey      userRoleKey    = "userRole"
 	sessionName  string         = "cowboy-cards-session"
 )
 
@@ -53,6 +55,11 @@ func GetFlashcardIDFromContext(ctx context.Context) (id int32, ok bool) {
 
 func GetSetIDFromContext(ctx context.Context) (id int32, ok bool) {
 	id, ok = ctx.Value(setKey).(int32)
+	return
+}
+
+func GetRoleFromContext(ctx context.Context) (role string, ok bool) {
+	role, ok = ctx.Value(roleKey).(string)
 	return
 }
 

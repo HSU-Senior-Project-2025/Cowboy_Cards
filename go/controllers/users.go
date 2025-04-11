@@ -84,7 +84,7 @@ func (h *DBHandler) GetUserById(w http.ResponseWriter, r *http.Request) {
 		Email:     user.Email,
 		FirstName: user.FirstName,
 		LastName:  user.LastName,
-		CreatedAt: user.CreatedAt.Time.Format("2006/01/02"),
+		CreatedAt: user.CreatedAt.Time.Format(timeFormat),
 		// UpdatedAt: user.UpdatedAt.Time,
 		NumClasses: len(classes),
 	}

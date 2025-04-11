@@ -1,4 +1,5 @@
 import FlashcardCarousel from '@/components/flashcards/FlashcardCarousel';
+import { Footer } from '@/components/footer';
 import { Navbar } from '@/components/navbar';
 import { type CarouselApi } from '@/components/ui/carousel';
 import Leaderboard from '@/components/ui/Leaderboard';
@@ -17,7 +18,6 @@ import {
   IonSegmentButton,
   IonSpinner,
 } from '@ionic/react';
-import { h } from 'ionicons/dist/types/stencil-public-runtime';
 import {
   arrowBackOutline,
   bookOutline,
@@ -25,21 +25,17 @@ import {
   peopleOutline,
   trophyOutline,
 } from 'ionicons/icons';
-import { Footer } from '@/components/footer';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-
-// type User = {
-//     role: string;
-// };
 
 type Class = {
   ID: number;
   ClassName: string;
   ClassDescription: string;
-  JoinCode: string;
+  JoinCode?: string;
   CreatedAt: string;
   UpdatedAt: string;
+  Role: string;
 };
 
 type FlashcardSet = {

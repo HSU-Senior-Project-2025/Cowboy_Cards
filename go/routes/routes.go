@@ -40,20 +40,20 @@ func Protected(r *chi.Mux, h *controllers.DBHandler) {
 	// r.Post("/logout", h.Logout)
 
 	r.Route("/classes", func(r chi.Router) {
-
 		r.Route("/", func(r chi.Router) {
-			// Ensure only teachers can update/delete
-			r.Use(h.VerifyTeacherMW)
+			r.Use(h.VerifyClassMemberMW)
+			r.Get("/", h.GetClassById)
 			r.Put("/class_name", h.UpdateClass)
 			r.Put("/class_description", h.UpdateClass)
 			r.Delete("/", h.DeleteClass)
 		})
+
 		r.Route("/leaderboard", func(r chi.Router) {
 			r.Use(h.VerifyClassMemberMW)
 			r.Get("/", h.GetClassLeaderboard)
 		})
-		// r.Get("/list", h.ListClasses)
-		r.Get("/", h.GetClassById)
+
+		r.Get("/list", h.ListClasses)
 		r.Post("/", h.CreateClass)
 	})
 
