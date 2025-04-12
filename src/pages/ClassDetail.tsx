@@ -1,33 +1,16 @@
-import FlashcardCarousel from '@/components/FlashcardCarousel';
 import { Footer } from '@/components/Footer';
 import { Navbar } from '@/components/Navbar';
 import { type CarouselApi } from '@/components/ui/carousel';
-import Leaderboard from '@/components/Leaderboard';
-import StudentList from '@/components/StudentList';
 import { makeHttpCall } from '@/utils/makeHttpCall';
-import {
-  IonAlert,
-  IonButton,
-  IonCardContent,
-  IonContent,
-  IonIcon,
-  IonInput,
-  IonItem,
-  IonLabel,
-  IonSegment,
-  IonSegmentButton,
-  IonSpinner,
-} from '@ionic/react';
-import {
-  arrowBackOutline,
-  bookOutline,
-  createOutline,
-  peopleOutline,
-  trophyOutline,
-} from 'ionicons/icons';
+import { IonCard, IonContent } from '@ionic/react';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { EditableField } from '@/utils/EditableField';
+import ClassDetailHeader from '@/components/ClassDetailHeader';
+import ClassDetailControls from '@/components/ClassDetailControls';
+import ClassDetailTabs from '@/components/ClassDetailTabs';
+import FlashcardTab from '@/components/FlashcardTab';
+import LeaderboardTab from '@/components/LeaderboardTab';
+import StudentTab from '@/components/StudentTab';
 
 type Class = {
   ID: number;
@@ -79,10 +62,6 @@ const ClassDetail = () => {
     []
   );
   const [loadingScores, setLoadingScores] = useState(false);
-  const [showDeleteAlert, setShowDeleteAlert] = useState({
-    isOpen: false,
-    studentId: null,
-  });
 
   // Update Class Name and Description Form
   const [isEditing, setIsEditing] = useState(false);
@@ -246,16 +225,8 @@ const ClassDetail = () => {
     }
   }, [id]);
 
-  const showDeleteStudentAlert = (studentId) => {
-    setShowDeleteAlert((prev) => ({
-      ...prev,
-      isOpen: true,
-      studentId: studentId,
-    }));
-  };
-
   // Handler to delete a student
-  const handleDeleteStudent = async (studentId) => {
+  const handleDeleteStudent = async (studentId: number | null) => {
     if (studentId === null) return;
     try {
       // TODO: Usees the wrong endpoint for deleting a student, deletes the current user from the  class
@@ -284,181 +255,73 @@ const ClassDetail = () => {
   }, [carouselApi]);
 
   return (
-    <IonContent className="ion-padding">
+    <>
       <Navbar />
+      <IonContent className="ion-padding">
+        <div className="max-w-4xl mx-auto">
+          {/* Remove the old Back button since it's now in ClassDetailControls */}
+          {error && <div className="text-red-500">{error}</div>}
 
-      <div id="main-content" className="container mx-auto px-4 py-8">
-        {error && <div className="text-red-500 mt-2">{error}</div>}
-
-        {isEditing ? (
-          <IonCardContent className="p-6 pt-0">
-            <h1 className="text-3xl font-bold mb-2">
-              Update Class Information
-            </h1>
-            <div className="space-y-4">
-              <EditableField
-                label="Class Name"
-                name="class_name"
-                value={updatedInfo?.class_name || ''}
-                error={errors.className}
-                onChange={handleChange}
-              />
-              <EditableField
-                label="Class Description"
-                name="class_description"
-                value={updatedInfo?.class_description || ''}
-                error={errors.classDescription}
-                onChange={handleChange}
-              />
-              <div className="flex justify-end">
-                <IonButton
-                  onClick={handleCancel}
-                  fill="outline"
-                  className="mr-2"
-                >
-                  Cancel
-                </IonButton>
-                <IonButton onClick={handleSave} fill="solid" color="primary">
-                  Save
-                </IonButton>
-              </div>
-            </div>
-          </IonCardContent>
-        ) : (
-          <div className="flex justify-between items-center">
-            <div className="mb-8">
-              <h1 className="text-3xl font-bold mb-2">
-                {loading ? 'Loading...' : classData?.ClassName}
-              </h1>
-              <p className="text-gray-600">
-                {loading ? 'Loading...' : classData?.ClassDescription}
-              </p>
-              {isTeacher && (
-                <IonIcon
-                  icon={createOutline}
-                  size="large"
-                  color="primary"
-                  className="hover:transform hover:scale-110 cursor-pointer p-2"
-                  onClick={handleEdit}
-                ></IonIcon>
-              )}
-            </div>
-            {isTeacher && (
-              //  TODO: create-set isn't accepting the class ID right now, will be necessary for making a set for a specific class
-              <div className="mb-8">
-                <IonButton
-                  routerLink={`/create-set`}
-                  fill="solid"
-                  color="primary"
-                >
-                  Create Flashcard Set
-                </IonButton>
-              </div>
-            )}
-          </div>
-        )}
-
-        <div className="flex flex-row justify-between mb-6">
-          <IonButton onClick={() => window.history.back()} fill="outline">
-            <IonIcon slot="start" icon={arrowBackOutline} />
-            Back
-          </IonButton>
-          {/* TODO: should only show for teachers */}
-        </div>
-
-        <IonSegment
-          value={tab}
-          onIonChange={(e) => setTab(e.detail.value as string)}
-          className="w-full mb-6"
-        >
-          <IonSegmentButton value="flashcards">
-            <IonIcon icon={bookOutline} className="mr-2" />
-            <IonLabel>Flashcard Sets</IonLabel>
-          </IonSegmentButton>
-          <IonSegmentButton value="leaderboard">
-            <IonIcon icon={trophyOutline} className="mr-2" />
-            <IonLabel>Leaderboard</IonLabel>
-          </IonSegmentButton>
-          <IonSegmentButton value="students">
-            <IonIcon icon={peopleOutline} className="mr-2" />
-            <IonLabel>Students</IonLabel>
-          </IonSegmentButton>
-        </IonSegment>
-
-        {tab === 'leaderboard' && (
-          <>
-            {loadingScores ? (
-              <div className="flex justify-center items-center p-8">
-                <IonSpinner name="circular" />
-                <span className="ml-2">Calculating scores...</span>
-              </div>
-            ) : (
-              <Leaderboard leaderboard={leaderboardData} />
-            )}
-          </>
-        )}
-
-        {tab === 'flashcards' && (
-          <FlashcardCarousel
-            flashcardSets={flashcardSets}
-            currentCardIndex={currentCardIndex}
-            setApi={setCarouselApi}
-          />
-        )}
-
-        {tab === 'students' && (
-          <div className="flex flex-col">
-            <StudentList
+          {/* Class Header and Edit Form Section */}
+          <IonCard className="mb-4">
+            {/* Integrate ClassDetailHeader Component */}
+            <ClassDetailHeader
+              classData={classData}
               isTeacher={isTeacher}
-              students={classUsers}
-              onDeleteStudent={showDeleteStudentAlert}
+              loading={loading}
+              handleEdit={handleEdit}
+              isEditing={isEditing}
+              updatedInfo={updatedInfo}
+              errors={errors}
+              handleChange={handleChange}
+              handleSave={handleSave}
+              handleCancel={handleCancel}
             />
-          </div>
-        )}
-      </div>
 
-      {/* Delete Account Alert */}
-      <IonAlert
-        isOpen={showDeleteAlert.isOpen}
-        onDidDismiss={() =>
-          setShowDeleteAlert((prev) => ({
-            ...prev,
-            isOpen: false,
-            studentId: null,
-          }))
-        }
-        header="Confirm Deletion"
-        message="Are you sure you want to delete this Student? This action cannot be undone."
-        buttons={[
+            {/* Integrate ClassDetailControls component */}
+            <ClassDetailControls isTeacher={isTeacher} classId={id} />
+          </IonCard>
+
+          {/* Integrate ClassDetailTabs Component */}
+          <ClassDetailTabs selectedTab={tab} onTabChange={setTab} />
+
+          {/* Conditionally render the appropriate tab content component */}
+          {/* Pass necessary data and handlers as props */}
           {
-            text: 'Cancel',
-            role: 'cancel',
-            handler: () => {
-              console.log('Cancel clicked');
-              setShowDeleteAlert((prev) => ({
-                ...prev,
-                isOpen: false,
-                studentId: null,
-              }));
-            },
-          },
+            // Render LeaderboardTab when 'leaderboard' tab is active
+            tab === 'leaderboard' && (
+              <LeaderboardTab
+                leaderboardData={leaderboardData}
+                loadingScores={loadingScores}
+              />
+            )
+          }
+
           {
-            text: 'Delete',
-            handler: () => {
-              // Add your delete account logic here
-              handleDeleteStudent(showDeleteAlert.studentId);
-              setShowDeleteAlert((prev) => ({
-                ...prev,
-                isOpen: false,
-                studentId: null,
-              }));
-              console.log('Student deletion initiated');
-            },
-          },
-        ]}
-      />
+            // Render FlashcardTab when 'flashcards' tab is active
+            tab === 'flashcards' && (
+              <FlashcardTab
+                flashcardSets={flashcardSets}
+                currentCardIndex={currentCardIndex}
+                setApi={setCarouselApi} // Pass the setter for the carousel API
+              />
+            )
+          }
+
+          {
+            // Render StudentTab when 'students' tab is active
+            tab === 'students' && (
+              <StudentTab
+                isTeacher={isTeacher}
+                students={classUsers} // Pass classUsers as the students prop
+                handleActualDelete={handleDeleteStudent} // Pass the actual delete handler
+              />
+            )
+          }
+        </div>
+      </IonContent>
       <Footer />
-    </IonContent>
+    </>
   );
 };
 
