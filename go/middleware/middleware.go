@@ -13,7 +13,7 @@ import (
 
 var (
 	Cors = cors.New(cors.Options{
-		AllowedOrigins: []string{"http://localhost:3000", "http://localhost:5173", "http://localhost:8080", "http://localhost:8100", "http://localhost:8000"},
+		AllowedOrigins: []string{"http://localhost:3000", "http://localhost:5173", "http://localhost:8080", "http://localhost:8100", "http://localhost:8000", "http://10.84.16.31:8080"},
 		AllowedMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders: []string{"*"},
 		ExposedHeaders: []string{"Link"},
@@ -39,7 +39,7 @@ func SetCacheControlHeader(w http.ResponseWriter, r *http.Request, next http.Han
 
 func SetCredsHeaders(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	w.Header().Set("Access-Control-Allow-Credentials", "true")
-	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:8080")
+	w.Header().Set("Access-Control-Allow-Origin", "http://10.84.16.31:8080")
 	w.Header().Set("Vary", "Origin")
 	next(w, r)
 }

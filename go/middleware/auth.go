@@ -27,10 +27,10 @@ func init() {
 	store.Options = &sessions.Options{
 		Path:     "/",
 		MaxAge:   0,
-		Secure:   true,
+		Secure:   false,
 		HttpOnly: true,
 		// SameSite: http.SameSiteStrictMode,
-		SameSite: http.SameSiteNoneMode, //dev only
+		SameSite: http.SameSiteLaxMode, // Use Lax for development over HTTP
 	}
 }
 

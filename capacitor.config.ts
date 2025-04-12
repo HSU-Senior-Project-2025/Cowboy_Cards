@@ -5,7 +5,7 @@ const config: CapacitorConfig = {
   appName: 'Cowboy Cards',
   webDir: 'public',
   server: {
-    url: 'http://localhost:8080',
+    url: 'http://10.84.16.31:8080',
     cleartext: true,
   },
 };
