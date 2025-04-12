@@ -98,9 +98,9 @@ const Home = () => {
   // ];
 
   return (
-    <IonContent className="ion-padding">
+    <IonContent className="ion-padding flex flex-col min-h-screen" fullscreen>
       <Navbar />
-      <div id="main-content" className="container mx-auto px-4 py-8">
+      <div id="main-content" className="container mx-auto px-4 py-8 flex-grow">
         {error && <div className="text-red-500 mt-2">{error}</div>}
         <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-8">
           <h1 className="text-3xl font-bold">
@@ -208,31 +208,8 @@ const Home = () => {
             )}
           </>
         )}
-        <Footer />
-        {/* <div className="mb-8">
-          <IonHeader className="p-4">
-            <IonTitle className="text-2xl font-bold">Suggested Sets</IonTitle>
-          </IonHeader>
-        </div> */}
-        {/* <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {suggestedFlashcardSets.map((set) => (
-            <Link key={set.id} to={`/class/${set.id}`}>
-              <IonCard className="cursor-pointer hover:shadow-lg hover:-translate-y-1 transition-transform-shadow duration-200 rounded-lg border shadow-sm">
-                <IonCardHeader className="flex flex-col space-y-1.5 p-6">
-                  <IonCardTitle className="text-2xl font-semibold leading-none tracking-tight">
-                    {set.name}
-                  </IonCardTitle>
-                </IonCardHeader>
-                <IonCardContent>
-                  <IonText className="text-sm text-gray-600">
-                    {set.cards} cards
-                  </IonText>
-                </IonCardContent>
-              </IonCard>
-            </Link>
-          ))}
-        </div> */}
       </div>
+      <Footer />
     </IonContent>
   );
 };
