@@ -319,8 +319,8 @@ const ClassDetail = () => {
             )
           }
         </div>
+        <Footer />
       </IonContent>
-      <Footer />
     </>
   );
 };

@@ -1,5 +1,6 @@
 // SetOverview.tsx
 import { Navbar } from '@/components/Navbar';
+import { makeHttpCall } from '@/utils/makeHttpCall';
 import {
   IonButton,
   IonCard,
@@ -39,14 +40,13 @@ const SetOverview = () => {
     const fetchCards = async () => {
       setLoadingCards(true);
       try {
-        const res = await fetch(`${API_BASE}/api/flashcards/list`, {
+        const res = await makeHttpCall(`${API_BASE}/api/flashcards/list`, {
           method: 'GET',
           headers: { set_id: id },
         });
-        const data = await res.json();
         setCards(
-          Array.isArray(data)
-            ? data.map((card: any) => ({
+          Array.isArray(res)
+            ? res.map((card: any) => ({
                 front: card.Front,
                 back: card.Back,
               }))

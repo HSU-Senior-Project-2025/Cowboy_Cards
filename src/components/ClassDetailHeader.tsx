@@ -81,7 +81,7 @@ const ClassDetailHeader: React.FC<ClassDetailHeaderProps> = ({
   handleCancel,
 }) => {
   return (
-    <IonCardHeader>
+    <>
       {isEditing ? (
         // Editing Mode Form
         <>
@@ -142,9 +142,9 @@ const ClassDetailHeader: React.FC<ClassDetailHeaderProps> = ({
         </>
       ) : (
         // Fallback if not loading and no data (Display Mode)
-        <IonCardTitle>Class details unavailable</IonCardTitle>
+        <h1>Class details unavailable</h1>
       )}
-    </IonCardHeader>
+    </>
   );
 };
 
