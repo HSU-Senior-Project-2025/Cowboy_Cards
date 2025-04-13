@@ -12,7 +12,7 @@ import (
 )
 
 const createUser = `-- name: CreateUser :one
-INSERT INTO users (username, first_name, last_name, email, password) VALUES ($1, $2, $3, $4, $5) RETURNING id, username, first_name, last_name, email, password, created_at, updated_at
+INSERT INTO users (username, first_name, last_name, email, password) VALUES ($1, $2, $3, $4, $5) RETURNING id, username, first_name, last_name, email, password, last_login, login_streak, created_at, updated_at
 `
 
 type CreateUserParams struct {
@@ -39,6 +39,8 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 		&i.LastName,
 		&i.Email,
 		&i.Password,
+		&i.LastLogin,
+		&i.LoginStreak,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
@@ -55,7 +57,7 @@ func (q *Queries) DeleteUser(ctx context.Context, id int32) error {
 }
 
 const getUserByEmail = `-- name: GetUserByEmail :one
-SELECT id, username, first_name, last_name, email, password, created_at, updated_at FROM users WHERE email = $1
+SELECT id, username, first_name, last_name, email, password, last_login, login_streak, created_at, updated_at FROM users WHERE email = $1
 `
 
 func (q *Queries) GetUserByEmail(ctx context.Context, email string) (User, error) {
@@ -68,6 +70,8 @@ func (q *Queries) GetUserByEmail(ctx context.Context, email string) (User, error
 		&i.LastName,
 		&i.Email,
 		&i.Password,
+		&i.LastLogin,
+		&i.LoginStreak,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
@@ -175,7 +179,7 @@ func (q *Queries) ListUsers(ctx context.Context) ([]ListUsersRow, error) {
 }
 
 const updateEmail = `-- name: UpdateEmail :one
-UPDATE users SET email = $1, updated_at = NOW() WHERE id = $2 RETURNING email
+UPDATE users SET email = $1, updated_at = LOCALTIMESTAMP(2) WHERE id = $2 RETURNING email
 `
 
 type UpdateEmailParams struct {
@@ -191,7 +195,7 @@ func (q *Queries) UpdateEmail(ctx context.Context, arg UpdateEmailParams) (strin
 }
 
 const updateFirstname = `-- name: UpdateFirstname :one
-UPDATE users SET first_name = $1, updated_at = NOW() WHERE id = $2 RETURNING first_name
+UPDATE users SET first_name = $1, updated_at = LOCALTIMESTAMP(2) WHERE id = $2 RETURNING first_name
 `
 
 type UpdateFirstnameParams struct {
@@ -206,8 +210,17 @@ func (q *Queries) UpdateFirstname(ctx context.Context, arg UpdateFirstnameParams
 	return first_name, err
 }
 
+const updateLastLogin = `-- name: UpdateLastLogin :exec
+UPDATE users SET last_login = CURRENT_DATE, updated_at = LOCALTIMESTAMP(2) WHERE id = $1
+`
+
+func (q *Queries) UpdateLastLogin(ctx context.Context, id int32) error {
+	_, err := q.db.Exec(ctx, updateLastLogin, id)
+	return err
+}
+
 const updateLastname = `-- name: UpdateLastname :one
-UPDATE users SET last_name = $1, updated_at = NOW() WHERE id = $2 RETURNING last_name
+UPDATE users SET last_name = $1, updated_at = LOCALTIMESTAMP(2) WHERE id = $2 RETURNING last_name
 `
 
 type UpdateLastnameParams struct {
@@ -223,7 +236,7 @@ func (q *Queries) UpdateLastname(ctx context.Context, arg UpdateLastnameParams) 
 }
 
 const updatePassword = `-- name: UpdatePassword :exec
-UPDATE users SET password = $1, updated_at = NOW() WHERE id = $2
+UPDATE users SET password = $1, updated_at = LOCALTIMESTAMP(2) WHERE id = $2
 `
 
 type UpdatePasswordParams struct {
@@ -237,7 +250,7 @@ func (q *Queries) UpdatePassword(ctx context.Context, arg UpdatePasswordParams) 
 }
 
 const updateUsername = `-- name: UpdateUsername :one
-UPDATE users SET username = $1, updated_at = NOW() WHERE id = $2 RETURNING username
+UPDATE users SET username = $1, updated_at = LOCALTIMESTAMP(2) WHERE id = $2 RETURNING username
 `
 
 type UpdateUsernameParams struct {

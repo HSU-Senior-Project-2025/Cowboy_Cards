@@ -39,7 +39,7 @@ func (q *Queries) LeaveClass(ctx context.Context, arg LeaveClassParams) error {
 }
 
 const listClassesOfAUser = `-- name: ListClassesOfAUser :many
-SELECT class_id, role, class_name, class_description FROM class_user JOIN classes ON class_user.class_id = classes.id WHERE user_id = $1
+SELECT class_id, role, class_name, class_description FROM class_user JOIN classes ON class_user.class_id = classes.id WHERE user_id = $1 ORDER BY class_name
 `
 
 type ListClassesOfAUserRow struct {
@@ -75,7 +75,7 @@ func (q *Queries) ListClassesOfAUser(ctx context.Context, userID int32) ([]ListC
 }
 
 const listMembersOfAClass = `-- name: ListMembersOfAClass :many
-SELECT user_id, class_id, role, first_name, last_name FROM class_user JOIN users ON class_user.user_id = users.id WHERE class_id = $1
+SELECT user_id, class_id, role, first_name, last_name, username FROM class_user JOIN users ON class_user.user_id = users.id WHERE class_id = $1 ORDER BY last_name, first_name
 `
 
 type ListMembersOfAClassRow struct {
@@ -84,6 +84,7 @@ type ListMembersOfAClassRow struct {
 	Role      string
 	FirstName string
 	LastName  string
+	Username  string
 }
 
 func (q *Queries) ListMembersOfAClass(ctx context.Context, classID int32) ([]ListMembersOfAClassRow, error) {
@@ -101,50 +102,7 @@ func (q *Queries) ListMembersOfAClass(ctx context.Context, classID int32) ([]Lis
 			&i.Role,
 			&i.FirstName,
 			&i.LastName,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
-}
-
-const listStudentsOfAClass = `-- name: ListStudentsOfAClass :many
-
-SELECT user_id, class_id, role, first_name, last_name
-FROM class_user JOIN users ON class_user.user_id = users.id
-WHERE class_id = $1 AND role = 'teacher'
-`
-
-type ListStudentsOfAClassRow struct {
-	UserID    int32
-	ClassID   int32
-	Role      string
-	FirstName string
-	LastName  string
-}
-
-// SELECT user_id, class_id, role, first_name, last_name
-// FROM class_user JOIN users ON class_user.user_id = users.id
-// WHERE class_id = $1 AND role = 'student';
-func (q *Queries) ListStudentsOfAClass(ctx context.Context, classID int32) ([]ListStudentsOfAClassRow, error) {
-	rows, err := q.db.Query(ctx, listStudentsOfAClass, classID)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	var items []ListStudentsOfAClassRow
-	for rows.Next() {
-		var i ListStudentsOfAClassRow
-		if err := rows.Scan(
-			&i.UserID,
-			&i.ClassID,
-			&i.Role,
-			&i.FirstName,
-			&i.LastName,
+			&i.Username,
 		); err != nil {
 			return nil, err
 		}

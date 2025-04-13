@@ -1,13 +1,12 @@
 import { Navbar } from '@/components/Navbar';
 import { makeHttpCall } from '@/utils/makeHttpCall';
 import {
+  IonButton,
   IonCard,
   IonCardHeader,
   IonCardSubtitle,
   IonCardTitle,
   IonContent,
-  IonButton,
-  IonSearchbar,
 } from '@ionic/react';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -16,7 +15,6 @@ type Class = {
   ID: number;
   ClassName: string;
   ClassDescription: string;
-  JoinCode?: string;
   CreatedAt: string;
   UpdatedAt: string;
 };
@@ -91,7 +89,6 @@ const PublicClasses = () => {
                     expand="block"
                     color="primary"
                     className="mt-4"
-                    // TODO: Use state instead of onClick
                     onClick={async () => {
                       try {
                         const response = await makeHttpCall(

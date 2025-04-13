@@ -1,4 +1,5 @@
-import { Navbar } from '@/components/Navbar';
+import { Footer } from '@/components/footer';
+import { Navbar } from '@/components/navbar';
 import { makeHttpCall } from '@/utils/makeHttpCall';
 import {
   IonButton,
@@ -8,20 +9,15 @@ import {
   IonCardSubtitle,
   IonCardTitle,
   IonContent,
-  IonHeader,
   IonIcon,
   IonLabel,
   IonSegment,
   IonSegmentButton,
   IonSpinner,
-  IonText,
-  IonTitle,
 } from '@ionic/react';
 import { addOutline, bookOutline, listOutline } from 'ionicons/icons';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Footer } from '@/components/Footer';
-import { useTheme } from '@/contexts/ThemeContext';
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
@@ -30,6 +26,8 @@ type Class = {
   Role: string;
   ClassName: string;
   ClassDescription: string;
+  CreatedAt: string;
+  UpdatedAt: string;
 };
 
 type Set = {

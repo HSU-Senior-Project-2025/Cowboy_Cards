@@ -7,6 +7,7 @@ import (
 	"path"
 
 	"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/db"
+	"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/middleware"
 )
 
 func (h *DBHandler) ListFlashcardSets(w http.ResponseWriter, r *http.Request) {
@@ -41,26 +42,20 @@ func (h *DBHandler) GetFlashcardSetById(w http.ResponseWriter, r *http.Request) 
 	}
 	defer conn.Release()
 
-	headerVals, err := getHeaderVals(r, "id")
-	if err != nil {
-		logAndSendError(w, err, "Header error", http.StatusBadRequest)
+	setID, ok := middleware.GetSetIDFromContext(ctx)
+	if !ok {
+		logAndSendError(w, errContext, "Unauthorized", http.StatusUnauthorized)
 		return
 	}
 
-	id, err := getInt32Id(headerVals["id"])
-	if err != nil {
-		logAndSendError(w, err, "Invalid id", http.StatusBadRequest)
-		return
-	}
-
-	flashcard, err := query.GetFlashcardSetById(ctx, id)
+	flashcard_set, err := query.GetFlashcardSetById(ctx, setID)
 	if err != nil {
 		logAndSendError(w, err, "Failed to get flashcard set", http.StatusInternalServerError)
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	if err := json.NewEncoder(w).Encode(flashcard); err != nil {
+	if err := json.NewEncoder(w).Encode(flashcard_set); err != nil {
 		logAndSendError(w, err, "Error encoding response", http.StatusInternalServerError)
 	}
 }
@@ -75,15 +70,23 @@ func (h *DBHandler) CreateFlashcardSet(w http.ResponseWriter, r *http.Request) {
 	}
 	defer conn.Release()
 
-	headerVals, err := getHeaderVals(r, "set_name", "set_description")
+	headerVals, err := getHeaderVals(r, set_name, set_description)
 	if err != nil {
 		logAndSendError(w, err, "Header error", http.StatusBadRequest)
 		return
 	}
 
-	flashcard_set, err := query.CreateFlashcardSet(ctx, db.CreateFlashcardSetParams{
-		SetName:        headerVals["set_name"],
-		SetDescription: headerVals["set_description"],
+	tx, err := conn.Begin(ctx)
+	if err != nil {
+		logAndSendError(w, err, "Database tx connection error", http.StatusInternalServerError)
+	}
+	defer tx.Rollback(ctx)
+
+	qtx := query.WithTx(tx)
+
+	flashcard_set, err := qtx.CreateFlashcardSet(ctx, db.CreateFlashcardSetParams{
+		SetName:        headerVals[set_name],
+		SetDescription: headerVals[set_description],
 	})
 	if err != nil {
 		logAndSendError(w, err, "Failed to create flashcard set", http.StatusInternalServerError)
@@ -109,15 +112,15 @@ func (h *DBHandler) UpdateFlashcardSet(w http.ResponseWriter, r *http.Request) {
 
 	route := path.Base(r.URL.Path)
 
-	headerVals, err := getHeaderVals(r, "id", route)
+	headerVals, err := getHeaderVals(r, route)
 	if err != nil {
 		logAndSendError(w, err, "Header error", http.StatusBadRequest)
 		return
 	}
 
-	id, err := getInt32Id(headerVals["id"])
-	if err != nil {
-		logAndSendError(w, err, "Invalid id", http.StatusBadRequest)
+	setID, ok := middleware.GetSetIDFromContext(ctx)
+	if !ok {
+		logAndSendError(w, errContext, "Unauthorized", http.StatusUnauthorized)
 		return
 	}
 
@@ -125,15 +128,15 @@ func (h *DBHandler) UpdateFlashcardSet(w http.ResponseWriter, r *http.Request) {
 
 	var res string
 	switch route {
-	case "set_name":
+	case set_name:
 		res, err = query.UpdateFlashcardSetName(ctx, db.UpdateFlashcardSetNameParams{
 			SetName: val,
-			ID:      id,
+			ID:      setID,
 		})
-	case "set_description":
+	case set_description:
 		res, err = query.UpdateFlashcardSetDescription(ctx, db.UpdateFlashcardSetDescriptionParams{
 			SetDescription: val,
-			ID:             id,
+			ID:             setID,
 		})
 	default:
 		logAndSendError(w, errors.New("invalid column"), "Improper header", http.StatusBadRequest)
@@ -159,19 +162,13 @@ func (h *DBHandler) DeleteFlashcardSet(w http.ResponseWriter, r *http.Request) {
 	}
 	defer conn.Release()
 
-	headerVals, err := getHeaderVals(r, "id")
-	if err != nil {
-		logAndSendError(w, err, "Header error", http.StatusBadRequest)
+	setID, ok := middleware.GetSetIDFromContext(ctx)
+	if !ok {
+		logAndSendError(w, errContext, "Unauthorized", http.StatusUnauthorized)
 		return
 	}
 
-	id, err := getInt32Id(headerVals["id"])
-	if err != nil {
-		logAndSendError(w, err, "Invalid id", http.StatusBadRequest)
-		return
-	}
-
-	err = query.DeleteFlashcardSet(ctx, id)
+	err = query.DeleteFlashcardSet(ctx, setID)
 	if err != nil {
 		logAndSendError(w, err, "Failed to delete flashcard set", http.StatusInternalServerError)
 		return

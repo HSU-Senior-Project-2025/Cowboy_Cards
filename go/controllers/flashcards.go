@@ -5,9 +5,9 @@ import (
 	"errors"
 	"net/http"
 	"path"
-	"strings"
 
 	"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/db"
+	"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/middleware"
 )
 
 func (h *DBHandler) GetFlashcardById(w http.ResponseWriter, r *http.Request) {
@@ -20,13 +20,13 @@ func (h *DBHandler) GetFlashcardById(w http.ResponseWriter, r *http.Request) {
 	}
 	defer conn.Release()
 
-	headerVals, err := getHeaderVals(r, "id")
+	headerVals, err := getHeaderVals(r, id)
 	if err != nil {
 		logAndSendError(w, err, "Header error", http.StatusBadRequest)
 		return
 	}
 
-	id, err := getInt32Id(headerVals["id"])
+	id, err := getInt32Id(headerVals[id])
 	if err != nil {
 		logAndSendError(w, err, "Invalid id", http.StatusBadRequest)
 		return
@@ -54,13 +54,13 @@ func (h *DBHandler) ListFlashcardsOfASet(w http.ResponseWriter, r *http.Request)
 	}
 	defer conn.Release()
 
-	headerVals, err := getHeaderVals(r, "set_id")
+	headerVals, err := getHeaderVals(r, set_id)
 	if err != nil {
 		logAndSendError(w, err, "Header error", http.StatusBadRequest)
 		return
 	}
 
-	set_id, err := getInt32Id(headerVals["set_id"])
+	set_id, err := getInt32Id(headerVals[set_id])
 	if err != nil {
 		logAndSendError(w, err, "Invalid id", http.StatusBadRequest)
 		return
@@ -88,22 +88,28 @@ func (h *DBHandler) CreateFlashcard(w http.ResponseWriter, r *http.Request) {
 	}
 	defer conn.Release()
 
-	headerVals, err := getHeaderVals(r, "front", "back", "set_id")
+	headerVals, err := getHeaderVals(r, front, back)
 	if err != nil {
 		logAndSendError(w, err, "Header error", http.StatusBadRequest)
 		return
 	}
 
-	sid, err := getInt32Id(headerVals["set_id"])
-	if err != nil {
-		logAndSendError(w, err, "Invalid set id", http.StatusBadRequest)
+	setID, ok := middleware.GetSetIDFromContext(ctx)
+	if !ok {
+		logAndSendError(w, errContext, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
+
+	role, ok := middleware.GetRoleFromContext(ctx)
+	if !ok || role != owner {
+		logAndSendError(w, errContext, "Unauthorized", http.StatusUnauthorized)
 		return
 	}
 
 	flashcard, err := query.CreateFlashcard(ctx, db.CreateFlashcardParams{
-		Front: headerVals["front"],
-		Back:  headerVals["back"],
-		SetID: sid,
+		Front: headerVals[front],
+		Back:  headerVals[back],
+		SetID: setID,
 	})
 	if err != nil {
 		logAndSendError(w, err, "Failed to create flashcard", http.StatusInternalServerError)
@@ -129,71 +135,43 @@ func (h *DBHandler) UpdateFlashcard(w http.ResponseWriter, r *http.Request) {
 
 	route := path.Base(r.URL.Path)
 
-	headerVals, err := getHeaderVals(r, "id", route)
+	headerVals, err := getHeaderVals(r, route)
 	if err != nil {
 		logAndSendError(w, err, "Header error", http.StatusBadRequest)
 		return
 	}
 
-	id, err := getInt32Id(headerVals["id"])
-	if err != nil {
-		logAndSendError(w, err, "Invalid id", http.StatusBadRequest)
+	setID, ok := middleware.GetSetIDFromContext(ctx)
+	if !ok {
+		logAndSendError(w, errContext, "Unauthorized", http.StatusUnauthorized)
 		return
 	}
 
 	val := headerVals[route]
 
-	if strings.HasSuffix(route, "id") {
-		var res int32
-		switch route {
-		case "set_id":
-			sid, err := getInt32Id(val)
-			if err != nil {
-				logAndSendError(w, err, "Invalid set id", http.StatusBadRequest)
-				return
-			}
+	var res string
+	switch route {
+	case front:
+		res, err = query.UpdateFlashcardFront(ctx, db.UpdateFlashcardFrontParams{
+			Front: val,
+			ID:    setID,
+		})
+	case back:
+		res, err = query.UpdateFlashcardBack(ctx, db.UpdateFlashcardBackParams{
+			Back: val,
+			ID:   setID,
+		})
+	default:
+		logAndSendError(w, errors.New("invalid column"), "Improper header", http.StatusBadRequest)
+		return
+	}
 
-			res, err = query.UpdateFlashcardSetId(ctx, db.UpdateFlashcardSetIdParams{
-				SetID: sid,
-				ID:    id,
-			})
-			if err != nil {
-				logAndSendError(w, err, "Failed to update flashcard", http.StatusInternalServerError)
-				return
-			}
-		default:
-			logAndSendError(w, errors.New("invalid column"), "Improper header", http.StatusBadRequest)
-			return
-		}
-
-		if err := json.NewEncoder(w).Encode(res); err != nil {
-			logAndSendError(w, err, "Error encoding response", http.StatusInternalServerError)
-		}
-	} else {
-		var res string
-		switch route {
-		case "front":
-			res, err = query.UpdateFlashcardFront(ctx, db.UpdateFlashcardFrontParams{
-				Front: val,
-				ID:    id,
-			})
-		case "back":
-			res, err = query.UpdateFlashcardBack(ctx, db.UpdateFlashcardBackParams{
-				Back: val,
-				ID:   id,
-			})
-		default:
-			logAndSendError(w, errors.New("invalid column"), "Improper header", http.StatusBadRequest)
-			return
-		}
-
-		if err != nil {
-			logAndSendError(w, err, "Failed to update flashcard", http.StatusInternalServerError)
-			return
-		}
-		if err := json.NewEncoder(w).Encode(res); err != nil {
-			logAndSendError(w, err, "Error encoding response", http.StatusInternalServerError)
-		}
+	if err != nil {
+		logAndSendError(w, err, "Failed to update flashcard", http.StatusInternalServerError)
+		return
+	}
+	if err := json.NewEncoder(w).Encode(res); err != nil {
+		logAndSendError(w, err, "Error encoding response", http.StatusInternalServerError)
 	}
 }
 
@@ -207,19 +185,13 @@ func (h *DBHandler) DeleteFlashcard(w http.ResponseWriter, r *http.Request) {
 	}
 	defer conn.Release()
 
-	headerVals, err := getHeaderVals(r, "id")
-	if err != nil {
-		logAndSendError(w, err, "Header error", http.StatusBadRequest)
+	setID, ok := middleware.GetSetIDFromContext(ctx)
+	if !ok {
+		logAndSendError(w, errContext, "Unauthorized", http.StatusUnauthorized)
 		return
 	}
 
-	id, err := getInt32Id(headerVals["id"])
-	if err != nil {
-		logAndSendError(w, err, "Invalid id", http.StatusBadRequest)
-		return
-	}
-
-	err = query.DeleteFlashcard(ctx, id)
+	err = query.DeleteFlashcard(ctx, setID)
 	if err != nil {
 		logAndSendError(w, err, "Failed to delete flashcard", http.StatusInternalServerError)
 		return

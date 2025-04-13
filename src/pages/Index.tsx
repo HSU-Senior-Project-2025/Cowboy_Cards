@@ -5,7 +5,6 @@ import { IonContent } from '@ionic/react';
 //   ID: string;
 //   ClassName: string;
 //   ClassDescription: string;
-//   JoinCode: string;
 //   CreatedAt: string;
 //   UpdatedAt: string;
 // };

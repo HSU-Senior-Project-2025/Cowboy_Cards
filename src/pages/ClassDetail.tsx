@@ -16,7 +16,6 @@ type Class = {
   ID: number;
   ClassName: string;
   ClassDescription: string;
-  JoinCode?: string;
   CreatedAt: string;
   UpdatedAt: string;
   Role: string;
@@ -220,8 +219,18 @@ const ClassDetail = () => {
       }
     }
 
-    if (id) {
-      fetchDataForClass();
+    async function fetchFlashcardSets() {
+      const sets = await makeHttpCall<FlashcardSet[]>(
+        `${API_BASE}/api/class_set/list_sets`,
+        {
+          method: 'GET',
+          headers: {
+            class_id: id,
+          },
+        }
+      );
+      console.log('sets', sets);
+      setFlashcardSets(sets);
     }
   }, [id]);
 

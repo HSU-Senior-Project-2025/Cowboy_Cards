@@ -38,27 +38,21 @@ func (h *DBHandler) Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Create session cookie
-	if err := middleware.CreateSession(w, r, user.ID); err != nil {
+	err = middleware.CreateSession(w, r, user.ID)
+	if err != nil {
 		logAndSendError(w, err, "Error creating session", http.StatusInternalServerError)
 		return
+	} else {
+		// login and streak
+		err = query.UpdateLastLogin(ctx, user.ID)
+		if err != nil {
+			logAndSendError(w, err, "update error", http.StatusInternalServerError)
+			return
+		}
 	}
-
-	resp := AuthResponse{
-		// UserID:    user.ID,
-		Username:  user.Username,
-		Email:     user.Email,
-		FirstName: user.FirstName,
-		LastName:  user.LastName,
-	}
-
-	// resp, err := getTokenAndResponse(user)
-	// if err != nil {
-	// 	logAndSendError(w, err, "Error creating token", http.StatusInternalServerError)
-	// 	return
-	// }
 
 	w.Header().Set("Content-Type", "application/json")
-	if err := json.NewEncoder(w).Encode(resp); err != nil {
+	if err := json.NewEncoder(w).Encode("resp"); err != nil {
 		logAndSendError(w, err, "Error encoding response", http.StatusInternalServerError)
 	}
 }
@@ -135,23 +129,9 @@ func (h *DBHandler) Signup(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	resp := AuthResponse{
-		// UserID:    user.ID,
-		Username:  user.Username,
-		Email:     user.Email,
-		FirstName: user.FirstName,
-		LastName:  user.LastName,
-	}
-
-	// resp, err := getTokenAndResponse(user)
-	// if err != nil {
-	// 	logAndSendError(w, err, "Error creating token", http.StatusInternalServerError)
-	// 	return
-	// }
-
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
-	if err := json.NewEncoder(w).Encode(resp); err != nil {
+	if err := json.NewEncoder(w).Encode("resp"); err != nil {
 		logAndSendError(w, err, "Error encoding response", http.StatusInternalServerError)
 	}
 }

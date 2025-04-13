@@ -92,7 +92,7 @@ func (q *Queries) ListFlashcardsOfASet(ctx context.Context, setID int32) ([]Flas
 }
 
 const updateFlashcardBack = `-- name: UpdateFlashcardBack :one
-UPDATE flashcards SET back = $1, updated_at = NOW() WHERE id = $2 RETURNING back
+UPDATE flashcards SET back = $1, updated_at = LOCALTIMESTAMP(2) WHERE id = $2 RETURNING back
 `
 
 type UpdateFlashcardBackParams struct {
@@ -108,7 +108,7 @@ func (q *Queries) UpdateFlashcardBack(ctx context.Context, arg UpdateFlashcardBa
 }
 
 const updateFlashcardFront = `-- name: UpdateFlashcardFront :one
-UPDATE flashcards SET front = $1, updated_at = NOW() WHERE id = $2 RETURNING front
+UPDATE flashcards SET front = $1, updated_at = LOCALTIMESTAMP(2) WHERE id = $2 RETURNING front
 `
 
 type UpdateFlashcardFrontParams struct {
@@ -124,7 +124,7 @@ func (q *Queries) UpdateFlashcardFront(ctx context.Context, arg UpdateFlashcardF
 }
 
 const updateFlashcardSetId = `-- name: UpdateFlashcardSetId :one
-UPDATE flashcards SET set_id = $1, updated_at = NOW() WHERE id = $2 RETURNING set_id
+UPDATE flashcards SET set_id = $1, updated_at = LOCALTIMESTAMP(2) WHERE id = $2 RETURNING set_id
 `
 
 type UpdateFlashcardSetIdParams struct {

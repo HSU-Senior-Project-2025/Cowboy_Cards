@@ -9,42 +9,42 @@ import (
 	"context"
 )
 
-const addSet = `-- name: AddSet :exec
+const addSetToClass = `-- name: AddSetToClass :exec
 INSERT INTO class_set (class_id,set_id) VALUES ($1, $2)
 `
 
-type AddSetParams struct {
+type AddSetToClassParams struct {
 	ClassID int32
 	SetID   int32
 }
 
-func (q *Queries) AddSet(ctx context.Context, arg AddSetParams) error {
-	_, err := q.db.Exec(ctx, addSet, arg.ClassID, arg.SetID)
+func (q *Queries) AddSetToClass(ctx context.Context, arg AddSetToClassParams) error {
+	_, err := q.db.Exec(ctx, addSetToClass, arg.ClassID, arg.SetID)
 	return err
 }
 
-const getClassesHavingSet = `-- name: GetClassesHavingSet :many
+const listClassesHavingSet = `-- name: ListClassesHavingSet :many
 SELECT classes.id, class_name, class_description FROM classes
 JOIN class_set ON classes.id = class_set.class_id 
 JOIN flashcard_sets ON class_set.set_id = flashcard_sets.id
-WHERE set_id = $1
+WHERE set_id = $1 ORDER BY class_name
 `
 
-type GetClassesHavingSetRow struct {
+type ListClassesHavingSetRow struct {
 	ID               int32
 	ClassName        string
 	ClassDescription string
 }
 
-func (q *Queries) GetClassesHavingSet(ctx context.Context, setID int32) ([]GetClassesHavingSetRow, error) {
-	rows, err := q.db.Query(ctx, getClassesHavingSet, setID)
+func (q *Queries) ListClassesHavingSet(ctx context.Context, setID int32) ([]ListClassesHavingSetRow, error) {
+	rows, err := q.db.Query(ctx, listClassesHavingSet, setID)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []GetClassesHavingSetRow
+	var items []ListClassesHavingSetRow
 	for rows.Next() {
-		var i GetClassesHavingSetRow
+		var i ListClassesHavingSetRow
 		if err := rows.Scan(&i.ID, &i.ClassName, &i.ClassDescription); err != nil {
 			return nil, err
 		}
@@ -56,28 +56,28 @@ func (q *Queries) GetClassesHavingSet(ctx context.Context, setID int32) ([]GetCl
 	return items, nil
 }
 
-const getSetsInClass = `-- name: GetSetsInClass :many
-SELECT flashcard_sets.id, set_name, set_description FROM classes
-JOIN class_set ON classes.id = class_set.class_id 
-JOIN flashcard_sets ON class_set.set_id = flashcard_sets.id
-WHERE class_id = $1
+const listSetsInClass = `-- name: ListSetsInClass :many
+SELECT flashcard_sets.id, set_name, set_description FROM flashcard_sets 
+JOIN class_set ON flashcard_sets.id = class_set.set_id 
+JOIN classes ON class_set.class_id = classes.id
+WHERE class_id = $1 ORDER BY set_name
 `
 
-type GetSetsInClassRow struct {
+type ListSetsInClassRow struct {
 	ID             int32
 	SetName        string
 	SetDescription string
 }
 
-func (q *Queries) GetSetsInClass(ctx context.Context, classID int32) ([]GetSetsInClassRow, error) {
-	rows, err := q.db.Query(ctx, getSetsInClass, classID)
+func (q *Queries) ListSetsInClass(ctx context.Context, classID int32) ([]ListSetsInClassRow, error) {
+	rows, err := q.db.Query(ctx, listSetsInClass, classID)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []GetSetsInClassRow
+	var items []ListSetsInClassRow
 	for rows.Next() {
-		var i GetSetsInClassRow
+		var i ListSetsInClassRow
 		if err := rows.Scan(&i.ID, &i.SetName, &i.SetDescription); err != nil {
 			return nil, err
 		}
@@ -89,16 +89,16 @@ func (q *Queries) GetSetsInClass(ctx context.Context, classID int32) ([]GetSetsI
 	return items, nil
 }
 
-const removeSet = `-- name: RemoveSet :exec
+const removeSetFromClass = `-- name: RemoveSetFromClass :exec
 DELETE FROM class_set WHERE class_id = $1 AND set_id = $2
 `
 
-type RemoveSetParams struct {
+type RemoveSetFromClassParams struct {
 	ClassID int32
 	SetID   int32
 }
 
-func (q *Queries) RemoveSet(ctx context.Context, arg RemoveSetParams) error {
-	_, err := q.db.Exec(ctx, removeSet, arg.ClassID, arg.SetID)
+func (q *Queries) RemoveSetFromClass(ctx context.Context, arg RemoveSetFromClassParams) error {
+	_, err := q.db.Exec(ctx, removeSetFromClass, arg.ClassID, arg.SetID)
 	return err
 }

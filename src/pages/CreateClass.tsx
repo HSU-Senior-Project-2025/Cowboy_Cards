@@ -22,7 +22,6 @@ const CreateClass = () => {
   const [buttonClicked, setButtonClicked] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  // const [lastJoinCode, setLastJoinCode] = useState('');
   const [formData, setFormData] = useState({
     className: '',
     description: '',
@@ -60,8 +59,6 @@ const CreateClass = () => {
 
         console.log('Class created successfully:', data);
 
-        // setLastJoinCode(formData.joinCode);
-
         setButtonClicked(false);
 
         setFormData({
@@ -82,14 +79,6 @@ const CreateClass = () => {
       submitForm();
     }
   }, [buttonClicked, formData]);
-
-  // useEffect(() => {
-  //   if (lastJoinCode) {
-  //     setTextToCopy(lastJoinCode); // Update textToCopy when lastJoinCode changes
-  //   } else {
-  //     setTextToCopy(''); //reset the text to copy, if there is no join code.
-  //   }
-  // }, [lastJoinCode]);
 
   return (
     <IonContent>

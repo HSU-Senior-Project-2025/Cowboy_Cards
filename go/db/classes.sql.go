@@ -7,28 +7,24 @@ package db
 
 import (
 	"context"
-
-	"github.com/jackc/pgx/v5/pgtype"
 )
 
 const createClass = `-- name: CreateClass :one
-INSERT INTO classes (class_name, class_description, join_code) VALUES ($1, $2, $3) RETURNING id, class_name, class_description, join_code, created_at, updated_at
+INSERT INTO classes (class_name, class_description) VALUES ($1, $2) RETURNING id, class_name, class_description, created_at, updated_at
 `
 
 type CreateClassParams struct {
 	ClassName        string
 	ClassDescription string
-	JoinCode         pgtype.Text
 }
 
 func (q *Queries) CreateClass(ctx context.Context, arg CreateClassParams) (Class, error) {
-	row := q.db.QueryRow(ctx, createClass, arg.ClassName, arg.ClassDescription, arg.JoinCode)
+	row := q.db.QueryRow(ctx, createClass, arg.ClassName, arg.ClassDescription)
 	var i Class
 	err := row.Scan(
 		&i.ID,
 		&i.ClassName,
 		&i.ClassDescription,
-		&i.JoinCode,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
@@ -45,7 +41,7 @@ func (q *Queries) DeleteClass(ctx context.Context, id int32) error {
 }
 
 const getClassById = `-- name: GetClassById :one
-SELECT id, class_name, class_description, join_code, created_at, updated_at FROM classes WHERE id = $1
+SELECT id, class_name, class_description, created_at, updated_at FROM classes WHERE id = $1
 `
 
 func (q *Queries) GetClassById(ctx context.Context, id int32) (Class, error) {
@@ -55,40 +51,47 @@ func (q *Queries) GetClassById(ctx context.Context, id int32) (Class, error) {
 		&i.ID,
 		&i.ClassName,
 		&i.ClassDescription,
-		&i.JoinCode,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
 	return i, err
 }
 
-const getClassScores = `-- name: GetClassScores :many
-SELECT class_user.user_id, users.username, SUM(set_score) AS class_score FROM classes 
+const getClassLeaderboard = `-- name: GetClassLeaderboard :many
+SELECT class_user.user_id, users.first_name, users.last_name, users.username, SUM(set_score) AS class_score FROM classes 
 JOIN class_user ON classes.id = class_user.class_id 
 JOIN class_set ON classes.id = class_set.class_id
 JOIN set_user ON (class_user.user_id = set_user.user_id AND class_set.set_id = set_user.set_id)
 JOIN users ON class_user.user_id = users.id
 WHERE classes.id = $1
-GROUP BY class_user.user_id, users.username
+GROUP BY class_user.user_id, users.first_name, users.last_name, users.username
 ORDER BY SUM(set_score) DESC
 `
 
-type GetClassScoresRow struct {
+type GetClassLeaderboardRow struct {
 	UserID     int32
+	FirstName  string
+	LastName   string
 	Username   string
 	ClassScore int64
 }
 
-func (q *Queries) GetClassScores(ctx context.Context, id int32) ([]GetClassScoresRow, error) {
-	rows, err := q.db.Query(ctx, getClassScores, id)
+func (q *Queries) GetClassLeaderboard(ctx context.Context, id int32) ([]GetClassLeaderboardRow, error) {
+	rows, err := q.db.Query(ctx, getClassLeaderboard, id)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []GetClassScoresRow
+	var items []GetClassLeaderboardRow
 	for rows.Next() {
-		var i GetClassScoresRow
-		if err := rows.Scan(&i.UserID, &i.Username, &i.ClassScore); err != nil {
+		var i GetClassLeaderboardRow
+		if err := rows.Scan(
+			&i.UserID,
+			&i.FirstName,
+			&i.LastName,
+			&i.Username,
+			&i.ClassScore,
+		); err != nil {
 			return nil, err
 		}
 		items = append(items, i)
@@ -100,7 +103,7 @@ func (q *Queries) GetClassScores(ctx context.Context, id int32) ([]GetClassScore
 }
 
 const listClasses = `-- name: ListClasses :many
-SELECT id, class_name, class_description, join_code, created_at, updated_at FROM classes ORDER BY class_name
+SELECT id, class_name, class_description, created_at, updated_at FROM classes ORDER BY class_name
 `
 
 func (q *Queries) ListClasses(ctx context.Context) ([]Class, error) {
@@ -116,7 +119,6 @@ func (q *Queries) ListClasses(ctx context.Context) ([]Class, error) {
 			&i.ID,
 			&i.ClassName,
 			&i.ClassDescription,
-			&i.JoinCode,
 			&i.CreatedAt,
 			&i.UpdatedAt,
 		); err != nil {
@@ -131,7 +133,7 @@ func (q *Queries) ListClasses(ctx context.Context) ([]Class, error) {
 }
 
 const updateClassDescription = `-- name: UpdateClassDescription :one
-UPDATE classes SET class_description = $1, updated_at = NOW() WHERE id = $2 RETURNING class_description
+UPDATE classes SET class_description = $1, updated_at = LOCALTIMESTAMP(2) WHERE id = $2 RETURNING class_description
 `
 
 type UpdateClassDescriptionParams struct {
@@ -147,7 +149,7 @@ func (q *Queries) UpdateClassDescription(ctx context.Context, arg UpdateClassDes
 }
 
 const updateClassName = `-- name: UpdateClassName :one
-UPDATE classes SET class_name = $1, updated_at = NOW() WHERE id = $2 RETURNING class_name
+UPDATE classes SET class_name = $1, updated_at = LOCALTIMESTAMP(2) WHERE id = $2 RETURNING class_name
 `
 
 type UpdateClassNameParams struct {

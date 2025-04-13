@@ -23,29 +23,29 @@ func (h *DBHandler) UpdateFlashcardScore(w http.ResponseWriter, r *http.Request)
 	// Get user_id from context (set by AuthMiddleware)
 	userID, ok := middleware.GetUserIDFromContext(ctx)
 	if !ok {
-		logAndSendError(w, err, "Unauthorized", http.StatusUnauthorized)
+		logAndSendError(w, errContext, "Unauthorized", http.StatusUnauthorized)
 		return
 	}
 
-	headerVals, err := getHeaderVals(r, "card_id")
+	headerVals, err := getHeaderVals(r, card_id)
 	if err != nil {
 		logAndSendError(w, err, "Header error", http.StatusBadRequest)
 		return
 	}
 
-	cardID, err := getInt32Id(headerVals["card_id"])
+	cardID, err := getInt32Id(headerVals[card_id])
 	if err != nil {
 		logAndSendError(w, err, "Invalid card id", http.StatusBadRequest)
 		return
 	}
 
 	switch path.Base(r.URL.Path) {
-	case "correct":
+	case correct:
 		err = query.UpsertCorrectFlashcardScore(ctx, db.UpsertCorrectFlashcardScoreParams{
 			UserID: userID,
 			CardID: cardID,
 		})
-	case "incorrect":
+	case incorrect:
 		err = query.UpsertIncorrectFlashcardScore(ctx, db.UpsertIncorrectFlashcardScoreParams{
 			UserID: userID,
 			CardID: cardID,
@@ -77,17 +77,17 @@ func (h *DBHandler) GetCardScore(w http.ResponseWriter, r *http.Request) {
 	// Get user_id from context (set by AuthMiddleware)
 	userID, ok := middleware.GetUserIDFromContext(ctx)
 	if !ok {
-		logAndSendError(w, err, "Unauthorized", http.StatusUnauthorized)
+		logAndSendError(w, errContext, "Unauthorized", http.StatusUnauthorized)
 		return
 	}
 
-	headerVals, err := getHeaderVals(r, "card_id")
+	headerVals, err := getHeaderVals(r, card_id)
 	if err != nil {
 		logAndSendError(w, err, "Header error", http.StatusBadRequest)
 		return
 	}
 
-	cardID, err := getInt32Id(headerVals["card_id"])
+	cardID, err := getInt32Id(headerVals[card_id])
 	if err != nil {
 		logAndSendError(w, err, "Invalid card id", http.StatusBadRequest)
 		return
@@ -121,17 +121,17 @@ func (h *DBHandler) GetScoresInASet(w http.ResponseWriter, r *http.Request) {
 	// Get user_id from context (set by AuthMiddleware)
 	userID, ok := middleware.GetUserIDFromContext(ctx)
 	if !ok {
-		logAndSendError(w, err, "Unauthorized", http.StatusUnauthorized)
+		logAndSendError(w, errContext, "Unauthorized", http.StatusUnauthorized)
 		return
 	}
 
-	headerVals, err := getHeaderVals(r, "set_id")
+	headerVals, err := getHeaderVals(r, set_id)
 	if err != nil {
 		logAndSendError(w, err, "Header error", http.StatusBadRequest)
 		return
 	}
 
-	setID, err := getInt32Id(headerVals["set_id"])
+	setID, err := getInt32Id(headerVals[set_id])
 	if err != nil {
 		logAndSendError(w, err, "Invalid set id", http.StatusBadRequest)
 		return

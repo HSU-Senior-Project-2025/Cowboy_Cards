@@ -24,6 +24,8 @@ type flashcardIDKey string
 type setIDKey string
 type userRoleKey string
 
+var errContext error = errors.New("error retrieving from context")
+
 const (
 	userKey      userIDKey      = "userID"
 	classKey     classIDKey     = "classID"
@@ -31,6 +33,7 @@ const (
 	setKey       setIDKey       = "setID"
 	roleKey      userRoleKey    = "userRole"
 	sessionName  string         = "cowboy-cards-session"
+	id           string         = "id"
 )
 
 func LogAndSendError(w http.ResponseWriter, err error, msg string, statusCode int) {

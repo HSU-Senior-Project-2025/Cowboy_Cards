@@ -21,7 +21,6 @@ type Class struct {
 	ID               int32
 	ClassName        string
 	ClassDescription string
-	JoinCode         pgtype.Text
 	CreatedAt        pgtype.Timestamp
 	UpdatedAt        pgtype.Timestamp
 }
@@ -58,17 +57,19 @@ type SetUser struct {
 	UserID    int32
 	SetID     int32
 	Role      string
-	SetScore  pgtype.Int4
+	SetScore  int32
 	IsPrivate bool
 }
 
 type User struct {
-	ID        int32
-	Username  string
-	FirstName string
-	LastName  string
-	Email     string
-	Password  string
-	CreatedAt pgtype.Timestamp
-	UpdatedAt pgtype.Timestamp
+	ID          int32
+	Username    string
+	FirstName   string
+	LastName    string
+	Email       string
+	Password    string
+	LastLogin   pgtype.Date
+	LoginStreak int32
+	CreatedAt   pgtype.Timestamp
+	UpdatedAt   pgtype.Timestamp
 }

@@ -6,6 +6,7 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { Suspense } from 'react';
 import { Route } from 'react-router-dom';
 import { ThemeProvider } from './contexts/ThemeContext';
 import ClassDetail from './pages/ClassDetail';
@@ -44,6 +45,10 @@ setupIonicReact();
 
 const queryClient = new QueryClient();
 
+// const Home = React.lazy(() => import('./pages/Home'));
+// const PublicCards = React.lazy(() => import('./pages/PublicCards'));
+// const PublicClasses = React.lazy(() => import('./pages/PublicClasses'));
+
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
@@ -51,23 +56,33 @@ function App() {
         <TooltipProvider>
           <IonApp>
             <IonReactRouter>
-              <IonRouterOutlet>
-                <Route exact path="/" component={Index} />
-                <Route exact path="/home" component={Home} />
-                <Route exact path="/class/:id" component={ClassDetail} />
-                <Route exact path="/teacher" component={TeacherDashboard} />
-                <Route exact path="/auth" component={AuthForm} />
-                <Route exact path="/reset-password" component={ResetPass} />
-                <Route exact path="/public-cards" component={PublicCards} />
-                <Route exact path="/user-account" component={UserAccount} />
-                <Route exact path="/flashcards/:id" component={Flashcard} />
-                <Route exact path="/create-set" component={CreateSet} />
-                <Route exact path="/edit-set/:id" component={CreateSet} />
-                <Route exact path="/class/create" component={CreateClass} />
-                <Route exact path="/public-classes" component={PublicClasses} />
-                <Route exact path="/set-overview/:id" component={SetOverview} />
-                <Route component={NotFound} />
-              </IonRouterOutlet>
+              <Suspense fallback={<div>Loading...</div>}>
+                <IonRouterOutlet>
+                  <Route exact path="/" component={Index} />
+                  <Route exact path="/home" component={Home} />
+                  <Route exact path="/class/:id" component={ClassDetail} />
+                  <Route exact path="/teacher" component={TeacherDashboard} />
+                  <Route exact path="/auth" component={AuthForm} />
+                  <Route exact path="/reset-password" component={ResetPass} />
+                  <Route exact path="/public-cards" component={PublicCards} />
+                  <Route exact path="/user-account" component={UserAccount} />
+                  <Route exact path="/flashcards/:id" component={Flashcard} />
+                  <Route exact path="/create-set" component={CreateSet} />
+                  <Route exact path="/edit-set/:id" component={CreateSet} />
+                  <Route exact path="/class/create" component={CreateClass} />
+                  <Route
+                    exact
+                    path="/public-classes"
+                    component={PublicClasses}
+                  />
+                  <Route
+                    exact
+                    path="/set-overview/:id"
+                    component={SetOverview}
+                  />
+                  <Route component={NotFound} />
+                </IonRouterOutlet>
+              </Suspense>
             </IonReactRouter>
           </IonApp>
           <Toaster />
