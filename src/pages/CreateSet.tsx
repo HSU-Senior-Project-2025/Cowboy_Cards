@@ -16,12 +16,19 @@ import { useHistory, useParams } from 'react-router-dom';
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
-type FlashcardSet = {
+type Flashcard = {
   ID: number;
-  SetName: string;
-  SetDescription: string;
+  Front: string;
+  Back: string;
+  SetID: number;
   CreatedAt: string;
   UpdatedAt: string;
+};
+
+type FlashcardNew = {
+  ID?: number;
+  Front: string;
+  Back: string;
 };
 
 const CreateSet = () => {
@@ -29,36 +36,36 @@ const CreateSet = () => {
   const history = useHistory();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [cards, setCards] = useState<
-    { id?: number; front: string; back: string }[]
-  >([{ front: '', back: '' }]);
+  const [cards, setCards] = useState<FlashcardNew[]>([]);
   const [errors, setErrors] = useState({ title: '', description: '' });
   const [showDeleteAlert, setShowDeleteAlert] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    // TODO: Move to a different page for editing sets
     if (id) {
       const fetchCards = async () => {
         try {
-          const res = await fetch(`${API_BASE}/api/flashcards/list`, {
-            method: 'GET',
-            headers: {
-              set_id: id,
-            },
-          });
-          if (!res.ok) throw new Error('Failed to fetch flashcards');
-          const data = await res.json();
-          console.log(data);
-          const cardsData = Array.isArray(data) ? data : [];
+          const res = await makeHttpCall<Flashcard[]>(
+            `${API_BASE}/api/flashcards/list`,
+            {
+              method: 'GET',
+              headers: {
+                set_id: id,
+              },
+            }
+          );
+          console.log(res);
+          const cardsData = Array.isArray(res) ? res : [];
           if (cardsData.length === 0) {
-            setCards([{ front: '', back: '' }]); // ensure at least one blank card
+            setCards([{ Front: '', Back: '' }]); // ensure at least one blank card
           } else {
             setCards(
-              cardsData.map((card: any) => ({
-                id: card.ID, // Map the ID from API to the state
-                front: card.Front, // Map the Front from API to the state
-                back: card.Back, // Map the Back from API to the state
+              cardsData.map((card: FlashcardNew) => ({
+                ID: card.ID, // Map the ID from API to the state
+                Front: card.Front, // Map the Front from API to the state
+                Back: card.Back, // Map the Back from API to the state
               }))
             );
           }
@@ -211,13 +218,16 @@ const CreateSet = () => {
       // If ID is not provided, create a new set
       try {
         // 1. Create the set
-        const setResponse = await fetch(`${API_BASE}/flashcards/sets/`, {
-          method: 'POST',
-          headers: {
-            set_name: title,
-            set_description: description,
-          },
-        });
+        const setResponse = await makeHttpCall<FlashcardSet>(
+          `${API_BASE}/api/flashcards/sets/`,
+          {
+            method: 'POST',
+            headers: {
+              set_name: title,
+              set_description: description,
+            },
+          }
+        );
 
         if (!setResponse.ok)
           throw new Error(`HTTP error! Status: ${setResponse.status}`);
@@ -226,7 +236,7 @@ const CreateSet = () => {
 
         // 2. Create flashcards
         for (const card of cleanedCards) {
-          await fetch(`${API_BASE}/flashcards`, {
+          await makeHttpCall(`${API_BASE}/flashcards`, {
             method: 'POST',
             headers: {
               front: card.front,
@@ -335,6 +345,7 @@ const CreateSet = () => {
           </IonCard>
         ))}
 
+        {/* TODO: refactor to CreateSetControls component similar to ClassDetailControls */}
         {/* Add card button */}
         <div className="flex justify-center mb-6">
           <IonButton
@@ -362,6 +373,7 @@ const CreateSet = () => {
           </IonButton>
         </div>
 
+        {/*TODO: move to set overview page, and only show if user is teacher */}
         {/* Delete Set Alert */}
         <IonAlert
           isOpen={showDeleteAlert}
