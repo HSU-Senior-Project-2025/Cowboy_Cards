@@ -112,23 +112,15 @@ const ClassDetailHeader: React.FC<ClassDetailHeaderProps> = ({
             </IonButton>
           </div>
         </>
-      ) : loading ? (
-        // Loading State (Display Mode)
-        <>
-          <IonCardTitle>
-            <IonSkeletonText animated style={{ width: '60%' }} />
-          </IonCardTitle>
-          <IonCardSubtitle>
-            <IonSkeletonText animated style={{ width: '80%' }} />
-          </IonCardSubtitle>
-        </>
       ) : classData ? (
         // Display Mode (Data Loaded)
         <>
           <div className="flex items-center">
             {' '}
             {/* Flex container for title and icon */}
-            <IonCardTitle>{classData.ClassName}</IonCardTitle>
+            <h1 className="text-2xl font-bold">
+              {loading ? 'Loading...' : classData.ClassName}
+            </h1>
             {isTeacher && !isEditing && (
               <IonIcon
                 icon={pencil}
@@ -138,7 +130,9 @@ const ClassDetailHeader: React.FC<ClassDetailHeaderProps> = ({
               />
             )}
           </div>
-          <IonCardSubtitle>{classData.ClassDescription}</IonCardSubtitle>
+          <p className="text-gray-600">
+            {loading ? 'Loading...' : classData.ClassDescription}
+          </p>
         </>
       ) : (
         // Fallback if not loading and no data (Display Mode)

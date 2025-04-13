@@ -267,29 +267,27 @@ const ClassDetail = () => {
     <>
       <Navbar />
       <IonContent className="ion-padding">
-        <div className="max-w-4xl mx-auto">
+        <div id="main-content" className="max-w-4xl mx-auto">
           {/* Remove the old Back button since it's now in ClassDetailControls */}
           {error && <div className="text-red-500">{error}</div>}
 
           {/* Class Header and Edit Form Section */}
-          <IonCard className="mb-4">
-            {/* Integrate ClassDetailHeader Component */}
-            <ClassDetailHeader
-              classData={classData}
-              isTeacher={isTeacher}
-              loading={loading}
-              handleEdit={handleEdit}
-              isEditing={isEditing}
-              updatedInfo={updatedInfo}
-              errors={errors}
-              handleChange={handleChange}
-              handleSave={handleSave}
-              handleCancel={handleCancel}
-            />
+          {/* Integrate ClassDetailHeader Component */}
+          <ClassDetailHeader
+            classData={classData}
+            isTeacher={isTeacher}
+            loading={loading}
+            handleEdit={handleEdit}
+            isEditing={isEditing}
+            updatedInfo={updatedInfo}
+            errors={errors}
+            handleChange={handleChange}
+            handleSave={handleSave}
+            handleCancel={handleCancel}
+          />
 
-            {/* Integrate ClassDetailControls component */}
-            <ClassDetailControls isTeacher={isTeacher} classId={id} />
-          </IonCard>
+          {/* Integrate ClassDetailControls component */}
+          <ClassDetailControls isTeacher={isTeacher} classId={id} />
 
           {/* Integrate ClassDetailTabs Component */}
           <ClassDetailTabs selectedTab={tab} onTabChange={setTab} />

@@ -43,7 +43,7 @@ const ClassDetailControls: React.FC<ClassDetailControlsProps> = ({
         {' '}
         {/* Flex container for alignment */}
         {/* Back Button */}
-        <IonButton routerLink="/home" color="medium">
+        <IonButton onClick={() => window.history.back()} fill="outline">
           <IonIcon slot="start" icon={arrowBackOutline} />
           Back
         </IonButton>
