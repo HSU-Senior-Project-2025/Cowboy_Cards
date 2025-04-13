@@ -7,15 +7,8 @@
  */
 
 import React from 'react';
-import {
-  IonButton,
-  IonCardHeader,
-  IonCardTitle,
-  IonCardSubtitle,
-  IonIcon,
-  IonSkeletonText,
-} from '@ionic/react';
-import { pencil } from 'ionicons/icons';
+import { IonButton, IonIcon } from '@ionic/react';
+import { createOutline } from 'ionicons/icons';
 import { EditableField } from '@/utils/EditableField';
 
 // Define the structure for Class data, mirroring the one in ClassDetail.tsx
@@ -123,11 +116,12 @@ const ClassDetailHeader: React.FC<ClassDetailHeaderProps> = ({
             </h1>
             {isTeacher && !isEditing && (
               <IonIcon
-                icon={pencil}
+                icon={createOutline}
+                size="large"
+                color="primary"
+                className="hover:transform hover:scale-110 cursor-pointer p-2"
                 onClick={handleEdit}
-                className="ml-2 cursor-pointer text-lg text-blue-500 hover:text-blue-700"
-                aria-label="Edit Class Name and Description"
-              />
+              ></IonIcon>
             )}
           </div>
           <p className="text-gray-600">
