@@ -48,7 +48,7 @@ func Protected(r *chi.Mux, h *controllers.DBHandler) {
 			r.Delete("/", h.LeaveSet)
 		})
 		r.Post("/", h.JoinSet)
-		r.Get("/sets", h.ListSetsOfAUser)
+		r.Get("/list", h.ListSetsOfAUser)
 	})
 
 	// -------------------simple-------------------------

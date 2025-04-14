@@ -38,12 +38,33 @@ func (q *Queries) GetCardScore(ctx context.Context, arg GetCardScoreParams) (Get
 	return i, err
 }
 
+const getCardsMastered = `-- name: GetCardsMastered :one
+SELECT COUNT(is_mastered) FROM card_history WHERE user_id = $1 AND is_mastered = TRUE
+`
+
+func (q *Queries) GetCardsMastered(ctx context.Context, userID int32) (int64, error) {
+	row := q.db.QueryRow(ctx, getCardsMastered, userID)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
+}
+
+const getCardsStudied = `-- name: GetCardsStudied :one
+SELECT COUNT(card_id) FROM card_history WHERE user_id = $1
+`
+
+func (q *Queries) GetCardsStudied(ctx context.Context, userID int32) (int64, error) {
+	row := q.db.QueryRow(ctx, getCardsStudied, userID)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
+}
+
 const getScoresInASet = `-- name: GetScoresInASet :many
 SELECT set_name, score AS correct, (times_attempted - score) AS incorrect, score AS net_score, times_attempted 
 FROM card_history 
 JOIN flashcards ON card_history.card_id = flashcards.id
-JOIN flashcard_sets ON flashcards.set_id = flashcard_sets.id
-WHERE user_id = $1 AND set_id = $2
+JOIN flashcard_sets ON flashcards.set_id = flashcard_sets.id WHERE user_id = $1 AND set_id = $2
 `
 
 type GetScoresInASetParams struct {
@@ -83,6 +104,17 @@ func (q *Queries) GetScoresInASet(ctx context.Context, arg GetScoresInASetParams
 		return nil, err
 	}
 	return items, nil
+}
+
+const getTotalCardViews = `-- name: GetTotalCardViews :one
+SELECT SUM(times_attempted) FROM card_history WHERE user_id = $1
+`
+
+func (q *Queries) GetTotalCardViews(ctx context.Context, userID int32) (int64, error) {
+	row := q.db.QueryRow(ctx, getTotalCardViews, userID)
+	var sum int64
+	err := row.Scan(&sum)
+	return sum, err
 }
 
 const upsertCorrectFlashcardScore = `-- name: UpsertCorrectFlashcardScore :exec

@@ -16,5 +16,13 @@ WHERE user_id = $1 AND card_id = $2;
 SELECT set_name, score AS correct, (times_attempted - score) AS incorrect, score AS net_score, times_attempted 
 FROM card_history 
 JOIN flashcards ON card_history.card_id = flashcards.id
-JOIN flashcard_sets ON flashcards.set_id = flashcard_sets.id
-WHERE user_id = $1 AND set_id = $2;
+JOIN flashcard_sets ON flashcards.set_id = flashcard_sets.id WHERE user_id = $1 AND set_id = $2;
+
+-- name: GetCardsStudied :one
+SELECT COUNT(card_id) FROM card_history WHERE user_id = $1;
+
+-- name: GetCardsMastered :one
+SELECT COUNT(is_mastered) FROM card_history WHERE user_id = $1 AND is_mastered = TRUE;
+
+-- name: GetTotalCardViews :one
+SELECT SUM(times_attempted) FROM card_history WHERE user_id = $1;

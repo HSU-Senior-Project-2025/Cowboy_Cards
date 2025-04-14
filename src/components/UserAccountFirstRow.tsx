@@ -1,3 +1,4 @@
+import { EditableField } from '@/components/EditableField';
 import {
   IonButton,
   IonCard,
@@ -6,9 +7,8 @@ import {
   IonCardTitle,
   IonIcon,
 } from '@ionic/react';
-import { EditableField } from '@/utils/EditableField';
 import { createOutline } from 'ionicons/icons';
-import InfoRow from '../utils/InfoRow';
+import InfoRow from './InfoRow';
 
 const UserAccountFirstRow = (props) => {
   return (
@@ -89,10 +89,17 @@ const UserAccountFirstRow = (props) => {
               label="Account Created"
               value={props.userInfo?.created_at}
             />
-            <InfoRow label="Classes Taken" value={props.userInfo?.numClasses} />
-            <InfoRow label="Cards Shown" value={props.userInfo?.cardsSeen} />
             <InfoRow
-              label="Cards Mastered"
+              label="Login Streak"
+              value={props.userInfo?.login_streak}
+            />
+            <InfoRow label="Classes Taken" value={props.userInfo?.numClasses} />
+            <InfoRow
+              label="Cards Mastered/Studied"
+              value={`${props.userInfo?.cardsMastered} / ${props.userInfo?.cardsStudied}`}
+            />
+            <InfoRow
+              label="Total Card Views"
               value={props.userInfo?.totalCardViews}
             />
           </div>

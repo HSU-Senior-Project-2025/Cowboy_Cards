@@ -1,31 +1,14 @@
 import { Navbar } from '@/components/Navbar';
 import { useTheme } from '@/contexts/ThemeContext';
-import { EditableField } from '@/utils/EditableField';
 import { makeHttpCall } from '@/utils/makeHttpCall';
 import {
-  IonAlert,
   IonButton,
-  IonCard,
-  IonCardContent,
-  IonCardHeader,
-  IonCardTitle,
   IonContent,
   IonIcon,
-  IonInput,
-  IonItem,
-  IonLabel,
-  IonList,
-  IonSelect,
-  IonSelectOption,
   IonSpinner,
   useIonToast,
 } from '@ionic/react';
-import {
-  arrowBackOutline,
-  chevronDownOutline,
-  chevronUpOutline,
-  createOutline,
-} from 'ionicons/icons';
+import { arrowBackOutline } from 'ionicons/icons';
 import { useEffect, useState } from 'react';
 import UserAccountFirstRow from '../components/UserAccountFirstRow';
 import UserAccountSecondRow from '../components/UserAccountSecondRow';
@@ -35,9 +18,11 @@ type User = {
   email: string;
   first_name: string;
   last_name: string;
+  login_streak: number;
   created_at: string;
   numClasses: number;
-  cardsSeen: number;
+  cardsStudied: number;
+  cardsMastered: number;
   totalCardViews: number;
 };
 

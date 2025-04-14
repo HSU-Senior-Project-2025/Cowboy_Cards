@@ -79,17 +79,18 @@ func (q *Queries) GetUserByEmail(ctx context.Context, email string) (User, error
 }
 
 const getUserById = `-- name: GetUserById :one
-SELECT id, username, first_name, last_name, email, created_at, updated_at FROM users WHERE id = $1
+SELECT id, username, first_name, last_name, email, login_streak, created_at, updated_at FROM users WHERE id = $1
 `
 
 type GetUserByIdRow struct {
-	ID        int32
-	Username  string
-	FirstName string
-	LastName  string
-	Email     string
-	CreatedAt pgtype.Timestamp
-	UpdatedAt pgtype.Timestamp
+	ID          int32
+	Username    string
+	FirstName   string
+	LastName    string
+	Email       string
+	LoginStreak int32
+	CreatedAt   pgtype.Timestamp
+	UpdatedAt   pgtype.Timestamp
 }
 
 func (q *Queries) GetUserById(ctx context.Context, id int32) (GetUserByIdRow, error) {
@@ -101,6 +102,7 @@ func (q *Queries) GetUserById(ctx context.Context, id int32) (GetUserByIdRow, er
 		&i.FirstName,
 		&i.LastName,
 		&i.Email,
+		&i.LoginStreak,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)

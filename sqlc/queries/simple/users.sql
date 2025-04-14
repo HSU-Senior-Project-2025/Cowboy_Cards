@@ -2,7 +2,7 @@
 SELECT id, username, first_name, last_name, email, created_at, updated_at FROM users ORDER BY last_name, first_name;
 
 -- name: GetUserById :one
-SELECT id, username, first_name, last_name, email, created_at, updated_at FROM users WHERE id = $1;
+SELECT id, username, first_name, last_name, email, login_streak, created_at, updated_at FROM users WHERE id = $1;
 
 -- name: GetUserByEmail :one
 SELECT * FROM users WHERE email = $1;

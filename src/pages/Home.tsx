@@ -71,9 +71,7 @@ const Home = () => {
     const fetchSetsOfUser = async () => {
       setSetsLoading(true);
       try {
-        const data = await makeHttpCall<Set[]>(
-          `${API_BASE}/api/flashcards/sets/list`
-        );
+        const data = await makeHttpCall<Set[]>(`${API_BASE}/api/set_user/list`);
         setSets(data);
       } catch (error) {
         setError(`Error fetching sets: ${error.message}`);
