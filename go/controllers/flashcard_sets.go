@@ -76,12 +76,43 @@ func (h *DBHandler) CreateFlashcardSet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	flashcard_set, err := query.CreateFlashcardSet(ctx, db.CreateFlashcardSetParams{
+	// Get user_id from context (set by AuthMiddleware)
+	userID, ok := middleware.GetUserIDFromContext(ctx)
+	if !ok {
+		middleware.LogAndSendError(w, errContext, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
+
+	tx, err := conn.Begin(ctx)
+	if err != nil {
+		logAndSendError(w, err, "Database tx connection error", http.StatusInternalServerError)
+	}
+	defer tx.Rollback(ctx)
+
+	qtx := query.WithTx(tx)
+
+	flashcard_set, err := qtx.CreateFlashcardSet(ctx, db.CreateFlashcardSetParams{
 		SetName:        headerVals[set_name],
 		SetDescription: headerVals[set_description],
 	})
 	if err != nil {
 		logAndSendError(w, err, "Failed to create flashcard set", http.StatusInternalServerError)
+		return
+	}
+
+	err = qtx.JoinSet(ctx, db.JoinSetParams{
+		UserID: userID,
+		SetID:  flashcard_set.ID,
+		Role:   owner,
+	})
+	if err != nil {
+		logAndSendError(w, err, "Error adding set", http.StatusInternalServerError)
+		return
+	}
+
+	err = tx.Commit(ctx)
+	if err != nil {
+		logAndSendError(w, err, "Failed to commit transaction", http.StatusInternalServerError)
 		return
 	}
 
