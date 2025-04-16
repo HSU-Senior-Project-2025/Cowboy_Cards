@@ -12,7 +12,14 @@ import {
 import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL;
+type Flashcard = {
+  ID: number;
+  Front: string;
+  Back: string;
+  SetID: number;
+  CreatedAt: string;
+  UpdatedAt: string;
+};
 
 /**
  * CreateSet Component

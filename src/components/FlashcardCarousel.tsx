@@ -1,6 +1,7 @@
 import { makeHttpCall } from '@/utils/makeHttpCall';
 import {
   IonButton,
+  IonButtons,
   IonCard,
   IonCardContent,
   IonCardHeader,
@@ -8,9 +9,16 @@ import {
   IonCol,
   IonGrid,
   IonIcon,
+  IonRouterLink,
   IonRow,
 } from '@ionic/react';
-import { arrowBackOutline } from 'ionicons/icons';
+import {
+  arrowBackOutline,
+  createOutline,
+  trashBin,
+  trashBinOutline,
+  trashOutline,
+} from 'ionicons/icons';
 import { useEffect, useState } from 'react';
 import {
   Carousel,
@@ -21,6 +29,7 @@ import {
 } from '@/components/ui/carousel';
 import { FlashCard } from '@/components/FlashCard';
 import { useHistory } from 'react-router-dom';
+import { Link } from 'lucide-react';
 
 type Flashcards = {
   ID: number;
@@ -87,6 +96,33 @@ const FlashcardCarousel = (props) => {
                         {/* <p className="text-muted-foreground">
                                             {set.cards.length} cards
                                         </p> */}
+                        {props.isTeacher && (
+                          <IonButtons slot="end" className="flex justify-end">
+                            <IonButton
+                              onClick={(e) => {
+                                history.push(`/edit-set/${set.ID}`);
+                                e.bubbles = false;
+                                e.stopPropagation();
+                              }}
+                            >
+                              <IonIcon icon={createOutline} />
+                            </IonButton>
+                            <IonButton
+                              onClick={(e) => {
+                                e.bubbles = false;
+                                e.stopPropagation();
+                                props.onDeleteSet(set.ID);
+                              }}
+                            >
+                              <IonIcon
+                                slot="end"
+                                icon={trashOutline}
+                                color="danger"
+                                className="cursor-pointer"
+                              />
+                            </IonButton>
+                          </IonButtons>
+                        )}
                       </IonCardContent>
                     </IonCard>
                   </IonCol>

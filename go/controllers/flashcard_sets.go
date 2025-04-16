@@ -76,15 +76,7 @@ func (h *DBHandler) CreateFlashcardSet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tx, err := conn.Begin(ctx)
-	if err != nil {
-		logAndSendError(w, err, "Database tx connection error", http.StatusInternalServerError)
-	}
-	defer tx.Rollback(ctx)
-
-	qtx := query.WithTx(tx)
-
-	flashcard_set, err := qtx.CreateFlashcardSet(ctx, db.CreateFlashcardSetParams{
+	flashcard_set, err := query.CreateFlashcardSet(ctx, db.CreateFlashcardSetParams{
 		SetName:        headerVals[set_name],
 		SetDescription: headerVals[set_description],
 	})
