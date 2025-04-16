@@ -3,6 +3,7 @@ import { Navbar } from '@/components/Navbar';
 import { Flashcard, FlashcardSet } from '@/types/flashcards';
 import { makeHttpCall } from '@/utils/makeHttpCall';
 import {
+  IonAlert,
   IonButton,
   IonCard,
   IonCardContent,
@@ -22,6 +23,12 @@ const SetOverview = () => {
   const [description, setDescription] = useState('');
   const [cards, setCards] = useState<{ front: string; back: string }[]>([]);
   const [loadingCards, setLoadingCards] = useState(true);
+
+  /**
+   * State to control the visibility of the delete confirmation alert.
+   * @type {[boolean, React.Dispatch<React.SetStateAction<boolean>>]}
+   */
+  const [showDeleteAlert, setShowDeleteAlert] = useState(false);
 
   useEffect(() => {
     const fetchSetDetails = async () => {
@@ -96,23 +103,34 @@ const SetOverview = () => {
             </div>
           </div>
 
-          {/* Right: Study Set Button */}
+          {/* Right: Action Buttons */}
           <div className="self-start md:self-center flex gap-2 md:mt-0 mt-4 w-full md:w-auto">
+            {/* Edit Set Button */}
             <IonButton
-              className="rounded-lg w-1/2 md:w-auto"
+              className="rounded-lg w-1/3 md:w-auto"
               fill="outline"
               style={{ '--border-radius': '0.5rem' }}
               routerLink={`/edit-set/${id}`}
             >
               Edit Set
             </IonButton>
+            {/* Study Set Button */}
             <IonButton
-              className="rounded-lg w-1/2 md:w-auto"
+              className="rounded-lg w-1/3 md:w-auto"
               color={'primary'}
               style={{ '--border-radius': '0.5rem' }}
               routerLink={`/flashcards/${id}`}
             >
               Study Set
+            </IonButton>
+            {/* Delete Set Button */}
+            <IonButton
+              className="rounded-lg w-1/3 md:w-auto"
+              color={'danger'}
+              style={{ '--border-radius': '0.5rem' }}
+              onClick={() => setShowDeleteAlert(true)}
+            >
+              Delete Set
             </IonButton>
           </div>
         </div>
@@ -162,6 +180,34 @@ const SetOverview = () => {
           )}
         </div>
       </div>
+
+      {/* Delete Confirmation Alert */}
+      <IonAlert
+        isOpen={showDeleteAlert}
+        onDidDismiss={() => setShowDeleteAlert(false)}
+        header={'Confirm Deletion'}
+        message={
+          'Are you sure you want to delete this set? This action cannot be undone.'
+        }
+        buttons={[
+          {
+            text: 'Cancel',
+            role: 'cancel',
+            cssClass: 'secondary',
+            handler: () => {
+              console.log('Delete canceled');
+            },
+          },
+          {
+            text: 'Delete',
+            role: 'destructive',
+            handler: () => {
+              console.log('Deletion confirmed - logic pending in Step 4.2');
+              // handleDeleteSet(); // This will be uncommented/implemented in Step 4.2
+            },
+          },
+        ]}
+      />
     </IonContent>
   );
 };
