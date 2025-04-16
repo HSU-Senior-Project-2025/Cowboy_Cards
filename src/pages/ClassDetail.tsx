@@ -271,6 +271,7 @@ const ClassDetail = () => {
                 flashcardSets={flashcardSets}
                 currentCardIndex={currentCardIndex}
                 setApi={setCarouselApi} // Pass the setter for the carousel API
+                loading={loading}
               />
             )
           }

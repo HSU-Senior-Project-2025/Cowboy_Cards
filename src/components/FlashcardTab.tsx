@@ -28,6 +28,8 @@ interface FlashcardTabProps {
   currentCardIndex: number;
   /** Callback function to receive the carousel API instance. */
   setApi: (api: CarouselApi | undefined) => void;
+  /** Flag indicating if the flashcard tab is currently loading. */
+  loading: boolean;
 }
 
 /**
@@ -52,12 +54,14 @@ const FlashcardTab: React.FC<FlashcardTabProps> = ({
   flashcardSets,
   currentCardIndex,
   setApi,
+  loading,
 }) => {
   return (
     <FlashcardCarousel
       flashcardSets={flashcardSets}
       currentCardIndex={currentCardIndex}
       setApi={setApi}
+      loading={loading}
     />
   );
 };

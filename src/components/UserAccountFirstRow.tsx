@@ -1,4 +1,4 @@
-import { EditableField } from '@/components/EditableField';
+import { EditableField } from '@/utils/EditableField';
 import {
   IonButton,
   IonCard,
@@ -8,7 +8,7 @@ import {
   IonIcon,
 } from '@ionic/react';
 import { createOutline } from 'ionicons/icons';
-import InfoRow from './InfoRow';
+import InfoRow from '@/utils/InfoRow';
 
 const UserAccountFirstRow = (props) => {
   return (

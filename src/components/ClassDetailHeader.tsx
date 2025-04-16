@@ -105,6 +105,8 @@ const ClassDetailHeader: React.FC<ClassDetailHeaderProps> = ({
             </IonButton>
           </div>
         </>
+      ) : loading ? (
+        <div>Loading...</div>
       ) : classData ? (
         // Display Mode (Data Loaded)
         <>
