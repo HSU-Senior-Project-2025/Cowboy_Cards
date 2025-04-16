@@ -1,5 +1,6 @@
 // SetOverview.tsx
 import { Navbar } from '@/components/Navbar';
+import { Flashcard, FlashcardSet } from '@/types/flashcards';
 import { makeHttpCall } from '@/utils/makeHttpCall';
 import {
   IonButton,
@@ -25,13 +26,15 @@ const SetOverview = () => {
   useEffect(() => {
     const fetchSetDetails = async () => {
       try {
-        const setRes = await fetch(`${API_BASE}/api/flashcards/sets/`, {
-          method: 'GET',
-          headers: { id },
-        });
-        const setData = await setRes.json();
-        setTitle(setData.SetName);
-        setDescription(setData.SetDescription);
+        const setRes = await makeHttpCall<FlashcardSet>(
+          `${API_BASE}/api/flashcards/sets/`,
+          {
+            method: 'GET',
+            headers: { id: id },
+          }
+        );
+        setTitle(setRes.SetName);
+        setDescription(setRes.SetDescription);
       } catch (error) {
         console.error('Failed to fetch set info', error);
       }
@@ -40,10 +43,13 @@ const SetOverview = () => {
     const fetchCards = async () => {
       setLoadingCards(true);
       try {
-        const res = await makeHttpCall(`${API_BASE}/api/flashcards/list`, {
-          method: 'GET',
-          headers: { set_id: id },
-        });
+        const res = await makeHttpCall<Flashcard[]>(
+          `${API_BASE}/api/flashcards/list`,
+          {
+            method: 'GET',
+            headers: { set_id: id },
+          }
+        );
         setCards(
           Array.isArray(res)
             ? res.map((card: any) => ({

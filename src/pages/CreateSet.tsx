@@ -64,7 +64,7 @@ const CreateSet = () => {
     try {
       // 1. Create the set
       const setResponse = await makeHttpCall<FlashcardSet>(
-        `${API_BASE}/api/flashcards/sets/`,
+        `${API_BASE}/api/flashcards/sets`,
         {
           method: 'POST',
           headers: {

@@ -21,6 +21,7 @@ import PublicClasses from './pages/PublicClasses';
 import SetOverview from './pages/SetOverview';
 import TeacherDashboard from './pages/TeacherDashboard';
 import UserAccount from './pages/UserAccount';
+import EditSet from './pages/EditSet';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -68,7 +69,7 @@ function App() {
                   <Route exact path="/user-account" component={UserAccount} />
                   <Route exact path="/flashcards/:id" component={Flashcard} />
                   <Route exact path="/create-set" component={CreateSet} />
-                  <Route exact path="/edit-set/:id" component={CreateSet} />
+                  <Route exact path="/edit-set/:id" component={EditSet} />
                   <Route exact path="/class/create" component={CreateClass} />
                   <Route
                     exact
