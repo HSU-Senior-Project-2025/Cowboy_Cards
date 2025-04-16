@@ -99,7 +99,11 @@ const EditSet = () => {
       setEditedSetName(fetchedSetDetails.SetName);
       setEditedSetDescription(fetchedSetDetails.SetDescription);
       // Ensure fetched cards have positive IDs if backend guarantees it
-      setCards(fetchedCards.map((card) => ({ ...card, ID: card.ID || 0 })));
+      if (fetchedCards) {
+        setCards(fetchedCards.map((card) => ({ ...card, ID: card.ID || 0 })));
+      } else {
+        setCards([]);
+      }
     } catch (err) {
       console.error('Error fetching data for EditSet:', err);
       let message = 'Unknown error';
@@ -223,17 +227,18 @@ const EditSet = () => {
     const currentCardIds = new Set(
       cards.map((card) => card.ID).filter((id) => id > 0)
     );
-    originalCards.forEach((originalCard) => {
-      if (!currentCardIds.has(originalCard.ID)) {
-        apiPromises.push(
-          makeHttpCall(`${API_BASE}/api/flashcards`, {
-            method: 'DELETE',
-            headers: { id: originalCard.ID },
-          })
-        );
-      }
-    });
-
+    if (originalCards) {
+      originalCards.forEach((originalCard) => {
+        if (!currentCardIds.has(originalCard.ID)) {
+          apiPromises.push(
+            makeHttpCall(`${API_BASE}/api/flashcards`, {
+              method: 'DELETE',
+              headers: { id: originalCard.ID },
+            })
+          );
+        }
+      });
+    }
     // Step 3: Check for Card Updates and Creations
     cards.forEach((card) => {
       if (card.ID <= 0) {
@@ -244,7 +249,7 @@ const EditSet = () => {
             headers: {
               front: card.Front,
               back: card.Back,
-              set_id: originalSetDetails.ID,
+              id: originalSetDetails.ID,
             },
           })
         );
