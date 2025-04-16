@@ -1,7 +1,7 @@
 /**
  * @file src/pages/EditSet.tsx
  * Purpose: Provides a page for editing the details of a flashcard set
- * and managing the flashcards within that set.
+ * and managing the flashcards within that set (add, edit, delete).
  */
 
 import { Navbar } from '@/components/Navbar';
@@ -13,15 +13,15 @@ import {
   IonLoading,
   IonText,
   IonPage,
-  IonCard,
-  IonCardContent,
-  IonTextarea,
   IonButton,
-  IonIcon,
+  useIonToast,
 } from '@ionic/react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
-import { addOutline, trashOutline } from 'ionicons/icons'; // Import icons
+
+// Import the extracted components
+import SetMetadataEditor from '@/components/edit-set/SetMetadataEditor';
+import FlashcardListEditor from '@/components/edit-set/FlashcardListEditor';
 
 // Base URL for the API, likely from environment variables
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
@@ -29,79 +29,104 @@ const API_BASE = import.meta.env.VITE_API_BASE_URL;
 /**
  * EditSet Component
  *
- * Fetches and displays the details of a specific flashcard set and its cards.
- * Allows editing of set title and description, and adding, removing, and editing cards.
+ * Allows users to edit the metadata (title, description) of a flashcard set
+ * and manage its associated cards (add, edit, delete).
+ * Fetches initial set and card data based on the ID in the URL.
+ * Provides UI elements for editing and persists changes via API calls.
+ * Uses child components SetMetadataEditor and FlashcardListEditor for UI structure.
+ *
+ * @returns {JSX.Element} The EditSet page component.
  */
 const EditSet = () => {
-  // Get the set ID from the URL parameters
+  /** @type {{ id: string }} Extracts the set ID from the URL route parameters. */
   const { id } = useParams<{ id: string }>();
+  /** @type {Function} Hook to display toast notifications for feedback. */
+  const [presentToast] = useIonToast();
 
-  // State for storing original fetched data
+  // --- State Variables ---
+  /** @type {FlashcardSet | null} Stores the original set details fetched from the API. Used for comparison. */
   const [originalSetDetails, setOriginalSetDetails] =
     useState<FlashcardSet | null>(null);
-  const [originalCards, setOriginalCards] = useState<Flashcard[]>([]); // Keep original cards for comparison later
+  /** @type {Flashcard[]} Stores the original list of cards fetched from the API. Used for comparison. */
+  const [originalCards, setOriginalCards] = useState<Flashcard[]>([]);
 
-  // State for editable data
+  /** @type {string} Holds the current edited value for the set's name in the input field. */
   const [editedSetName, setEditedSetName] = useState<string>('');
+  /** @type {string} Holds the current edited value for the set's description in the input field. */
   const [editedSetDescription, setEditedSetDescription] = useState<string>('');
-  const [cards, setCards] = useState<Flashcard[]>([]); // This holds the current editable list of cards
+  /** @type {Flashcard[]} Holds the current, potentially modified, list of cards being edited in the UI. */
+  const [cards, setCards] = useState<Flashcard[]>([]);
 
-  // State for managing loading and error status
+  /** @type {boolean} Tracks the loading state during the initial data fetch. */
   const [loading, setLoading] = useState<boolean>(true);
+  /** @type {string | null} Stores any error message encountered during the initial data fetch. */
   const [error, setError] = useState<string | null>(null);
+  /** @type {boolean} Tracks the loading state during the save operation (API calls). */
+  const [isSaving, setIsSaving] = useState<boolean>(false);
+  /** @type {string | null} Stores any error message encountered during the save operation. */
+  const [saveError, setSaveError] = useState<string | null>(null);
 
-  // Fetch initial data
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!id) {
-        setError('Set ID is missing from URL.');
-        setLoading(false);
-        return;
-      }
-      setLoading(true);
-      setError(null);
-      try {
-        const [fetchedSetDetails, fetchedCards] = await Promise.all([
-          makeHttpCall<FlashcardSet>(`${API_BASE}/api/flashcards/sets/`, {
-            method: 'GET',
-            headers: { id: id },
-          }),
-          makeHttpCall<Flashcard[]>(`${API_BASE}/api/flashcards/list`, {
-            method: 'GET',
-            headers: { set_id: id },
-          }),
-        ]);
-
-        // Store original data
-        setOriginalSetDetails(fetchedSetDetails);
-        setOriginalCards(fetchedCards);
-
-        // Initialize editable state
-        setEditedSetName(fetchedSetDetails.SetName);
-        setEditedSetDescription(fetchedSetDetails.SetDescription);
-        setCards(fetchedCards); // Initialize editable cards with fetched cards
-      } catch (err) {
-        console.error('Error fetching data for EditSet:', err);
-        let message = 'Unknown error';
-        if (err instanceof Error) message = err.message;
-        setError(`Failed to load set data: ${message}`);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
+  /**
+   * Fetches initial set details and card list from the backend.
+   * Uses `useCallback` to memoize the function, preventing unnecessary re-creation.
+   * Called on component mount and when the `id` parameter changes.
+   * Updates original state and initializes editable state.
+   * @async
+   */
+  const fetchData = useCallback(async () => {
+    if (!id) {
+      setError('Set ID is missing from URL.');
+      setLoading(false);
+      return;
+    }
+    // Reset states before fetching
+    setLoading(true);
+    setError(null);
+    setSaveError(null);
+    try {
+      const [fetchedSetDetails, fetchedCards] = await Promise.all([
+        makeHttpCall<FlashcardSet>(`${API_BASE}/api/flashcards/sets/`, {
+          method: 'GET',
+          headers: { id: id },
+        }),
+        makeHttpCall<Flashcard[]>(`${API_BASE}/api/flashcards/list`, {
+          method: 'GET',
+          headers: { set_id: id },
+        }),
+      ]);
+      setOriginalSetDetails(fetchedSetDetails);
+      setOriginalCards(fetchedCards);
+      setEditedSetName(fetchedSetDetails.SetName);
+      setEditedSetDescription(fetchedSetDetails.SetDescription);
+      // Ensure fetched cards have positive IDs if backend guarantees it
+      setCards(fetchedCards.map((card) => ({ ...card, ID: card.ID || 0 })));
+    } catch (err) {
+      console.error('Error fetching data for EditSet:', err);
+      let message = 'Unknown error';
+      if (err instanceof Error) message = err.message;
+      setError(`Failed to load set data: ${message}`);
+    } finally {
+      setLoading(false);
+    }
   }, [id]);
+
+  // Effect hook to run `fetchData` on mount and when `fetchData` (dependency: id) changes.
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   // --- State Handlers ---
 
   /**
-   * Handles changes to the set's title or description inputs.
+   * Updates the state for the edited set name or description based on input changes.
+   * @param {'SetName' | 'SetDescription'} field - The specific field being changed.
+   * @param {string | null | undefined} value - The new value from the input event.
    */
   const handleSetDetailChange = (
     field: 'SetName' | 'SetDescription',
     value: string | null | undefined
   ) => {
-    const newValue = value ?? ''; // Ensure value is a string
+    const newValue = value ?? '';
     if (field === 'SetName') {
       setEditedSetName(newValue);
     } else {
@@ -110,45 +135,167 @@ const EditSet = () => {
   };
 
   /**
-   * Adds a new, empty flashcard template to the editable cards list.
-   * Uses Date.now() as a temporary unique key for React rendering before saving.
-   * The actual ID will be assigned by the backend.
+   * Appends a new, empty flashcard object to the `cards` state array.
+   * New cards are initialized with ID = 0 to differentiate them from existing cards.
    */
   const addCard = () => {
-    if (!originalSetDetails) return; // Should not happen if data loaded
-
+    if (!originalSetDetails) return;
     const newCard: Flashcard = {
-      ID: Date.now(), // Temporary ID for React key - ensure this doesn't conflict with real IDs
+      ID: 0, // Use 0 to indicate a new card, backend assigns real ID
       Front: '',
       Back: '',
-      SetID: originalSetDetails.ID, // Assign the correct SetID
-      CreatedAt: new Date().toISOString(), // Placeholder, backend will set real dates
-      UpdatedAt: new Date().toISOString(), // Placeholder
+      SetID: originalSetDetails.ID,
+      CreatedAt: new Date().toISOString(),
+      UpdatedAt: new Date().toISOString(),
     };
     setCards([...cards, newCard]);
   };
 
   /**
-   * Removes a card from the editable cards list at the specified index.
+   * Removes a flashcard from the `cards` state array at the specified index.
+   * @param {number} index - The index of the card to remove.
    */
   const removeCard = (index: number) => {
     setCards(cards.filter((_, i) => i !== index));
   };
 
   /**
-   * Updates the Front or Back content of a card in the editable list.
+   * Updates the `Front` or `Back` field of a specific card in the `cards` state array.
+   * @param {number} index - The index of the card to update.
+   * @param {'Front' | 'Back'} field - The specific field (`Front` or `Back`) to update.
+   * @param {string | null | undefined} value - The new value from the input event.
    */
   const updateCard = (
     index: number,
     field: 'Front' | 'Back',
     value: string | null | undefined
   ) => {
-    const newValue = value ?? ''; // Ensure value is a string
+    const newValue = value ?? '';
     setCards(
       cards.map((card, i) =>
         i === index ? { ...card, [field]: newValue } : card
       )
     );
+  };
+
+  // --- Save Logic ---
+
+  /**
+   * Orchestrates saving all changes (set details, card adds/updates/deletes) to the backend.
+   * 1. Compares edited set details with original and queues PUT requests if changed.
+   * 2. Compares original card list with current list and queues DELETE requests for removed cards.
+   * 3. Iterates through current cards:
+   *    - Queues POST requests for new cards (ID <= 0).
+   *    - Compares existing cards (ID > 0) with originals and queues PUT requests if changed.
+   * 4. Executes all queued API calls concurrently using `Promise.all`.
+   * 5. Provides user feedback (loading state, toasts) and re-fetches data on success.
+   * @async
+   */
+  const handleSaveChanges = async () => {
+    if (!originalSetDetails || isSaving) return;
+
+    setIsSaving(true);
+    setSaveError(null);
+    const apiPromises: Promise<any>[] = [];
+
+    // Step 1: Check for Set Detail Updates
+    if (editedSetName !== originalSetDetails.SetName) {
+      apiPromises.push(
+        makeHttpCall(`${API_BASE}/api/flashcards/sets/set_name`, {
+          method: 'PUT',
+          headers: { id: originalSetDetails.ID, set_name: editedSetName },
+        })
+      );
+    }
+    if (editedSetDescription !== originalSetDetails.SetDescription) {
+      apiPromises.push(
+        makeHttpCall(`${API_BASE}/api/flashcards/sets/set_description`, {
+          method: 'PUT',
+          headers: {
+            id: originalSetDetails.ID,
+            set_description: editedSetDescription,
+          },
+        })
+      );
+    }
+
+    // Step 2: Check for Card Deletions
+    const currentCardIds = new Set(
+      cards.map((card) => card.ID).filter((id) => id > 0)
+    );
+    originalCards.forEach((originalCard) => {
+      if (!currentCardIds.has(originalCard.ID)) {
+        apiPromises.push(
+          makeHttpCall(`${API_BASE}/api/flashcards`, {
+            method: 'DELETE',
+            headers: { id: originalCard.ID },
+          })
+        );
+      }
+    });
+
+    // Step 3: Check for Card Updates and Creations
+    cards.forEach((card) => {
+      if (card.ID <= 0) {
+        // Case: New Card - Queue POST request
+        apiPromises.push(
+          makeHttpCall<Flashcard>(`${API_BASE}/api/flashcards`, {
+            method: 'POST',
+            headers: {
+              front: card.Front,
+              back: card.Back,
+              set_id: originalSetDetails.ID,
+            },
+          })
+        );
+      } else {
+        // Case: Existing Card - Check for updates
+        const originalCard = originalCards.find((oc) => oc.ID === card.ID);
+        if (originalCard) {
+          // Subcase: Front updated - Queue PUT request
+          if (card.Front !== originalCard.Front) {
+            apiPromises.push(
+              makeHttpCall(`${API_BASE}/api/flashcards/front`, {
+                method: 'PUT',
+                headers: { id: card.ID, front: card.Front },
+              })
+            );
+          }
+          // Subcase: Back updated - Queue PUT request
+          if (card.Back !== originalCard.Back) {
+            apiPromises.push(
+              makeHttpCall(`${API_BASE}/api/flashcards/back`, {
+                method: 'PUT',
+                headers: { id: card.ID, back: card.Back },
+              })
+            );
+          }
+        }
+      }
+    });
+
+    // Step 4: Execute all API Calls
+    try {
+      await Promise.all(apiPromises);
+      presentToast({
+        message: 'Changes saved successfully!',
+        duration: 2000,
+        color: 'success',
+      });
+      await fetchData();
+    } catch (err) {
+      console.error('Error saving changes:', err);
+      let message = 'Unknown error during save';
+      if (err instanceof Error) message = err.message;
+      setSaveError(`Failed to save changes: ${message}`);
+      presentToast({
+        message: `Save failed: ${message}`,
+        duration: 3000,
+        color: 'danger',
+      });
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   // --- Render --- //
@@ -164,116 +311,49 @@ const EditSet = () => {
           <h1 className="text-3xl font-bold mb-6">Edit Flashcard Set</h1>
 
           <IonLoading isOpen={loading} message={'Loading set data...'} />
+          <IonLoading isOpen={isSaving} message={'Saving changes...'} />
 
           {error && !loading && (
-            <IonText color="danger">
-              <p>Error: {error}</p>
+            <IonText color="danger" className="block mb-4">
+              <p>Error loading data: {error}</p>
+            </IonText>
+          )}
+          {saveError && !isSaving && (
+            <IonText color="danger" className="block mb-4">
+              <p>Error saving: {saveError}</p>
             </IonText>
           )}
 
           {!loading && !error && originalSetDetails && (
             <>
-              {/* Set Details Inputs */}
-              <IonCard className="mb-6 rounded-lg border shadow-sm">
-                <IonCardContent>
-                  <IonTextarea
-                    label="Set Title" // Added label for clarity
-                    labelPlacement="stacked"
-                    placeholder="Enter set title"
-                    value={editedSetName}
-                    onIonChange={(e) =>
-                      handleSetDetailChange('SetName', e.detail.value)
-                    }
-                    rows={1}
-                    autoGrow
-                    className="w-full text-xl font-bold mb-2"
-                    style={{ resize: 'none' }}
-                  />
-                  {/* TODO: Add validation error display if needed */}
+              {/* Use SetMetadataEditor Component */}
+              <SetMetadataEditor
+                setName={editedSetName}
+                setDescription={editedSetDescription}
+                onNameChange={(value) =>
+                  handleSetDetailChange('SetName', value)
+                }
+                onDescriptionChange={(value) =>
+                  handleSetDetailChange('SetDescription', value)
+                }
+              />
 
-                  <IonTextarea
-                    label="Set Description" // Added label for clarity
-                    labelPlacement="stacked"
-                    placeholder="Enter set description"
-                    value={editedSetDescription}
-                    onIonChange={(e) =>
-                      handleSetDetailChange('SetDescription', e.detail.value)
-                    }
-                    rows={2} // Allow a bit more space for description
-                    autoGrow
-                    className="w-full text-base mt-4"
-                    style={{ resize: 'none' }}
-                  />
-                  {/* TODO: Add validation error display if needed */}
-                </IonCardContent>
-              </IonCard>
+              {/* Use FlashcardListEditor Component */}
+              <FlashcardListEditor
+                cards={cards}
+                onAddCard={addCard}
+                onRemoveCard={removeCard}
+                onUpdateCard={updateCard}
+              />
 
-              {/* Cards List Editor */}
-              <h2 className="text-xl font-semibold mb-2">Edit Cards</h2>
-              {cards.map((card, index) => (
-                <IonCard
-                  key={card.ID} // Use card ID as key (or temporary ID for new cards)
-                  className="mb-4 rounded-lg border shadow-sm"
-                >
-                  <IonCardContent>
-                    <div className="flex justify-between items-start mb-2">
-                      <span className="text-sm font-semibold text-gray-600">
-                        Card {index + 1} {card.ID > 0 ? '(Existing)' : '(New)'}{' '}
-                        {/* Indicate if card is new */}
-                      </span>
-                      <IonButton
-                        fill="clear"
-                        color="danger"
-                        size="small"
-                        onClick={() => removeCard(index)}
-                        className="-mt-2 -mr-2" // Adjust position slightly
-                      >
-                        <IonIcon slot="icon-only" icon={trashOutline} />
-                      </IonButton>
-                    </div>
-                    <IonTextarea
-                      label={`Front (Card ${index + 1})`} // Unique label
-                      labelPlacement="stacked"
-                      placeholder="Front of card"
-                      value={card.Front}
-                      onIonChange={(e) =>
-                        updateCard(index, 'Front', e.detail.value)
-                      }
-                      rows={2}
-                      autoGrow
-                      className="mb-3"
-                      style={{ resize: 'none' }}
-                    />
-                    <IonTextarea
-                      label={`Back (Card ${index + 1})`} // Unique label
-                      labelPlacement="stacked"
-                      placeholder="Back of card"
-                      value={card.Back}
-                      onIonChange={(e) =>
-                        updateCard(index, 'Back', e.detail.value)
-                      }
-                      rows={2}
-                      autoGrow
-                      style={{ resize: 'none' }}
-                    />
-                  </IonCardContent>
-                </IonCard>
-              ))}
-
-              {/* Add Card Button */}
-              <div className="flex justify-center mt-4 mb-6">
-                <IonButton onClick={addCard} fill="outline">
-                  <IonIcon slot="start" icon={addOutline} /> Add Card
-                </IonButton>
-              </div>
-
-              {/* Save Changes Button (Placeholder for Step 3.3) */}
+              {/* Save Changes Button remains here */}
               <div className="flex justify-end">
                 <IonButton
-                  onClick={() => console.log('Save changes clicked')} // Placeholder action
+                  onClick={handleSaveChanges}
                   color="primary"
+                  disabled={isSaving}
                 >
-                  Save Changes
+                  {isSaving ? 'Saving...' : 'Save Changes'}
                 </IonButton>
               </div>
             </>
