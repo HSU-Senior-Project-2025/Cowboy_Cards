@@ -3,7 +3,7 @@ import { Navbar } from '@/components/Navbar';
 import { type CarouselApi } from '@/components/ui/carousel';
 import { makeHttpCall } from '@/utils/makeHttpCall';
 import { IonContent } from '@ionic/react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import ClassDetailHeader from '@/components/ClassDetailHeader';
 import ClassDetailControls from '@/components/ClassDetailControls';
@@ -11,6 +11,7 @@ import ClassDetailTabs from '@/components/ClassDetailTabs';
 import FlashcardTab from '@/components/FlashcardTab';
 import LeaderboardTab from '@/components/LeaderboardTab';
 import StudentTab from '@/components/StudentTab';
+import AddSetToClassDialog from '@/components/AddSetToClassDialog';
 
 type Class = {
   ID: number;
@@ -46,7 +47,7 @@ type GetClassScoresRow = {
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 const ClassDetail = () => {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
   console.log('id', id);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [carouselApi, setCarouselApi] = useState<CarouselApi>();
@@ -67,6 +68,8 @@ const ClassDetail = () => {
     class_name: '',
     class_description: '',
   });
+
+  const [showAddSetDialog, setShowAddSetDialog] = useState(false);
 
   const handleEdit = () => {
     console.log('Handling Edit');
@@ -151,65 +154,69 @@ const ClassDetail = () => {
     setIsEditing(false);
   };
 
-  useEffect(() => {
-    async function fetchDataForClass() {
-      setLoading(true);
-      setLoadingScores(true);
-      setError(null);
-      try {
-        const [classDetails, sets, users, scores] = await Promise.all([
-          makeHttpCall<Class>(`${API_BASE}/api/classes/`, {
+  const fetchDataForClass = useCallback(async () => {
+    setLoading(true);
+    setLoadingScores(true);
+    setError(null);
+    try {
+      const [classDetails, sets, users, scores] = await Promise.all([
+        makeHttpCall<Class>(`${API_BASE}/api/classes/`, {
+          method: 'GET',
+          headers: { id: id },
+        }),
+
+        makeHttpCall<FlashcardSet[]>(`${API_BASE}/api/class_set/list_sets`, {
+          method: 'GET',
+          headers: { id: id },
+        }),
+
+        makeHttpCall<ClassUser[]>(`${API_BASE}/api/class_user/members`, {
+          method: 'GET',
+          headers: { class_id: id },
+        }),
+
+        makeHttpCall<GetClassScoresRow[]>(
+          `${API_BASE}/api/classes/leaderboard`,
+          {
             method: 'GET',
             headers: { id: id },
-          }),
+          }
+        ),
+      ]);
 
-          makeHttpCall<FlashcardSet[]>(`${API_BASE}/api/class_set/list_sets`, {
-            method: 'GET',
-            headers: { id: id },
-          }),
+      console.log('data', classDetails);
+      setIsTeacher(classDetails.Role === 'teacher');
+      setClassData(classDetails);
 
-          makeHttpCall<ClassUser[]>(`${API_BASE}/api/class_user/members`, {
-            method: 'GET',
-            headers: { class_id: id },
-          }),
+      console.log('sets', sets);
+      setFlashcardSets(sets || []);
 
-          makeHttpCall<GetClassScoresRow[]>(
-            `${API_BASE}/api/classes/leaderboard`,
-            {
-              method: 'GET',
-              headers: { id: id },
-            }
-          ),
-        ]);
+      console.log('users', users);
+      setClassUsers(users || []);
 
-        console.log('data', classDetails);
-        setIsTeacher(classDetails.Role === 'teacher');
-        setClassData(classDetails);
-
-        console.log('sets', sets);
-        setFlashcardSets(sets);
-
-        console.log('users', users);
-        setClassUsers(users);
-
-        console.log('scores', scores);
-        setLeaderboardData(scores);
-      } catch (error) {
-        setError(`Error fetching class data: ${error.message}`);
-      } finally {
-        setLoading(false);
-        setLoadingScores(false);
-      }
+      console.log('scores', scores);
+      setLeaderboardData(scores || []);
+    } catch (error) {
+      let message = 'Unknown error';
+      if (error instanceof Error) message = error.message;
+      setError(`Error fetching class data: ${message}`);
+      setClassData(undefined);
+      setFlashcardSets([]);
+      setClassUsers([]);
+      setLeaderboardData([]);
+    } finally {
+      setLoading(false);
+      setLoadingScores(false);
     }
-
-    fetchDataForClass();
   }, [id]);
+
+  useEffect(() => {
+    fetchDataForClass();
+  }, [fetchDataForClass]);
 
   const handleDeleteStudent = async (studentId: number | null) => {
     if (studentId === null) return;
     try {
-      // TODO: Usees the wrong endpoint for deleting a student, deletes the current user from the  class
-      // TODO: Need endpoint for deleting a student from a class, should verify that the user is a teacher in the backend
       await makeHttpCall(`${API_BASE}/api/class_user/`, {
         method: 'DELETE',
         headers: {
@@ -253,7 +260,11 @@ const ClassDetail = () => {
             handleCancel={handleCancel}
           />
 
-          <ClassDetailControls isTeacher={isTeacher} classId={id} />
+          <ClassDetailControls
+            isTeacher={isTeacher}
+            classId={id}
+            onAddSetClick={() => setShowAddSetDialog(true)}
+          />
 
           <ClassDetailTabs selectedTab={tab} onTabChange={setTab} />
 
@@ -264,31 +275,33 @@ const ClassDetail = () => {
             />
           )}
 
-          {
-            // Render FlashcardTab when 'flashcards' tab is active
-            tab === 'flashcards' && (
-              <FlashcardTab
-                flashcardSets={flashcardSets}
-                currentCardIndex={currentCardIndex}
-                setApi={setCarouselApi} // Pass the setter for the carousel API
-                loading={loading}
-              />
-            )
-          }
+          {tab === 'flashcards' && (
+            <FlashcardTab
+              flashcardSets={flashcardSets}
+              currentCardIndex={currentCardIndex}
+              setApi={setCarouselApi}
+              loading={loading}
+            />
+          )}
 
-          {
-            // Render StudentTab when 'students' tab is active
-            tab === 'students' && (
-              <StudentTab
-                isTeacher={isTeacher}
-                students={classUsers} // Pass classUsers as the students prop
-                handleActualDelete={handleDeleteStudent} // Pass the actual delete handler
-              />
-            )
-          }
+          {tab === 'students' && (
+            <StudentTab
+              isTeacher={isTeacher}
+              students={classUsers}
+              handleActualDelete={handleDeleteStudent}
+            />
+          )}
         </div>
         <Footer />
       </IonContent>
+
+      <AddSetToClassDialog
+        isOpen={showAddSetDialog}
+        onDidDismiss={() => setShowAddSetDialog(false)}
+        classId={id}
+        existingSetIds={flashcardSets.map((set) => set.ID)}
+        onSetAdded={fetchDataForClass}
+      />
     </>
   );
 };

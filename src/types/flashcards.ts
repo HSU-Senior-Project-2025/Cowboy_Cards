@@ -30,7 +30,7 @@ export interface Flashcard {
  */
 export interface FlashcardSet {
   /** Corresponds to `db.FlashcardSet.ID` (int32) */
-  ID: number;
+  SetID: number;
   /** Corresponds to `db.FlashcardSet.SetName` (string) */
   SetName: string;
   /** Corresponds to `db.FlashcardSet.SetDescription` (string) */
@@ -57,6 +57,10 @@ export interface SetUser {
   SetScore: number;
   /** Corresponds to `db.SetUser.IsPrivate` (bool) - Whether this association is private */
   IsPrivate: boolean;
+  /** Corresponds to `db.SetUser.SetName` (string) */
+  SetName: string;
+  /** Corresponds to `db.SetUser.SetDescription` (string) */
+  SetDescription: string;
 }
 
 /**

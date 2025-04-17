@@ -5,7 +5,7 @@
  */
 
 import React from 'react';
-import FlashcardCarousel from '@/components/FlashcardCarousel';
+import FlashcardSetList from '@/components/FlashcardSetList';
 import { type CarouselApi } from '@/components/ui/carousel';
 
 // TODO: Move this type to a shared types file (e.g., src/types/index.ts)
@@ -57,7 +57,7 @@ const FlashcardTab: React.FC<FlashcardTabProps> = ({
   loading,
 }) => {
   return (
-    <FlashcardCarousel
+    <FlashcardSetList
       flashcardSets={flashcardSets}
       currentCardIndex={currentCardIndex}
       setApi={setApi}

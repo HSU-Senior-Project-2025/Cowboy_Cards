@@ -6,7 +6,7 @@
 
 import React from 'react';
 import { IonButton, IonIcon, IonCardContent } from '@ionic/react';
-import { arrowBackOutline, createOutline } from 'ionicons/icons';
+import { arrowBackOutline, createOutline, addOutline } from 'ionicons/icons';
 
 /**
  * Props for the ClassDetailControls component.
@@ -17,6 +17,8 @@ interface ClassDetailControlsProps {
   isTeacher: boolean;
   /** The ID of the current class, needed for the create set link. */
   classId: string | undefined;
+  /** Callback function to open the Add Set dialog. */
+  onAddSetClick: () => void;
 }
 
 /**
@@ -32,6 +34,7 @@ interface ClassDetailControlsProps {
 const ClassDetailControls: React.FC<ClassDetailControlsProps> = ({
   isTeacher,
   classId,
+  onAddSetClick,
 }) => {
   // Render the Back button and, conditionally, the Create Set button.
   // Using IonCardContent for consistent padding/margin with other sections.
@@ -49,9 +52,18 @@ const ClassDetailControls: React.FC<ClassDetailControlsProps> = ({
         </IonButton>
         {/* Create Set Button (Only for Teachers) */}
         {isTeacher && (
-          <div>
-            {' '}
-            {/* Simple div wrapper for the conditional button */}
+          <div className="flex gap-2">
+            {/* Add Existing Set Button */}
+            <IonButton
+              onClick={onAddSetClick}
+              color="secondary"
+              disabled={!classId} // Disable if classId isn't available yet
+            >
+              <IonIcon slot="start" icon={addOutline} />
+              Add Existing Set
+            </IonButton>
+
+            {/* Create New Set Button */}
             {/* TODO: Confirm create-set route and query param handling */}
             <IonButton
               routerLink={`/create-set?classId=${classId}`}
@@ -59,7 +71,7 @@ const ClassDetailControls: React.FC<ClassDetailControlsProps> = ({
               disabled={!classId} // Disable if classId isn't available yet
             >
               <IonIcon slot="start" icon={createOutline} />
-              Create Flashcard Set
+              Create New Set
             </IonButton>
           </div>
         )}
