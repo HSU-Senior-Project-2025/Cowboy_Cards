@@ -16,8 +16,6 @@ import { useHistory, useParams } from 'react-router-dom';
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
-//TODO: add a button to add this set to a class
-
 const SetOverview = () => {
   const { id } = useParams<{ id: string }>();
   const history = useHistory();

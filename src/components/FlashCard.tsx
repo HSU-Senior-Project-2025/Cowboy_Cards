@@ -11,7 +11,6 @@ interface FlashCardProps {
   back: string;
   onAdvance?: () => void;
   cardId: number;
-  userId: number;
 }
 
 export const FlashCard = ({
@@ -19,16 +18,15 @@ export const FlashCard = ({
   back,
   onAdvance,
   cardId,
-  userId,
 }: FlashCardProps) => {
   const [isFlipped, setIsFlipped] = useState(false);
 
   const handleScoreUpdate = async (endpoint: string) => {
+    // TODO: user_id should be from context
     try {
       const result = await makeHttpCall(`${API_BASE}${endpoint}`, {
         method: 'POST',
         headers: {
-          user_id: userId.toString(),
           card_id: cardId.toString(),
         },
       });

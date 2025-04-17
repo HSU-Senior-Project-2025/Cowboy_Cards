@@ -151,11 +151,11 @@ const FlashcardCarousel = (props) => {
               <CarouselContent className="-mt-1 h-[400px]">
                 {flashcards.map((card) => (
                   <CarouselItem key={card.ID}>
+                    {/* TODO: user_id should be from context */}
                     <FlashCard
                       front={card.Front}
                       back={card.Back}
                       cardId={card.ID}
-                      userId={1}
                     />
                   </CarouselItem>
                 ))}
