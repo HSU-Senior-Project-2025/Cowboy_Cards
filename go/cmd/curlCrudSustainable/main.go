@@ -565,8 +565,6 @@ func class_userTest() {
 	}
 	fmt.Print(curlOutput)
 
-	// fmt.Print(curlOutput)
-
 	// reset cookie
 	cookie = realCookie
 
