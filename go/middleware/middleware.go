@@ -13,7 +13,7 @@ import (
 )
 
 var (
-	allowList = []string{"https://cowboy-cards.org", "https://cowboy-cards.dsouth.org", "http://localhost:8080", "http://10.84.16.34:8080"} // last one is mobile dev only, should change every time, so check
+	allowList = []string{"https://cowboy-cards.org", "https://cowboy-cards.dsouth.org", "http://localhost:8080", "http://10.76.16.143:8080"} // last one is mobile dev only, should change every time, so check
 	Cors      = cors.New(cors.Options{
 		AllowedOrigins: allowList,
 		AllowedMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},

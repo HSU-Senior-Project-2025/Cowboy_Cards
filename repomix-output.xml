@@ -1,0 +1,5597 @@
+This file is a merged representation of the entire codebase, combined into a single document by Repomix.
+The content has been processed where content has been compressed (code blocks are separated by ⋮---- delimiter).
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Content has been compressed - code blocks are separated by ⋮---- delimiter
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+<additional_info>
+
+</additional_info>
+
+</file_summary>
+
+<directory_structure>
+go/
+  app/
+    app_test.go
+    app.go
+  controllers/
+    auth.go
+    card_history.go
+    class_set.go
+    class_user.go
+    classes.go
+    flashcard_sets.go
+    flashcards.go
+    set_user.go
+    users.go
+    util.go
+  db/
+    card_history.sql.go
+    class_set.sql.go
+    class_user.sql.go
+    classes.sql.go
+    db.go
+    flashcard_sets.sql.go
+    flashcards.sql.go
+    models.go
+    set_user.sql.go
+    users.sql.go
+  middleware/
+    csrf.go
+    middleware.go
+    paseto.go
+    util.go
+  routes/
+    routes.go
+  main.go
+sqlc/
+  queries/
+    complex/
+      card_history.sql
+      class_set.sql
+      class_user.sql
+      classes.sql
+      set_user.sql
+    simple/
+      classes.sql
+      flashcard_sets.sql
+      flashcards.sql
+      users.sql
+  schema.sql
+  script.sql
+  sqlc.yaml
+src/
+  components/
+    auth/
+      AuthForm.tsx
+      ConfirmResetPass.tsx
+      ResetPass.tsx
+    ui/
+      accordion.tsx
+      alert-dialog.tsx
+      alert.tsx
+      aspect-ratio.tsx
+      avatar.tsx
+      badge.tsx
+      breadcrumb.tsx
+      button.tsx
+      calendar.tsx
+      card.tsx
+      carousel.tsx
+      chart.tsx
+      checkbox.tsx
+      collapsible.tsx
+      command.tsx
+      context-menu.tsx
+      dialog.tsx
+      drawer.tsx
+      dropdown-menu.tsx
+      form.tsx
+      hover-card.tsx
+      input-otp.tsx
+      input.tsx
+      label.tsx
+      menubar.tsx
+      navigation-menu.tsx
+      pagination.tsx
+      popover.tsx
+      progress.tsx
+      radio-group.tsx
+      resizable.tsx
+      scroll-area.tsx
+      select.tsx
+      separator.tsx
+      sheet.tsx
+      sidebar.tsx
+      skeleton.tsx
+      slider.tsx
+      sonner.tsx
+      switch.tsx
+      table.tsx
+      tabs.tsx
+      textarea.tsx
+      toast.tsx
+      toaster.tsx
+      toggle-group.tsx
+      toggle.tsx
+      tooltip.tsx
+      use-toast.ts
+    AddSetToClassDialog.tsx
+    ClassDetailControls.tsx
+    ClassDetailHeader.tsx
+    ClassDetailTabs.tsx
+    FlashCard.tsx
+    FlashcardListEditor.tsx
+    FlashcardSetList.tsx
+    Footer.tsx
+    Leaderboard.tsx
+    LeaderboardTab.tsx
+    LoginStreakCard.tsx
+    Navbar.tsx
+    SetCardList.tsx
+    SetMetadataEditor.tsx
+    SetOverviewControls.tsx
+    SetOverviewHeader.tsx
+    StudentList.tsx
+    StudentTab.tsx
+    UserAccountFirstRow.tsx
+    UserAccountSecondRow.tsx
+  contexts/
+    ThemeContext.tsx
+  hooks/
+    use-mobile.tsx
+    use-toast.ts
+    useClassQueries.ts
+    useFlashcardQueries.ts
+    useSetQueries.ts
+  lib/
+    utils.ts
+  pages/
+    ClassDetail.tsx
+    CreateClass.tsx
+    CreateSet.tsx
+    Flashcard.tsx
+    Home.tsx
+    Index.tsx
+    NotFound.tsx
+    PublicCards.tsx
+    PublicClasses.tsx
+    SetOverview.tsx
+    UserAccount.tsx
+  types/
+    globalTypes.ts
+  utils/
+    EditableField.tsx
+    InfoRow.tsx
+    makeHttpCall.ts
+  App.css
+  App.tsx
+  index.css
+  main.tsx
+  vite-env.d.ts
+.gitignore
+capacitor.config.ts
+components.json
+Dockerfile
+eslint.config.js
+FORMATTINGSTANDARDS.md
+GITWORKFLOW.md
+go.mod
+index.html
+ionic.config.json
+package.json
+postcss.config.js
+README.md
+tailwind.config.ts
+tsconfig.app.json
+tsconfig.json
+tsconfig.node.json
+vite.config.ts
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path="go/app/app_test.go">
+package app
+⋮----
+import (
+	// "net/http"
+	"net/http/httptest"
+	"testing"
+)
+⋮----
+// "net/http"
+"net/http/httptest"
+"testing"
+⋮----
+func TestGetClasses(t *testing.T)
+⋮----
+// request, _ := http.NewRequest(http.MethodGet, "/classes", nil)
+⋮----
+// PlayerServer(response, request)
+</file>
+
+<file path="go/controllers/class_set.go">
+package controllers
+⋮----
+import (
+	"encoding/json"
+	"net/http"
+
+	"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/db"
+	"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/middleware"
+)
+⋮----
+"encoding/json"
+"net/http"
+⋮----
+"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/db"
+"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/middleware"
+⋮----
+func (h *DBHandler) AddSetToClass(w http.ResponseWriter, r *http.Request)
+⋮----
+// curl POST localhost:8000/api/class_set -H "id: 1" -H "set_id: 1"
+⋮----
+func (h *DBHandler) RemoveSetFromClass(w http.ResponseWriter, r *http.Request)
+⋮----
+// curl -X DELETE localhost:8000/api/class_user/ -H "id: 1" -H "set_id"
+⋮----
+func (h *DBHandler) ListSetsInClass(w http.ResponseWriter, r *http.Request)
+⋮----
+// curl -X GET localhost:8000/api/class_set/list_sets -H "id: 1"
+⋮----
+func (h *DBHandler) ListClassesHavingSet(w http.ResponseWriter, r *http.Request)
+⋮----
+// curl -X GET localhost:8000/api/class_set/list_classes -H "set_id"
+</file>
+
+<file path="go/controllers/class_user.go">
+package controllers
+⋮----
+import (
+	"encoding/json"
+	"errors"
+	"net/http"
+
+	"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/db"
+	"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/middleware"
+)
+⋮----
+"encoding/json"
+"errors"
+"net/http"
+⋮----
+"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/db"
+"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/middleware"
+⋮----
+func (h *DBHandler) JoinClass(w http.ResponseWriter, r *http.Request)
+⋮----
+//curl -X POST localhost:8000/api/class_user -H "class_id: 1" -H "role: Student"
+⋮----
+// Get user_id from context (set by AuthMiddleware)
+⋮----
+func (h *DBHandler) LeaveClass(w http.ResponseWriter, r *http.Request)
+⋮----
+//curl -X DELETE localhost:8000/api/class_user/ -H "user_id: 1" -H "class_id: 1"
+⋮----
+// no body is sent with a 204 response
+⋮----
+func (h *DBHandler) ListClassesOfAUser(w http.ResponseWriter, r *http.Request)
+⋮----
+//curl -X GET localhost:8000/api/class_user/getclasses -H "user_id: 1"
+⋮----
+func (h *DBHandler) ListMembersOfAClass(w http.ResponseWriter, r *http.Request)
+⋮----
+//curl -X GET localhost:8000/api/class_user/getmembers -H "class_id: 1"
+⋮----
+// func (h *DBHandler) GetStudentsOfAClass(w http.ResponseWriter, r *http.Request) {
+// 	//curl -X GET localhost:8000/api/class_user/getstudents -H "class_id: 1"
+// 	query, ctx, conn, err := getQueryConnAndContext(r, h)
+// 	if err != nil {
+// 		logAndSendError(w, err, "Error connecting to database", http.StatusInternalServerError)
+// 		return
+// 	}
+// 	defer conn.Release()
+⋮----
+// 	headerVals, err := getHeaderVals(r, "class_id")
+⋮----
+// 		logAndSendError(w, err, "Header error", http.StatusBadRequest)
+⋮----
+// 	cid, err := getInt32Id(headerVals["class_id"])
+⋮----
+// 		logAndSendError(w, err, "Invalid class id", http.StatusBadRequest)
+⋮----
+// 	students, err := query.GetStudentsOfAClass(ctx, cid)
+⋮----
+// 		logAndSendError(w, err, "Error getting students", http.StatusInternalServerError)
+⋮----
+// 	if err := json.NewEncoder(w).Encode(students); err != nil {
+// 		logAndSendError(w, err, "Error encoding message", http.StatusInternalServerError)
+⋮----
+// }
+⋮----
+// func (h *DBHandler) GetTeacherOfAClass(w http.ResponseWriter, r *http.Request) {
+⋮----
+// 	teacher, err := query.GetTeacherOfAClass(ctx, cid)
+⋮----
+// 		logAndSendError(w, err, "Error getting teacher", http.StatusInternalServerError)
+⋮----
+// 	if err := json.NewEncoder(w).Encode(teacher); err != nil {
+</file>
+
+<file path="go/controllers/set_user.go">
+package controllers
+⋮----
+import (
+	"encoding/json"
+	"net/http"
+
+	"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/db"
+	"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/middleware"
+)
+⋮----
+"encoding/json"
+"net/http"
+⋮----
+"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/db"
+"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/middleware"
+⋮----
+func (h *DBHandler) JoinSet(w http.ResponseWriter, r *http.Request)
+⋮----
+// curl POST localhost:8000/api/class_set -H "id: 1" -H "set_id: 1"
+⋮----
+// Get user_id from context (set by AuthMiddleware)
+⋮----
+func (h *DBHandler) LeaveSet(w http.ResponseWriter, r *http.Request)
+⋮----
+// curl -X DELETE localhost:8000/api/class_user/ -H "id: 1" -H "set_id"
+⋮----
+func (h *DBHandler) ListSetsOfAUser(w http.ResponseWriter, r *http.Request)
+⋮----
+// curl -X GET localhost:8000/api/class_set/list_sets -H "id: 1"
+</file>
+
+<file path="go/middleware/csrf.go">
+package middleware
+⋮----
+// CSRF middleware wrapper to make it compatible with negroni
+// func CSRFMiddleware(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+// 	// In development mode, add debug headers
+// 	if inDevelopment {
+// 		log.Printf("DEBUG: CSRF middleware processing request to: %s", r.URL.Path)
+⋮----
+// 		// For development, check if this is an API request from localhost
+// 		origin := r.Header.Get("Origin")
+// 		if strings.HasPrefix(origin, "http://localhost") {
+// 			// Add CSRF token to response header for easier access by frontend
+// 			token := csrf.Token(r)
+// 			w.Header().Set("X-CSRF-Token", token)
+// 			log.Printf("DEBUG: Added CSRF token to response headers: %s", token)
+⋮----
+// 			// Check if this is a preflight OPTIONS request
+// 			if r.Method == "OPTIONS" {
+// 				w.WriteHeader(http.StatusOK)
+// 				return
+// 			}
+⋮----
+// 			// For development API testing, bypass CSRF check for specific endpoints
+// 			if r.Method == "POST" && (r.URL.Path == "/login" || r.URL.Path == "/signup") {
+// 				log.Printf("DEBUG: Bypassing CSRF check for %s in development mode", r.URL.Path)
+// 				next(w, r)
+⋮----
+// 		}
+// 	}
+⋮----
+// 	csrfMiddleware(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+// 		next(w, r)
+// 	})).ServeHTTP(w, r)
+// }
+⋮----
+// GetCSRFToken returns the CSRF token for the current request
+// func GetCSRFToken(r *http.Request) string {
+// 	return csrf.Token(r)
+⋮----
+// CSRF protection middleware
+// csrfMiddleware = csrf.Protect(
+//
+//	[]byte(pasetoImplicit),
+//	csrf.Secure(!inDevelopment), // Only require Secure in production
+//	csrf.SameSite(func() csrf.SameSiteMode {
+//		if inDevelopment {
+//			return csrf.SameSiteLaxMode // Less restrictive for development
+//		}
+//		return csrf.SameSiteStrictMode // More secure for production
+//	}()),
+//	csrf.Path("/"),
+⋮----
+// Add CSRF token to response if this is a browser request
+// if strings.Contains(r.Header.Get("Accept"), "text/html") ||
+//    strings.Contains(r.Header.Get("Accept"), "application/json") {
+// 	resp.CSRFToken = middleware.GetCSRFToken(r)
+</file>
+
+<file path="go/middleware/paseto.go">
+package middleware
+⋮----
+// PasetoToken represents a PASETO token payload
+// type PasetoToken struct {
+// 	Audience   string    `json:"aud,omitempty"`
+// 	Issuer     string    `json:"iss,omitempty"`
+// 	Jti        string    `json:"jti,omitempty"`
+// 	Subject    string    `json:"sub,omitempty"`
+// 	IssuedAt   time.Time `json:"iat,omitempty"`
+// 	Expiration time.Time `json:"exp,omitempty"`
+// 	NotBefore  time.Time `json:"nbf,omitempty"`
+// 	UserID     int32     `json:"user_id,omitempty"`
+// }
+⋮----
+// PASETO instance
+// pasetoV2 = paseto.NewV2()
+⋮----
+// pasetoAud = os.Getenv("PASETO_AUD")
+// pasetoIss = os.Getenv("PASETO_ISS")
+// pasetoKey = os.Getenv("PASETO_SECRET")
+// pasetoImp = os.Getenv("PASETO_IMPLICIT")
+⋮----
+// GeneratePasetoToken creates a new PASETO token for the given user ID
+// func GeneratePasetoToken(userID int32) (string, error) {
+// 	// Convert hex string to byte array
+// 	secretKey, err := hex.DecodeString(pasetoSecret)
+// 	if err != nil {
+// 		return "", fmt.Errorf("error decoding PASETO secret: %w", err)
+// 	}
+⋮----
+// 	now := time.Now()
+// 	exp := now.Add(24 * time.Hour) // Token expires in 24 hours
+⋮----
+// 	// Create token payload
+// 	payload := PasetoToken{
+// 		Audience:   pasetoAud,
+// 		Issuer:     pasetoIss,
+// 		Subject:    fmt.Sprintf("%d", userID),
+// 		IssuedAt:   now,
+// 		Expiration: exp,
+// 		NotBefore:  now,
+// 		UserID:     userID,
+⋮----
+// 	// Encode the token
+// 	token, err := pasetoV2.Encrypt(secretKey, payload, footer)
+⋮----
+// 		return "", fmt.Errorf("error creating PASETO token: %w", err)
+⋮----
+// 	return token, nil
+⋮----
+// ValidatePasetoToken validates a PASETO token and returns the user ID
+// func ValidatePasetoToken(tokenString string) (int32, error) {
+⋮----
+// 		return 0, fmt.Errorf("error decoding PASETO secret: %w", err)
+⋮----
+// 	var payload PasetoToken
+// 	var footer PasetoFooter
+⋮----
+// 	// Decrypt and validate the token
+// 	err = pasetoV2.Decrypt(tokenString, secretKey, &payload, &footer)
+⋮----
+// 		return 0, fmt.Errorf("error decrypting PASETO token: %w", err)
+⋮----
+// 	// Validate token claims
+⋮----
+// 	if payload.Expiration.Before(now) {
+// 		return 0, fmt.Errorf("token expired")
+⋮----
+// 	if payload.NotBefore.After(now) {
+// 		return 0, fmt.Errorf("token not yet valid")
+⋮----
+// 	if payload.Audience != pasetoAud {
+// 		return 0, fmt.Errorf("invalid audience")
+⋮----
+// 	if payload.Issuer != pasetoIss {
+// 		return 0, fmt.Errorf("invalid issuer")
+⋮----
+// 	return payload.UserID, nil
+⋮----
+// IsTokenExpiringSoon checks if the PASETO token is expiring soon (within 1 hour)
+// func IsTokenExpiringSoon(r *http.Request) (bool, error) {
+// 	token, err := GetPasetoTokenFromSession(r)
+⋮----
+// 		return false, err
+⋮----
+// 	// Decode the token to check expiration
+⋮----
+// 		return false, fmt.Errorf("error decoding PASETO secret: %w", err)
+⋮----
+// 	// Decrypt the token
+// 	err = pasetoV2.Decrypt(token, secretKey, &payload, &footer)
+⋮----
+// 		return false, fmt.Errorf("error decrypting PASETO token: %w", err)
+⋮----
+// 	// Check if token expires within the next hour
+// 	return payload.Expiration.Before(time.Now().Add(1 * time.Hour)), nil
+⋮----
+// RefreshSession refreshes the session and PASETO token
+// func RefreshSession(w http.ResponseWriter, r *http.Request) error {
+// 	session, err := store.Get(r, sessionName)
+⋮----
+// 		return err
+⋮----
+// 	// Check if user is authenticated
+// 	if auth, ok := session.Values["authenticated"].(bool); !ok || !auth {
+// 		return fmt.Errorf("not authenticated")
+⋮----
+// 	// Get user ID from session
+// 	userID, ok := session.Values["user_id"].(int32)
+// 	if !ok {
+// 		return fmt.Errorf("user ID not found in session")
+⋮----
+// 	// Generate new PASETO token
+// 	token, err := GeneratePasetoToken(userID)
+⋮----
+// 		return fmt.Errorf("error generating PASETO token: %w", err)
+⋮----
+// 	// Update session values
+// 	session.Values["created_at"] = time.Now().Unix()
+// 	session.Values["paseto_token"] = token
+⋮----
+// 	// Save session
+// 	return session.Save(r, w)
+⋮----
+// GetPasetoTokenFromSession retrieves the PASETO token from the session
+// func GetPasetoTokenFromSession(r *http.Request) (string, error) {
+⋮----
+// 		return "", err
+⋮----
+// 	token, ok := session.Values["paseto_token"].(string)
+// 	if !ok || token == "" {
+// 		return "", fmt.Errorf("PASETO token not found in session")
+⋮----
+// AutoRefreshMiddleware automatically refreshes sessions with tokens that are about to expire
+// func AutoRefreshMiddleware(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+// 	// Skip for non-authenticated routes
+⋮----
+// 		next(w, r)
+// 		return
+⋮----
+// 	// Check if token is expiring soon
+// 	expiringSoon, err := IsTokenExpiringSoon(r)
+// 	if err == nil && expiringSoon {
+// 		// Refresh the session
+// 		if err := RefreshSession(w, r); err != nil {
+// 			log.Printf("Error refreshing session: %v", err)
+// 		}
+⋮----
+// 	next(w, r)
+⋮----
+// func Auth(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+⋮----
+// 	// ****************************
+// 	// get token from cookie here
+// 	token := "h"
+⋮----
+// 	parser := paseto.NewParser()
+// 	parser.AddRule(paseto.ForAudience(pasetoAud))
+// 	// parser.AddRule(paseto.IdentifiedBy("identifier")) possible later use
+// 	parser.AddRule(paseto.IssuedBy(pasetoIss))
+// 	parser.AddRule(paseto.NotBeforeNbf())
+// 	parser.AddRule(paseto.NotExpired())
+// 	// parser.AddRule(paseto.Subject("subject"))
+// 	parser.AddRule(paseto.ValidAt(time.Now()))
+⋮----
+// 	secretKey, err := paseto.V4SymmetricKeyFromHex(pasetoKey)
+⋮----
+// 		LogAndSendError(w, err, "Key parse error", http.StatusBadRequest)
+⋮----
+// 	parsedToken, err := parser.ParseV4Local(secretKey, token, []byte(pasetoImp))
+⋮----
+// 		LogAndSendError(w, err, "Token parse error", http.StatusBadRequest)
+⋮----
+// 	subj, err := parsedToken.GetSubject()
+⋮----
+// 		LogAndSendError(w, err, "Subject not found or not a string", http.StatusBadRequest)
+⋮----
+// 	ctx := context.WithValue(r.Context(), userKey, subj)
+// 	next(w, r.WithContext(ctx))
+⋮----
+// func getTokenAndResponse(user db.User) (response AuthResponse, err error) {
+⋮----
+// 	// Generate PASETO token
+// 	//token, err := middleware.GeneratePasetoToken(user.ID)
+⋮----
+// 	var (
+// 		pasetoAud = os.Getenv("PASETO_AUD")
+// 		pasetoIss = os.Getenv("PASETO_ISS")
+// 		pasetoKey = os.Getenv("PASETO_SECRET")
+// 		pasetoImp = os.Getenv("PASETO_IMPLICIT")
+// 	)
+⋮----
+// 	token := paseto.NewToken()
+⋮----
+// 	token.SetAudience(pasetoAud)
+// 	token.SetJti(uuid.New().String())
+// 	token.SetIssuer(pasetoIss)
+// 	token.SetSubject(strconv.Itoa(int(user.ID)))
+// 	token.SetExpiration(time.Now().Add(time.Minute))
+// 	token.SetNotBefore(time.Now().Add(-3 * time.Second))
+// 	token.SetIssuedAt(time.Now())
+⋮----
+// 		return AuthResponse{}, err
+⋮----
+// 	signed := token.V4Encrypt(secretKey, []byte(pasetoImp))
+⋮----
+// 	response = AuthResponse{
+// 		Token:     signed,
+// 		UserID:    user.ID,
+// 		Username:  user.Username,
+// 		Email:     user.Email,
+// 		FirstName: user.FirstName,
+// 		LastName:  user.LastName,
+⋮----
+// 	return
+⋮----
+// Validate PASETO token for additional security
+// token, ok := session.Values["paseto_token"].(string)
+// if !ok || token == "" {
+// 	log.Printf("ERROR: PASETO token not found in session")
+// 	http.Error(w, "Unauthorized", http.StatusUnauthorized)
+⋮----
+// Validate the token
+// validatedUserID, err := ValidatePasetoToken(token)
+</file>
+
+<file path="go/main.go">
+package main
+⋮----
+import "github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/app"
+⋮----
+func main()
+</file>
+
+<file path="sqlc/queries/complex/card_history.sql">
+-- name: UpsertCorrectFlashcardScore :exec
+INSERT INTO card_history (user_id, card_id, score) VALUES ($1, $2, 1) 
+ON CONFLICT (user_id, card_id) DO 
+UPDATE SET score = card_history.score + 1, times_attempted = card_history.times_attempted + 1;
+
+-- name: UpsertIncorrectFlashcardScore :exec
+INSERT INTO card_history (user_id, card_id, score) VALUES ($1, $2, 0) 
+ON CONFLICT (user_id, card_id) DO 
+UPDATE SET times_attempted = card_history.times_attempted + 1;
+
+-- name: GetCardScore :one
+SELECT score AS correct, (times_attempted - score) AS incorrect, (score - times_attempted) AS net_score, times_attempted FROM card_history
+WHERE user_id = $1 AND card_id = $2;
+
+-- name: GetScoresInASet :many
+SELECT set_name, score AS correct, (times_attempted - score) AS incorrect, score AS net_score, times_attempted 
+FROM card_history 
+JOIN flashcards ON card_history.card_id = flashcards.id
+JOIN flashcard_sets ON flashcards.set_id = flashcard_sets.id WHERE user_id = $1 AND set_id = $2;
+
+-- name: GetCardsStudied :one
+SELECT COUNT(card_id) FROM card_history WHERE user_id = $1;
+
+-- name: GetCardsMastered :one
+SELECT COUNT(is_mastered) FROM card_history WHERE user_id = $1 AND is_mastered = TRUE;
+
+-- name: GetTotalCardViews :one
+SELECT COALESCE(SUM(times_attempted), 0) FROM card_history WHERE user_id = $1;
+</file>
+
+<file path="sqlc/queries/complex/class_set.sql">
+-- name: AddSetToClass :exec
+INSERT INTO class_set (class_id,set_id) VALUES ($1, $2);
+
+-- name: RemoveSetFromClass :exec
+DELETE FROM class_set WHERE class_id = $1 AND set_id = $2;
+
+-- name: ListSetsInClass :many
+SELECT flashcard_sets.id, set_name, set_description FROM flashcard_sets 
+JOIN class_set ON flashcard_sets.id = class_set.set_id 
+JOIN classes ON class_set.class_id = classes.id
+WHERE class_id = $1 ORDER BY set_name;
+
+-- name: ListClassesHavingSet :many
+SELECT classes.id, class_name, class_description FROM classes
+JOIN class_set ON classes.id = class_set.class_id 
+JOIN flashcard_sets ON class_set.set_id = flashcard_sets.id
+WHERE set_id = $1 ORDER BY class_name;
+</file>
+
+<file path="sqlc/queries/complex/class_user.sql">
+-- name: JoinClass :exec
+INSERT INTO class_user (user_id, class_id, role) VALUES ($1, $2, $3);
+
+-- name: LeaveClass :exec
+DELETE FROM class_user WHERE user_id = $1 AND class_id = $2;
+
+-- name: ListClassesOfAUser :many
+SELECT class_id, role, class_name, class_description FROM class_user JOIN classes ON class_user.class_id = classes.id WHERE user_id = $1 ORDER BY class_name;
+
+-- name: ListMembersOfAClass :many
+SELECT user_id, class_id, role, first_name, last_name, username FROM class_user JOIN users ON class_user.user_id = users.id WHERE class_id = $1 ORDER BY last_name, first_name;
+
+
+
+
+
+-- name: ListStudentsOfAClass :many
+-- SELECT user_id, class_id, role, first_name, last_name
+-- FROM class_user JOIN users ON class_user.user_id = users.id
+-- WHERE class_id = $1 AND role = 'student';
+
+-- name: ListTeachersOfAClass :many
+-- SELECT user_id, class_id, role, first_name, last_name
+-- FROM class_user JOIN users ON class_user.user_id = users.id
+-- WHERE class_id = $1 AND role = 'teacher';
+</file>
+
+<file path="sqlc/queries/complex/classes.sql">
+-- name: GetClassLeaderboard :many
+SELECT class_user.user_id, users.first_name, users.last_name, users.username, COALESCE(SUM(set_score),0) AS class_score FROM classes 
+JOIN class_user ON classes.id = class_user.class_id 
+JOIN class_set ON classes.id = class_set.class_id
+JOIN set_user ON (class_user.user_id = set_user.user_id AND class_set.set_id = set_user.set_id)
+JOIN users ON class_user.user_id = users.id
+WHERE classes.id = $1
+GROUP BY class_user.user_id, users.first_name, users.last_name, users.username
+ORDER BY COALESCE(SUM(set_score),0) DESC;
+</file>
+
+<file path="sqlc/queries/complex/set_user.sql">
+-- name: JoinSet :exec
+INSERT INTO set_user (user_id, set_id, role) VALUES ($1, $2, $3);
+
+-- name: LeaveSet :exec
+DELETE FROM set_user WHERE user_id = $1 AND set_id = $2;
+
+-- name: ListSetsOfAUser :many
+SELECT set_id, role, set_name, set_description FROM set_user JOIN flashcard_sets ON set_user.set_id = flashcard_sets.id WHERE user_id = $1 ORDER BY set_name;
+</file>
+
+<file path="sqlc/queries/simple/classes.sql">
+-- name: ListClasses :many
+SELECT * FROM classes ORDER BY class_name;
+
+-- name: GetClassById :one
+SELECT * FROM classes WHERE id = $1;
+
+-- name: CreateClass :one
+INSERT INTO classes (class_name, class_description) VALUES ($1, $2) RETURNING *;
+
+-- name: UpdateClassName :one
+UPDATE classes SET class_name = $1, updated_at = LOCALTIMESTAMP(2) WHERE id = $2 RETURNING class_name;
+
+-- name: UpdateClassDescription :one
+UPDATE classes SET class_description = $1, updated_at = LOCALTIMESTAMP(2) WHERE id = $2 RETURNING class_description;
+
+-- name: DeleteClass :exec
+DELETE FROM classes WHERE id = $1;
+
+-- name: VerifyClassMember :one
+SELECT * FROM class_user WHERE class_id = $1 AND user_id = $2;
+
+
+-- execresult annotation is buggy, trying exec https://github.com/sqlc-dev/sqlc/issues/3699#issuecomment-2486892414
+
+-- update join code deliberately omitted
+</file>
+
+<file path="sqlc/queries/simple/flashcard_sets.sql">
+-- name: ListFlashcardSets :many
+SELECT * FROM flashcard_sets ORDER BY set_name;
+
+-- name: GetFlashcardSetById :one
+SELECT * FROM flashcard_sets WHERE id = $1;
+
+-- name: CreateFlashcardSet :one
+INSERT INTO flashcard_sets (set_name, set_description) VALUES ($1, $2) RETURNING *;
+
+-- name: UpdateFlashcardSetName :one
+UPDATE flashcard_sets SET set_name = $1, updated_at = LOCALTIMESTAMP(2) WHERE id = $2 RETURNING set_name;
+
+-- name: UpdateFlashcardSetDescription :one
+UPDATE flashcard_sets SET set_description = $1, updated_at = LOCALTIMESTAMP(2) WHERE id = $2 RETURNING set_description;
+
+-- name: DeleteFlashcardSet :exec
+DELETE FROM flashcard_sets WHERE id = $1;
+
+-- name: VerifySetMember :one
+SELECT * from set_user WHERE set_id = $1 AND user_id = $2;
+
+-- execresult annotation is buggy, trying exec https://github.com/sqlc-dev/sqlc/issues/3699#issuecomment-2486892414
+</file>
+
+<file path="sqlc/queries/simple/flashcards.sql">
+-- name: GetFlashcardById :one
+SELECT * FROM flashcards WHERE id = $1;
+
+-- name: ListFlashcardsOfASet :many
+SELECT * FROM flashcards WHERE set_id = $1;
+
+-- name: CreateFlashcard :one
+INSERT INTO flashcards (front, back, set_id) VALUES ($1, $2, $3) RETURNING *;
+
+-- name: UpdateFlashcardFront :one
+UPDATE flashcards SET front = $1, updated_at = LOCALTIMESTAMP(2) WHERE id = $2 RETURNING front;
+
+-- name: UpdateFlashcardBack :one
+UPDATE flashcards SET back = $1, updated_at = LOCALTIMESTAMP(2) WHERE id = $2 RETURNING back;
+
+-- name: UpdateFlashcardSetId :one
+UPDATE flashcards SET set_id = $1, updated_at = LOCALTIMESTAMP(2) WHERE id = $2 RETURNING set_id;
+
+-- name: DeleteFlashcard :exec
+DELETE FROM flashcards WHERE id = $1;
+
+-- name: VerifyFlashcardOwner :one
+SELECT * from set_user WHERE user_id = $1 AND set_id = (SELECT set_id FROM flashcards WHERE id = $2) AND role = 'owner';
+
+-- execresult annotation is buggy, trying exec https://github.com/sqlc-dev/sqlc/issues/3699#issuecomment-2486892414
+</file>
+
+<file path="sqlc/sqlc.yaml">
+version: '2'
+sql:
+  - name: 'cowboy_cards'
+    engine: 'postgresql'
+    schema: 'schema.sql'
+    queries: ['queries/simple', 'queries/complex']
+    gen:
+      go:
+        package: 'db'
+        out: '../go/db'
+        sql_package: 'pgx/v5'
+        # query_parameter_limit: 2
+        # emit_json_tags: true
+        # json_tags_case_style: 'camel'
+        # overrides:
+        #   - column: 'users.id'
+        #     go_type:
+        #       type: 'uint32'
+        #   - column: 'flashcard_sets.id'
+        #     go_type:
+        #       type: 'uint32'
+        #   - column: 'flashcards.id'
+        #     go_type:
+        #       type: 'uint32'
+        #   - column: 'classes.id'
+        #     go_type:
+        #       type: 'uint32'
+</file>
+
+<file path="src/components/ui/accordion.tsx">
+import { ChevronDown } from "lucide-react"
+⋮----
+import { cn } from "@/lib/utils"
+⋮----
+className=
+</file>
+
+<file path="src/components/ui/alert-dialog.tsx">
+import { cn } from "@/lib/utils"
+import { buttonVariants } from "@/components/ui/button"
+</file>
+
+<file path="src/components/ui/alert.tsx">
+import { cva, type VariantProps } from "class-variance-authority"
+⋮----
+import { cn } from "@/lib/utils"
+⋮----
+className=
+</file>
+
+<file path="src/components/ui/aspect-ratio.tsx">
+
+</file>
+
+<file path="src/components/ui/avatar.tsx">
+import { cn } from "@/lib/utils"
+</file>
+
+<file path="src/components/ui/badge.tsx">
+import { cva, type VariantProps } from "class-variance-authority"
+⋮----
+import { cn } from "@/lib/utils"
+⋮----
+export interface BadgeProps
+  extends React.HTMLAttributes<HTMLDivElement>,
+    VariantProps<typeof badgeVariants> {}
+⋮----
+<div className=
+</file>
+
+<file path="src/components/ui/breadcrumb.tsx">
+import { Slot } from "@radix-ui/react-slot"
+import { ChevronRight, MoreHorizontal } from "lucide-react"
+⋮----
+import { cn } from "@/lib/utils"
+⋮----
+className=
+</file>
+
+<file path="src/components/ui/button.tsx">
+import { Slot } from "@radix-ui/react-slot"
+import { cva, type VariantProps } from "class-variance-authority"
+⋮----
+import { cn } from "@/lib/utils"
+⋮----
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {
+  asChild?: boolean
+}
+</file>
+
+<file path="src/components/ui/calendar.tsx">
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { DayPicker } from "react-day-picker";
+⋮----
+import { cn } from "@/lib/utils";
+import { buttonVariants } from "@/components/ui/button";
+⋮----
+export type CalendarProps = React.ComponentProps<typeof DayPicker>;
+</file>
+
+<file path="src/components/ui/card.tsx">
+import { cn } from "@/lib/utils"
+⋮----
+className=
+⋮----
+<div ref=
+</file>
+
+<file path="src/components/ui/carousel.tsx">
+import useEmblaCarousel, {
+  type UseEmblaCarouselType,
+} from "embla-carousel-react"
+import { ArrowLeft, ArrowRight } from "lucide-react"
+⋮----
+import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
+⋮----
+type CarouselApi = UseEmblaCarouselType[1]
+type UseCarouselParameters = Parameters<typeof useEmblaCarousel>
+type CarouselOptions = UseCarouselParameters[0]
+type CarouselPlugin = UseCarouselParameters[1]
+⋮----
+type CarouselProps = {
+  opts?: CarouselOptions
+  plugins?: CarouselPlugin
+  orientation?: "horizontal" | "vertical"
+  setApi?: (api: CarouselApi) => void
+}
+⋮----
+type CarouselContextProps = {
+  carouselRef: ReturnType<typeof useEmblaCarousel>[0]
+  api: ReturnType<typeof useEmblaCarousel>[1]
+  scrollPrev: () => void
+  scrollNext: () => void
+  canScrollPrev: boolean
+  canScrollNext: boolean
+} & CarouselProps
+⋮----
+function useCarousel()
+</file>
+
+<file path="src/components/ui/chart.tsx">
+import { cn } from "@/lib/utils"
+⋮----
+// Format: { THEME_NAME: CSS_SELECTOR }
+⋮----
+export type ChartConfig = {
+  [k in string]: {
+    label?: React.ReactNode
+    icon?: React.ComponentType
+  } & (
+    | { color?: string; theme?: never }
+    | { color?: never; theme: Record<keyof typeof THEMES, string> }
+  )
+}
+⋮----
+type ChartContextProps = {
+  config: ChartConfig
+}
+⋮----
+function useChart()
+⋮----
+className=
+⋮----
+<div className=
+⋮----
+// Helper to extract item config from a payload.
+</file>
+
+<file path="src/components/ui/checkbox.tsx">
+import { Check } from "lucide-react"
+⋮----
+import { cn } from "@/lib/utils"
+⋮----
+className=
+</file>
+
+<file path="src/components/ui/collapsible.tsx">
+
+</file>
+
+<file path="src/components/ui/command.tsx">
+import { type DialogProps } from "@radix-ui/react-dialog"
+import { Command as CommandPrimitive } from "cmdk"
+import { Search } from "lucide-react"
+⋮----
+import { cn } from "@/lib/utils"
+import { Dialog, DialogContent } from "@/components/ui/dialog"
+⋮----
+className=
+</file>
+
+<file path="src/components/ui/context-menu.tsx">
+import { Check, ChevronRight, Circle } from "lucide-react"
+⋮----
+import { cn } from "@/lib/utils"
+⋮----
+className=
+</file>
+
+<file path="src/components/ui/dialog.tsx">
+import { X } from "lucide-react"
+⋮----
+import { cn } from "@/lib/utils"
+⋮----
+className=
+</file>
+
+<file path="src/components/ui/drawer.tsx">
+import { Drawer as DrawerPrimitive } from "vaul"
+⋮----
+import { cn } from "@/lib/utils"
+⋮----
+const Drawer = (
+⋮----
+className=
+</file>
+
+<file path="src/components/ui/dropdown-menu.tsx">
+import { Check, ChevronRight, Circle } from "lucide-react"
+⋮----
+import { cn } from "@/lib/utils"
+⋮----
+className=
+</file>
+
+<file path="src/components/ui/form.tsx">
+import { Slot } from "@radix-ui/react-slot"
+import {
+  Controller,
+  ControllerProps,
+  FieldPath,
+  FieldValues,
+  FormProvider,
+  useFormContext,
+} from "react-hook-form"
+⋮----
+import { cn } from "@/lib/utils"
+import { Label } from "@/components/ui/label"
+⋮----
+type FormFieldContextValue<
+  TFieldValues extends FieldValues = FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+> = {
+  name: TName
+}
+⋮----
+const FormField = <
+  TFieldValues extends FieldValues = FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+>({
+  ...props
+}: ControllerProps<TFieldValues, TName>) =>
+⋮----
+const useFormField = () =>
+⋮----
+type FormItemContextValue = {
+  id: string
+}
+⋮----
+<div ref=
+⋮----
+className=
+</file>
+
+<file path="src/components/ui/hover-card.tsx">
+import { cn } from "@/lib/utils"
+</file>
+
+<file path="src/components/ui/input-otp.tsx">
+import { OTPInput, OTPInputContext } from "input-otp"
+import { Dot } from "lucide-react"
+⋮----
+import { cn } from "@/lib/utils"
+⋮----
+containerClassName=
+className=
+⋮----
+<div ref=
+</file>
+
+<file path="src/components/ui/input.tsx">
+import { cn } from "@/lib/utils"
+⋮----
+className=
+</file>
+
+<file path="src/components/ui/label.tsx">
+import { cva, type VariantProps } from "class-variance-authority"
+⋮----
+import { cn } from "@/lib/utils"
+</file>
+
+<file path="src/components/ui/menubar.tsx">
+import { Check, ChevronRight, Circle } from "lucide-react"
+⋮----
+import { cn } from "@/lib/utils"
+⋮----
+className=
+</file>
+
+<file path="src/components/ui/navigation-menu.tsx">
+import { cva } from "class-variance-authority"
+import { ChevronDown } from "lucide-react"
+⋮----
+import { cn } from "@/lib/utils"
+⋮----
+className=
+</file>
+
+<file path="src/components/ui/pagination.tsx">
+import { ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react"
+⋮----
+import { cn } from "@/lib/utils"
+import { ButtonProps, buttonVariants } from "@/components/ui/button"
+⋮----
+const Pagination = (
+⋮----
+className=
+⋮----
+<li ref=
+⋮----
+const PaginationPrevious = (
+</file>
+
+<file path="src/components/ui/popover.tsx">
+import { cn } from "@/lib/utils"
+</file>
+
+<file path="src/components/ui/progress.tsx">
+import { cn } from "@/lib/utils"
+⋮----
+className=
+</file>
+
+<file path="src/components/ui/radio-group.tsx">
+import { Circle } from "lucide-react"
+⋮----
+import { cn } from "@/lib/utils"
+⋮----
+className=
+</file>
+
+<file path="src/components/ui/resizable.tsx">
+import { GripVertical } from "lucide-react"
+⋮----
+import { cn } from "@/lib/utils"
+</file>
+
+<file path="src/components/ui/scroll-area.tsx">
+import { cn } from "@/lib/utils"
+⋮----
+className=
+</file>
+
+<file path="src/components/ui/select.tsx">
+import { Check, ChevronDown, ChevronUp } from "lucide-react"
+⋮----
+import { cn } from "@/lib/utils"
+⋮----
+className=
+</file>
+
+<file path="src/components/ui/separator.tsx">
+import { cn } from "@/lib/utils"
+</file>
+
+<file path="src/components/ui/sheet.tsx">
+import { cva, type VariantProps } from "class-variance-authority"
+import { X } from "lucide-react"
+⋮----
+import { cn } from "@/lib/utils"
+⋮----
+interface SheetContentProps
+  extends React.ComponentPropsWithoutRef<typeof SheetPrimitive.Content>,
+  VariantProps<typeof sheetVariants> { }
+⋮----
+className=
+</file>
+
+<file path="src/components/ui/sidebar.tsx">
+import { Slot } from "@radix-ui/react-slot"
+import { VariantProps, cva } from "class-variance-authority"
+import { PanelLeft } from "lucide-react"
+⋮----
+import { useIsMobile } from "@/hooks/use-mobile"
+import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Separator } from "@/components/ui/separator"
+import { Sheet, SheetContent } from "@/components/ui/sheet"
+import { Skeleton } from "@/components/ui/skeleton"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
+⋮----
+type SidebarContext = {
+  state: "expanded" | "collapsed"
+  open: boolean
+  setOpen: (open: boolean) => void
+  openMobile: boolean
+  setOpenMobile: (open: boolean) => void
+  isMobile: boolean
+  toggleSidebar: () => void
+}
+⋮----
+function useSidebar()
+⋮----
+// This is the internal state of the sidebar.
+// We use openProp and setOpenProp for control from outside the component.
+⋮----
+// This sets the cookie to keep the sidebar state.
+⋮----
+// Helper to toggle the sidebar.
+⋮----
+// Adds a keyboard shortcut to toggle the sidebar.
+⋮----
+const handleKeyDown = (event: KeyboardEvent) =>
+⋮----
+// We add a state so that we can do data-state="expanded" or "collapsed".
+// This makes it easier to style the sidebar with Tailwind classes.
+⋮----
+className=
+⋮----
+{/* This is what handles the sidebar gap on desktop */}
+⋮----
+// Adjust the padding for floating and inset variants.
+⋮----
+onClick?.(event)
+toggleSidebar()
+⋮----
+// Increases the hit area of the button on mobile.
+⋮----
+// Increases the hit area of the button on mobile.
+⋮----
+// Random width between 50 to 90%.
+</file>
+
+<file path="src/components/ui/skeleton.tsx">
+import { cn } from "@/lib/utils"
+⋮----
+className=
+</file>
+
+<file path="src/components/ui/slider.tsx">
+import { cn } from "@/lib/utils"
+⋮----
+className=
+</file>
+
+<file path="src/components/ui/sonner.tsx">
+import { useTheme } from "next-themes"
+import { Toaster as Sonner } from "sonner"
+⋮----
+type ToasterProps = React.ComponentProps<typeof Sonner>
+⋮----
+const Toaster = (
+</file>
+
+<file path="src/components/ui/switch.tsx">
+import { cn } from "@/lib/utils"
+⋮----
+className=
+</file>
+
+<file path="src/components/ui/table.tsx">
+import { cn } from "@/lib/utils"
+⋮----
+className=
+⋮----
+<thead ref=
+</file>
+
+<file path="src/components/ui/tabs.tsx">
+import { cn } from "@/lib/utils"
+</file>
+
+<file path="src/components/ui/textarea.tsx">
+import { cn } from "@/lib/utils"
+⋮----
+export interface TextareaProps
+  extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {}
+⋮----
+className=
+</file>
+
+<file path="src/components/ui/toast.tsx">
+import { cva, type VariantProps } from "class-variance-authority"
+import { X } from "lucide-react"
+⋮----
+import { cn } from "@/lib/utils"
+⋮----
+className=
+⋮----
+type ToastProps = React.ComponentPropsWithoutRef<typeof Toast>
+⋮----
+type ToastActionElement = React.ReactElement<typeof ToastAction>
+</file>
+
+<file path="src/components/ui/toaster.tsx">
+import { useToast } from "@/hooks/use-toast"
+import {
+  Toast,
+  ToastClose,
+  ToastDescription,
+  ToastProvider,
+  ToastTitle,
+  ToastViewport,
+} from "@/components/ui/toast"
+</file>
+
+<file path="src/components/ui/toggle-group.tsx">
+import { type VariantProps } from "class-variance-authority"
+⋮----
+import { cn } from "@/lib/utils"
+import { toggleVariants } from "@/components/ui/toggle"
+⋮----
+className=
+</file>
+
+<file path="src/components/ui/toggle.tsx">
+import { cva, type VariantProps } from "class-variance-authority"
+⋮----
+import { cn } from "@/lib/utils"
+</file>
+
+<file path="src/components/ui/tooltip.tsx">
+import { cn } from "@/lib/utils"
+</file>
+
+<file path="src/components/ui/use-toast.ts">
+import { useToast, toast } from "@/hooks/use-toast";
+</file>
+
+<file path="src/components/ClassDetailTabs.tsx">
+import { IonIcon, IonLabel, IonSegment, IonSegmentButton } from '@ionic/react';
+import { bookOutline, trophyOutline, peopleOutline } from 'ionicons/icons';
+⋮----
+const ClassDetailTabs = (props) =>
+</file>
+
+<file path="src/components/LeaderboardTab.tsx">
+import { IonSpinner } from '@ionic/react';
+import Leaderboard from '@/components/Leaderboard';
+</file>
+
+<file path="src/components/SetMetadataEditor.tsx">
+import { IonCard, IonCardContent, IonTextarea } from '@ionic/react';
+</file>
+
+<file path="src/components/StudentTab.tsx">
+import { useState } from 'react';
+import StudentList from '@/components/StudentList';
+import { IonAlert } from '@ionic/react';
+⋮----
+const handleShowDeleteAlert = (studentId: number) =>
+⋮----
+() => setShowDeleteAlert({ isOpen: false, studentId: null }) // Reset state on dismiss
+</file>
+
+<file path="src/hooks/use-mobile.tsx">
+export function useIsMobile()
+⋮----
+const onChange = () =>
+</file>
+
+<file path="src/hooks/use-toast.ts">
+import type { ToastActionElement, ToastProps } from '@/components/ui/toast';
+⋮----
+type ToasterToast = ToastProps & {
+  id: string;
+  title?: React.ReactNode;
+  description?: React.ReactNode;
+  action?: ToastActionElement;
+};
+⋮----
+function genId()
+⋮----
+type ActionType = typeof actionTypes;
+⋮----
+type Action =
+  | {
+      type: ActionType['ADD_TOAST'];
+      toast: ToasterToast;
+    }
+  | {
+      type: ActionType['UPDATE_TOAST'];
+      toast: Partial<ToasterToast>;
+    }
+  | {
+      type: ActionType['DISMISS_TOAST'];
+      toastId?: ToasterToast['id'];
+    }
+  | {
+      type: ActionType['REMOVE_TOAST'];
+      toastId?: ToasterToast['id'];
+    };
+⋮----
+interface State {
+  toasts: ToasterToast[];
+}
+⋮----
+const addToRemoveQueue = (toastId: string) =>
+⋮----
+export const reducer = (state: State, action: Action): State =>
+⋮----
+// ! Side effects ! - This could be extracted into a dismissToast() action,
+// but I'll keep it here for simplicity
+⋮----
+function dispatch(action: Action)
+⋮----
+type Toast = Omit<ToasterToast, 'id'>;
+⋮----
+function toast(
+⋮----
+const update = (props: ToasterToast)
+const dismiss = () => dispatch(
+⋮----
+function useToast()
+</file>
+
+<file path="src/lib/utils.ts">
+import { clsx, type ClassValue } from 'clsx';
+import { twMerge } from 'tailwind-merge';
+⋮----
+export function cn(...inputs: ClassValue[])
+</file>
+
+<file path="src/utils/EditableField.tsx">
+import { IonInput, IonItem } from '@ionic/react';
+⋮----
+export const EditableField = (props) =>
+</file>
+
+<file path="src/utils/InfoRow.tsx">
+const InfoRow = (props) =>
+</file>
+
+<file path="src/App.css">
+#root {
+⋮----
+.logo {
+.logo:hover {
+.logo.react:hover {
+⋮----
+a:nth-of-type(2) .logo {
+⋮----
+.card {
+⋮----
+.read-the-docs {
+</file>
+
+<file path="src/main.tsx">
+import { createRoot } from 'react-dom/client';
+import App from './App.tsx';
+</file>
+
+<file path="src/vite-env.d.ts">
+/// <reference types="vite/client" />
+</file>
+
+<file path=".gitignore">
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+node_modules
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# dotenv environment variable files
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
+go/middleware/auth.go
+android/
+public/
+ios/
+</file>
+
+<file path="capacitor.config.ts">
+import { CapacitorConfig } from '@capacitor/cli';
+⋮----
+url: 'http://10.76.16.36:8080/',// this is the IP from the second line ("Network") of the output of 'npm run dev' that runs the Vite front-end dev server
+</file>
+
+<file path="components.json">
+{
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "style": "default",
+  "rsc": false,
+  "tsx": true,
+  "tailwind": {
+    "config": "tailwind.config.ts",
+    "css": "src/index.css",
+    "baseColor": "slate",
+    "cssVariables": true,
+    "prefix": ""
+  },
+  "aliases": {
+    "components": "@/components",
+    "utils": "@/lib/utils",
+    "ui": "@/components/ui",
+    "lib": "@/lib",
+    "hooks": "@/hooks"
+  }
+}
+</file>
+
+<file path="Dockerfile">
+# Start from the latest golang base image
+FROM golang:latest
+
+# Add Maintainer Info
+LABEL maintainer="James South"
+
+# Set the Current Working Directory inside the container
+WORKDIR /
+
+# Copy the source from the current directory to the Working Directory inside the container
+COPY . .
+
+# Disable Go Modules
+# ENV GO111MODULE=off
+
+# Build the Go app
+RUN go build -o main ./go
+
+# Expose port 8090 to the outside world
+EXPOSE 8090
+
+# Command to run the executable
+CMD ["./main"]
+</file>
+
+<file path="eslint.config.js">
+export default tseslint.config(
+</file>
+
+<file path="FORMATTINGSTANDARDS.md">
+# Formatting Standards
+
+by Stephen and Danny
+
+### Description
+
+The purpose of this document is to define formatting standards for the project.
+
+This is advised because you might experience merge conflicts when pulling from the upstream if the following are true:
+
+1. Your formatting differs from upstream
+2. You have a divergent history from upstream (you **pushed** something **before** syncing your fork)
+
+It is difficult to prevent merge conflicts entirely when maintaining a fork, but to help decrease the amount of resolving, having consistent formatting between forks is preferable. It should also reduce diff noise, or long diffs that don't show any actual change in functionality, just whitespace changes.
+
+We will be using the **Prettier** extension with most settings at their default values. Here is how to setup VSCode and IntelliJ. The only setting you should have to change is the **single quote** setting to **true**.
+
+## Setup
+
+### Install Prettier
+
+#### VSCode
+
+1. Navigate to extensions.
+   - Do `Ctrl+Shift+P` and type `Install Extensions`
+   - Select the option `Extensions: Install Extensions`
+2. Find Prettier in Extensions
+   - Type `Prettier` in the search bar
+   - Install the "Prettier - Code formatter" extension by Prettier
+3. Configure VSCode settings
+
+   **Option 1: Using GUI**
+
+   1. Open Settings
+
+      - Windows/Linux: File > Preferences > Settings
+      - Mac: Code > Preferences > Settings
+      - Or use keyboard shortcut: `Ctrl+,` (Windows/Linux) or `Cmd+,` (Mac)
+
+   2. In the Settings search bar, type `formatter`
+
+      - Find `Editor: Default Formatter`
+      - Select `Prettier - Code formatter` from the dropdown
+
+   3. Search for `format on save`
+
+      - Check the box for `"Editor: Format On Save"`
+
+   4. Search for `prettier`
+      - Find `Prettier: Tab Width` (you'll have to scroll down about half a page)
+      - Set it to `2`
+      - Find `Prettier: Print Width`
+      - Set it to `80`
+      - Find `Prettier: Single Quote`
+      - Make sure this is checked.
+
+   **Option 2: Using JSON**
+
+   - Open Command Palette (`Ctrl+Shift+P` or `Cmd+Shift+P` on Mac)
+   - Type "settings" and select "Preferences: Open Settings (JSON)"
+   - Add or update the following settings:
+     ```json
+     {
+       "editor.defaultFormatter": "esbenp.prettier-vscode",
+       "editor.formatOnSave": true,
+       "prettier.tabWidth": 2,
+       "prettier.printWidth": 80,
+       "prettier.singleQuote": true
+     }
+     ```
+
+#### IntelliJ IDEA
+
+> IntelliJ does not apply these settings globally. Make sure you redo these steps if you create a new IntelliJ project.
+
+1. Ensure the Prettier package is installed
+   - You should already have Node.js. If you don't, download it [here.](https://nodejs.org/en#download)
+   - Open your terminal (use GitBash on Windows)
+   - Run:
+   ```bash
+   npm install --global prettier
+   ```
+2. Install Prettier plugin
+
+   - Go to Settings (`Ctrl+Alt+S` or `Cmd+,` on Mac)
+   - Navigate to Plugins
+   - Search for `Prettier`
+   - Install the `Prettier` plugin
+   - Restart IntelliJ when prompted
+
+3. Set Prettier plugin settings
+
+   - Go to Settings
+   - Navigate to Languages & Frameworks > JavaScript > Prettier (expand the dropdown)
+   - Select the option `Automatic Prettier configuration`
+   - Set the options under that:
+     - Run for files: `{**/*,*}.{js,ts,jsx,tsx,css,scss,json,html,vue}`
+     - Make sure `Run on save` is checked
+
+4. Create a Prettier configuration file
+   - Create a `.prettierrc` file in your project/fork root
+   - Add the following:
+     ```json
+     {
+       "tabWidth": 2,
+       "printWidth": 80,
+       "singleQuote": true
+     }
+     ```
+   - Add this file to your `.gitignore`
+     - Find the `.gitignore` file in your root directory
+     - Add `.prettierrc` under the `# Editor directories and files" section`
+5. Set auto-formatting
+   - Go to Settings
+   - Navigate to Tools > Actions on Save
+   - Check `Reformat code`
+
+#### Test Setup
+
+To verify your setup works:
+
+1. Open one of the Typescript files in the project
+2. Add a blank line somewhere
+3. Save the file
+4. The file should format on save to the exact state it was in when you opened it
+
+#### Troubleshooting
+
+- Restarting your editor can fix some issues
+- If you're using IntelliJ, you must have the Prettier installed globally on your machine
+- If you're using IntelliJ, double-check your settings after you reopen your project/fork. The settings detailed in this guide do not apply to all projects
+- Refer to these docs for other issues:
+
+  https://www.jetbrains.com/help/idea/prettier.html#ws_prettier_reformat_code
+  https://www.jetbrains.com/help/idea/configuring-project-and-ide-settings.html
+  https://prettier.io/docs/configuration  
+  https://prettier.io/docs/install  
+  https://www.freecodecamp.org/news/how-to-use-prettier-in-visual-studio-code/
+
+- Let us know on Teams if you have any issues
+</file>
+
+<file path="GITWORKFLOW.md">
+# Git Workflow Documentation
+
+by Evan, Stephen, and Danny
+
+### Description:
+
+This document outlines the process for contributing code to the Cowboy Cards project. All contributions should follow this workflow to ensure code quality, minimize merge conflicts, and maintain a clean project history.
+
+#### 1. Forking the repository
+
+On GitHub, navigate to the Cowboy Cards repository in the organization [HSU-Senior-Project-2025/Cowboy_Cards](https://github.com/HSU-Senior-Project-2025/Cowboy_Cards).
+
+Click the **Fork** button in the top right corner. This will create a copy of the repository in your GitHub account.
+
+#### 2. Cloning the fork
+
+On your fork, click the green **Code** button, then click the method you use to clone repos. Copy the appropriate URL.
+
+On your local machine, open a terminal (Linux or MacOS) or Git Bash (Windows).
+
+Navigate to the directory where you want to store the project.
+
+Run `git clone [URL you copied]` to clone your fork to your local.
+
+#### 3. Add the upstream repo as a remote
+
+To be able to sync with the sprint branch on the upstream repo, you need to add it as a remote with `git remote add upstream https://github.com/HSU-Senior-Project-2025/Cowboy_Cards`. This will add the project repo as a remote called **upstream**. Run `git remote -v` and you should see four lines of output, two for your fork (origin) and two for the project (upstream).
+
+#### 4. Pull the sprint branch to your local
+
+Now run `git pull upstream [name of sprint branch]`. This will update your fork's master branch with the latest commits to the sprint branch.
+
+### Do this early and often, and BEFORE you push any commits.
+
+Run `git branch` and there should be one line of output, **master**.
+
+#### 5. Creating your branch
+
+We use a feature branching strategy. Each new feature, bug fix, or improvement should be developed in its own dedicated branch. This isolates changes and makes it easier to manage pull requests.
+
+To create a new branch, run `git checkout -b [ticket-number/feature]` (replace ticket-number/feature with your own descriptive branch name). Run `git branch` again to see an asterisk next to your new branch, indicating that it is checked out.
+
+#### 6. Develop
+
+Make your code changes in the newly created branch. When you are ready to commit, run the usual commands: `git status`, `git add [files]`, `git commit -am "Descriptive commit message"`. Make as many commits as you need.
+
+#### 7. Stay up-to-date
+
+**_Before_** creating a pull request, it is **_essential_** to integrate the latest changes from the sprint branch of the original repository. This minimizes the risk of merge conflicts. If you have **uncommitted** changes, you can commit them with `git commit` or stash them with `git stash` first. Run `git pull upstream [name of sprint branch]`. To retrieve any stashed changes, run `git stash pop`.
+
+Review the updates and reconcile any differences between them and your code. Use your IDE or a text editor to carefully review the conflicting code and choose the correct changes.
+
+Make another commit if necessary and push your commit(s) up to your remote fork with `git push origin [ticket-number/feature]`.
+
+#### 8. Creating a pull request
+
+On GitHub, navigate to your fork. It will know that you have pushed commits. Click the "Compare & pull request" button.
+
+On the "Open a pull request" page:
+
+- Ensure the "base repository" is **HSU-Senior-Project-2025/Cowboy_Cards** and change the "base branch" to the current sprint branch.
+
+- Ensure the "head repository" is your fork and the "compare branch" is your feature branch.
+
+- Add a clear and descriptive title to your pull request.
+
+- In the description, explain the changes you've made and why. Reference any relevant issues with **#[issue number]**. Teams/teammates can be notified with an **@** followed by the team/member name.
+
+- Click "Create pull request".
+
+#### 9. Code review process
+
+All pull requests will be reviewed by team leads before being merged. Be responsive to feedback and make any necessary changes requested by the reviewers. Comments can be added on a per-line basis and the necessary discussion can take place there until the issue is resolved.
+
+## Note to team leads: Please try to be active and review pull requests often. We don’t have a way to automate merging, so merges will have to be done one at a time to prevent merge conflicts.
+
+#### 10. Merging pull requests
+
+Team leads will be responsible for merging approved pull requests. Squash merging is preferred to keep the commit history clean.
+
+#### 11. Troubleshooting
+
+**Git config**: Check your global git config with `git config --list`. See that you don't have any **pull** options (ff-only, rebase, ff or merge) set; this can make pulling and merging upstream changes difficult.
+
+**Merge conflicts**: Synching with the upstream **regularly** while developing, **_before_** you push anything, will reduce merge conflicts. If you encounter merge conflicts, it doesn't mean anything is wrong, or broken, it just means **git** doesn't know how to reconcile the differences. You have created divergent histories, and **git** wants to converge them. Carefully review the conflicts and resolve them manually in your IDE/editor. Commit the resolved changes.
+
+**Push errors**: If you have trouble pushing your branch, ensure you've updated your local branch with the latest changes from the sprint branch as described above.
+
+This workflow is designed to streamline our development process and minimize integration issues. Please follow these guidelines carefully. If you have any questions, don't hesitate to ask.
+
+Here are a couple of articles:
+
+[Git Merge Conflicts](https://www.atlassian.com/git/tutorials/using-branches/merge-conflicts)
+
+[How to undo (almost) anything with Git](https://github.blog/open-source/git/how-to-undo-almost-anything-with-git/)
+</file>
+
+<file path="go.mod">
+module github.com/HSU-Senior-Project-2025/Cowboy_Cards
+
+go 1.24.0
+
+require (
+	github.com/go-chi/chi/v5 v5.2.1
+	github.com/gorilla/sessions v1.4.0
+	github.com/jackc/pgx/v5 v5.7.2
+	github.com/joho/godotenv v1.5.1
+	github.com/rs/cors v1.11.1
+	github.com/urfave/negroni/v3 v3.1.1
+	golang.org/x/crypto v0.36.0
+)
+
+require (
+	github.com/gorilla/securecookie v1.1.2 // indirect
+	github.com/jackc/pgpassfile v1.0.0 // indirect
+	github.com/jackc/pgservicefile v0.0.0-20240606120523-5a60cdf6a761 // indirect
+	github.com/jackc/puddle/v2 v2.2.2 // indirect
+	github.com/stretchr/testify v1.8.2 // indirect
+	golang.org/x/sync v0.12.0 // indirect
+	golang.org/x/text v0.23.0 // indirect
+)
+</file>
+
+<file path="ionic.config.json">
+{
+  "name": "Cowboy Cards",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react-vite"
+}
+</file>
+
+<file path="postcss.config.js">
+
+</file>
+
+<file path="README.md">
+# Cowboy Cards
+
+This is a flashcard app for Hardin-Simmons University made by the Computer Science Senior Project class of 2025.
+
+### Built With
+
+ -	![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
+ -  ![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)
+ -  ![Go](https://img.shields.io/badge/go-%2300ADD8.svg?style=for-the-badge&logo=go&logoColor=white)
+ -  ![Ionic](https://img.shields.io/badge/Ionic-%233880FF.svg?style=for-the-badge&logo=Ionic&logoColor=white)
+ -  ![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)
+ -  ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
+ -  ![Postgres](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white)
+</file>
+
+<file path="tsconfig.app.json">
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "jsx": "react-jsx",
+
+    /* Linting */
+    "strict": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noImplicitAny": false,
+    "noFallthroughCasesInSwitch": false,
+
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": ["src"]
+}
+</file>
+
+<file path="tsconfig.json">
+{
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "noImplicitAny": false,
+    "noUnusedParameters": false,
+    "skipLibCheck": true,
+    "allowJs": true,
+    "noUnusedLocals": false,
+    "strictNullChecks": false
+  }
+}
+</file>
+
+<file path="tsconfig.node.json">
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2023"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": ["vite.config.ts"]
+}
+</file>
+
+<file path="go/controllers/card_history.go">
+package controllers
+⋮----
+import (
+	"encoding/json"
+	"net/http"
+	"path"
+
+	"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/db"
+	"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/middleware"
+)
+⋮----
+"encoding/json"
+"net/http"
+"path"
+⋮----
+"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/db"
+"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/middleware"
+⋮----
+func (h *DBHandler) UpdateFlashcardScore(w http.ResponseWriter, r *http.Request)
+⋮----
+// curl -X POST localhost:8000/api/card_history/correct -H "card_id: 1"
+⋮----
+// Get user_id from context (set by AuthMiddleware)
+⋮----
+w.WriteHeader(http.StatusCreated) // TODO - WriteHeader insert case only, not update case
+⋮----
+func (h *DBHandler) GetCardScore(w http.ResponseWriter, r *http.Request)
+⋮----
+// curl -X GET localhost:8000/api/card_history/ -H "card_id: 1"
+⋮----
+func (h *DBHandler) GetScoresInASet(w http.ResponseWriter, r *http.Request)
+⋮----
+// curl -X GET localhost:8000/api/card_history/set -H "user_id: 1" -H "set_id: 1"
+</file>
+
+<file path="go/controllers/flashcards.go">
+package controllers
+⋮----
+import (
+	"encoding/json"
+	"net/http"
+	"path"
+
+	"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/db"
+	"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/middleware"
+)
+⋮----
+"encoding/json"
+"net/http"
+"path"
+⋮----
+"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/db"
+"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/middleware"
+⋮----
+func (h *DBHandler) GetFlashcardById(w http.ResponseWriter, r *http.Request)
+⋮----
+// curl http://localhost:8000/api/flashcards/ -H "id: 1"
+⋮----
+func (h *DBHandler) ListFlashcardsOfASet(w http.ResponseWriter, r *http.Request)
+⋮----
+// curl http://localhost:8000/api/flashcards/list -H "set_id:1"| jq
+⋮----
+func (h *DBHandler) CreateFlashcard(w http.ResponseWriter, r *http.Request)
+⋮----
+// curl -X POST localhost:8000/api/flashcards -H "front: test front" -H "back: back test" -H "set_id: 1"
+⋮----
+func (h *DBHandler) UpdateFlashcard(w http.ResponseWriter, r *http.Request)
+⋮----
+// curl -X PUT localhost:8000/api/flashcards/front -H "id: 1" -H "front: Who is Don Quixote?"
+⋮----
+var res string
+⋮----
+func (h *DBHandler) DeleteFlashcard(w http.ResponseWriter, r *http.Request)
+⋮----
+// curl -X DELETE http://localhost:8000/api/flashcards/ -H "id: 1"
+⋮----
+// no body is sent with a 204 response
+</file>
+
+<file path="go/db/card_history.sql.go">
+// Code generated by sqlc. DO NOT EDIT.
+// versions:
+//   sqlc v1.29.0
+// source: card_history.sql
+⋮----
+package db
+⋮----
+import (
+	"context"
+)
+⋮----
+"context"
+⋮----
+const getCardScore = `-- name: GetCardScore :one
+SELECT score AS correct, (times_attempted - score) AS incorrect, (score - times_attempted) AS net_score, times_attempted FROM card_history
+WHERE user_id = $1 AND card_id = $2
+`
+⋮----
+type GetCardScoreParams struct {
+	UserID int32
+	CardID int32
+}
+⋮----
+type GetCardScoreRow struct {
+	Correct        int32
+	Incorrect      int32
+	NetScore       int32
+	TimesAttempted int32
+}
+⋮----
+func (q *Queries) GetCardScore(ctx context.Context, arg GetCardScoreParams) (GetCardScoreRow, error)
+⋮----
+var i GetCardScoreRow
+⋮----
+const getCardsMastered = `-- name: GetCardsMastered :one
+SELECT COUNT(is_mastered) FROM card_history WHERE user_id = $1 AND is_mastered = TRUE
+`
+⋮----
+func (q *Queries) GetCardsMastered(ctx context.Context, userID int32) (int64, error)
+⋮----
+var count int64
+⋮----
+const getCardsStudied = `-- name: GetCardsStudied :one
+SELECT COUNT(card_id) FROM card_history WHERE user_id = $1
+`
+⋮----
+func (q *Queries) GetCardsStudied(ctx context.Context, userID int32) (int64, error)
+⋮----
+const getScoresInASet = `-- name: GetScoresInASet :many
+SELECT set_name, score AS correct, (times_attempted - score) AS incorrect, score AS net_score, times_attempted 
+FROM card_history 
+JOIN flashcards ON card_history.card_id = flashcards.id
+JOIN flashcard_sets ON flashcards.set_id = flashcard_sets.id WHERE user_id = $1 AND set_id = $2
+`
+⋮----
+type GetScoresInASetParams struct {
+	UserID int32
+	SetID  int32
+}
+⋮----
+type GetScoresInASetRow struct {
+	SetName        string
+	Correct        int32
+	Incorrect      int32
+	NetScore       int32
+	TimesAttempted int32
+}
+⋮----
+func (q *Queries) GetScoresInASet(ctx context.Context, arg GetScoresInASetParams) ([]GetScoresInASetRow, error)
+⋮----
+var items []GetScoresInASetRow
+⋮----
+var i GetScoresInASetRow
+⋮----
+const getTotalCardViews = `-- name: GetTotalCardViews :one
+SELECT COALESCE(SUM(times_attempted), 0) FROM card_history WHERE user_id = $1
+`
+⋮----
+func (q *Queries) GetTotalCardViews(ctx context.Context, userID int32) (interface
+⋮----
+var coalesce interface{}
+⋮----
+const upsertCorrectFlashcardScore = `-- name: UpsertCorrectFlashcardScore :exec
+INSERT INTO card_history (user_id, card_id, score) VALUES ($1, $2, 1) 
+ON CONFLICT (user_id, card_id) DO 
+UPDATE SET score = card_history.score + 1, times_attempted = card_history.times_attempted + 1
+`
+⋮----
+type UpsertCorrectFlashcardScoreParams struct {
+	UserID int32
+	CardID int32
+}
+⋮----
+func (q *Queries) UpsertCorrectFlashcardScore(ctx context.Context, arg UpsertCorrectFlashcardScoreParams) error
+⋮----
+const upsertIncorrectFlashcardScore = `-- name: UpsertIncorrectFlashcardScore :exec
+INSERT INTO card_history (user_id, card_id, score) VALUES ($1, $2, 0) 
+ON CONFLICT (user_id, card_id) DO 
+UPDATE SET times_attempted = card_history.times_attempted + 1
+`
+⋮----
+type UpsertIncorrectFlashcardScoreParams struct {
+	UserID int32
+	CardID int32
+}
+⋮----
+func (q *Queries) UpsertIncorrectFlashcardScore(ctx context.Context, arg UpsertIncorrectFlashcardScoreParams) error
+</file>
+
+<file path="go/db/class_set.sql.go">
+// Code generated by sqlc. DO NOT EDIT.
+// versions:
+//   sqlc v1.29.0
+// source: class_set.sql
+⋮----
+package db
+⋮----
+import (
+	"context"
+)
+⋮----
+"context"
+⋮----
+const addSetToClass = `-- name: AddSetToClass :exec
+INSERT INTO class_set (class_id,set_id) VALUES ($1, $2)
+`
+⋮----
+type AddSetToClassParams struct {
+	ClassID int32
+	SetID   int32
+}
+⋮----
+func (q *Queries) AddSetToClass(ctx context.Context, arg AddSetToClassParams) error
+⋮----
+const listClassesHavingSet = `-- name: ListClassesHavingSet :many
+SELECT classes.id, class_name, class_description FROM classes
+JOIN class_set ON classes.id = class_set.class_id 
+JOIN flashcard_sets ON class_set.set_id = flashcard_sets.id
+WHERE set_id = $1 ORDER BY class_name
+`
+⋮----
+type ListClassesHavingSetRow struct {
+	ID               int32
+	ClassName        string
+	ClassDescription string
+}
+⋮----
+func (q *Queries) ListClassesHavingSet(ctx context.Context, setID int32) ([]ListClassesHavingSetRow, error)
+⋮----
+var items []ListClassesHavingSetRow
+⋮----
+var i ListClassesHavingSetRow
+⋮----
+const listSetsInClass = `-- name: ListSetsInClass :many
+SELECT flashcard_sets.id, set_name, set_description FROM flashcard_sets 
+JOIN class_set ON flashcard_sets.id = class_set.set_id 
+JOIN classes ON class_set.class_id = classes.id
+WHERE class_id = $1 ORDER BY set_name
+`
+⋮----
+type ListSetsInClassRow struct {
+	ID             int32
+	SetName        string
+	SetDescription string
+}
+⋮----
+func (q *Queries) ListSetsInClass(ctx context.Context, classID int32) ([]ListSetsInClassRow, error)
+⋮----
+var items []ListSetsInClassRow
+⋮----
+var i ListSetsInClassRow
+⋮----
+const removeSetFromClass = `-- name: RemoveSetFromClass :exec
+DELETE FROM class_set WHERE class_id = $1 AND set_id = $2
+`
+⋮----
+type RemoveSetFromClassParams struct {
+	ClassID int32
+	SetID   int32
+}
+⋮----
+func (q *Queries) RemoveSetFromClass(ctx context.Context, arg RemoveSetFromClassParams) error
+</file>
+
+<file path="go/db/class_user.sql.go">
+// Code generated by sqlc. DO NOT EDIT.
+// versions:
+//   sqlc v1.29.0
+// source: class_user.sql
+⋮----
+package db
+⋮----
+import (
+	"context"
+)
+⋮----
+"context"
+⋮----
+const joinClass = `-- name: JoinClass :exec
+INSERT INTO class_user (user_id, class_id, role) VALUES ($1, $2, $3)
+`
+⋮----
+type JoinClassParams struct {
+	UserID  int32
+	ClassID int32
+	Role    string
+}
+⋮----
+func (q *Queries) JoinClass(ctx context.Context, arg JoinClassParams) error
+⋮----
+const leaveClass = `-- name: LeaveClass :exec
+DELETE FROM class_user WHERE user_id = $1 AND class_id = $2
+`
+⋮----
+type LeaveClassParams struct {
+	UserID  int32
+	ClassID int32
+}
+⋮----
+func (q *Queries) LeaveClass(ctx context.Context, arg LeaveClassParams) error
+⋮----
+const listClassesOfAUser = `-- name: ListClassesOfAUser :many
+SELECT class_id, role, class_name, class_description FROM class_user JOIN classes ON class_user.class_id = classes.id WHERE user_id = $1 ORDER BY class_name
+`
+⋮----
+type ListClassesOfAUserRow struct {
+	ClassID          int32
+	Role             string
+	ClassName        string
+	ClassDescription string
+}
+⋮----
+func (q *Queries) ListClassesOfAUser(ctx context.Context, userID int32) ([]ListClassesOfAUserRow, error)
+⋮----
+var items []ListClassesOfAUserRow
+⋮----
+var i ListClassesOfAUserRow
+⋮----
+const listMembersOfAClass = `-- name: ListMembersOfAClass :many
+SELECT user_id, class_id, role, first_name, last_name, username FROM class_user JOIN users ON class_user.user_id = users.id WHERE class_id = $1 ORDER BY last_name, first_name
+`
+⋮----
+type ListMembersOfAClassRow struct {
+	UserID    int32
+	ClassID   int32
+	Role      string
+	FirstName string
+	LastName  string
+	Username  string
+}
+⋮----
+func (q *Queries) ListMembersOfAClass(ctx context.Context, classID int32) ([]ListMembersOfAClassRow, error)
+⋮----
+var items []ListMembersOfAClassRow
+⋮----
+var i ListMembersOfAClassRow
+</file>
+
+<file path="go/db/classes.sql.go">
+// Code generated by sqlc. DO NOT EDIT.
+// versions:
+//   sqlc v1.29.0
+// source: classes.sql
+⋮----
+package db
+⋮----
+import (
+	"context"
+)
+⋮----
+"context"
+⋮----
+const createClass = `-- name: CreateClass :one
+INSERT INTO classes (class_name, class_description) VALUES ($1, $2) RETURNING id, class_name, class_description, created_at, updated_at
+`
+⋮----
+type CreateClassParams struct {
+	ClassName        string
+	ClassDescription string
+}
+⋮----
+func (q *Queries) CreateClass(ctx context.Context, arg CreateClassParams) (Class, error)
+⋮----
+var i Class
+⋮----
+const deleteClass = `-- name: DeleteClass :exec
+DELETE FROM classes WHERE id = $1
+`
+⋮----
+func (q *Queries) DeleteClass(ctx context.Context, id int32) error
+⋮----
+const getClassById = `-- name: GetClassById :one
+SELECT id, class_name, class_description, created_at, updated_at FROM classes WHERE id = $1
+`
+⋮----
+func (q *Queries) GetClassById(ctx context.Context, id int32) (Class, error)
+⋮----
+const getClassLeaderboard = `-- name: GetClassLeaderboard :many
+SELECT class_user.user_id, users.first_name, users.last_name, users.username, COALESCE(SUM(set_score),0) AS class_score FROM classes 
+JOIN class_user ON classes.id = class_user.class_id 
+JOIN class_set ON classes.id = class_set.class_id
+JOIN set_user ON (class_user.user_id = set_user.user_id AND class_set.set_id = set_user.set_id)
+JOIN users ON class_user.user_id = users.id
+WHERE classes.id = $1
+GROUP BY class_user.user_id, users.first_name, users.last_name, users.username
+ORDER BY COALESCE(SUM(set_score),0) DESC
+`
+⋮----
+type GetClassLeaderboardRow struct {
+	UserID     int32
+	FirstName  string
+	LastName   string
+	Username   string
+	ClassScore interface{}
+⋮----
+func (q *Queries) GetClassLeaderboard(ctx context.Context, id int32) ([]GetClassLeaderboardRow, error)
+⋮----
+var items []GetClassLeaderboardRow
+⋮----
+var i GetClassLeaderboardRow
+⋮----
+const listClasses = `-- name: ListClasses :many
+SELECT id, class_name, class_description, created_at, updated_at FROM classes ORDER BY class_name
+`
+⋮----
+func (q *Queries) ListClasses(ctx context.Context) ([]Class, error)
+⋮----
+var items []Class
+⋮----
+var i Class
+⋮----
+const updateClassDescription = `-- name: UpdateClassDescription :one
+UPDATE classes SET class_description = $1, updated_at = LOCALTIMESTAMP(2) WHERE id = $2 RETURNING class_description
+`
+⋮----
+type UpdateClassDescriptionParams struct {
+	ClassDescription string
+	ID               int32
+}
+⋮----
+func (q *Queries) UpdateClassDescription(ctx context.Context, arg UpdateClassDescriptionParams) (string, error)
+⋮----
+var class_description string
+⋮----
+const updateClassName = `-- name: UpdateClassName :one
+UPDATE classes SET class_name = $1, updated_at = LOCALTIMESTAMP(2) WHERE id = $2 RETURNING class_name
+`
+⋮----
+type UpdateClassNameParams struct {
+	ClassName string
+	ID        int32
+}
+⋮----
+func (q *Queries) UpdateClassName(ctx context.Context, arg UpdateClassNameParams) (string, error)
+⋮----
+var class_name string
+⋮----
+const verifyClassMember = `-- name: VerifyClassMember :one
+SELECT user_id, class_id, role FROM class_user WHERE class_id = $1 AND user_id = $2
+`
+⋮----
+type VerifyClassMemberParams struct {
+	ClassID int32
+	UserID  int32
+}
+⋮----
+func (q *Queries) VerifyClassMember(ctx context.Context, arg VerifyClassMemberParams) (ClassUser, error)
+⋮----
+var i ClassUser
+</file>
+
+<file path="go/db/db.go">
+// Code generated by sqlc. DO NOT EDIT.
+// versions:
+//   sqlc v1.29.0
+⋮----
+package db
+⋮----
+import (
+	"context"
+
+	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgconn"
+)
+⋮----
+"context"
+⋮----
+"github.com/jackc/pgx/v5"
+"github.com/jackc/pgx/v5/pgconn"
+⋮----
+type DBTX interface {
+	Exec(context.Context, string, ...interface{}) (pgconn.CommandTag, error)
+⋮----
+func New(db DBTX) *Queries
+⋮----
+type Queries struct {
+	db DBTX
+}
+⋮----
+func (q *Queries) WithTx(tx pgx.Tx) *Queries
+</file>
+
+<file path="go/db/flashcard_sets.sql.go">
+// Code generated by sqlc. DO NOT EDIT.
+// versions:
+//   sqlc v1.29.0
+// source: flashcard_sets.sql
+⋮----
+package db
+⋮----
+import (
+	"context"
+)
+⋮----
+"context"
+⋮----
+const createFlashcardSet = `-- name: CreateFlashcardSet :one
+INSERT INTO flashcard_sets (set_name, set_description) VALUES ($1, $2) RETURNING id, set_name, set_description, created_at, updated_at
+`
+⋮----
+type CreateFlashcardSetParams struct {
+	SetName        string
+	SetDescription string
+}
+⋮----
+func (q *Queries) CreateFlashcardSet(ctx context.Context, arg CreateFlashcardSetParams) (FlashcardSet, error)
+⋮----
+var i FlashcardSet
+⋮----
+const deleteFlashcardSet = `-- name: DeleteFlashcardSet :exec
+DELETE FROM flashcard_sets WHERE id = $1
+`
+⋮----
+func (q *Queries) DeleteFlashcardSet(ctx context.Context, id int32) error
+⋮----
+const getFlashcardSetById = `-- name: GetFlashcardSetById :one
+SELECT id, set_name, set_description, created_at, updated_at FROM flashcard_sets WHERE id = $1
+`
+⋮----
+func (q *Queries) GetFlashcardSetById(ctx context.Context, id int32) (FlashcardSet, error)
+⋮----
+const listFlashcardSets = `-- name: ListFlashcardSets :many
+SELECT id, set_name, set_description, created_at, updated_at FROM flashcard_sets ORDER BY set_name
+`
+⋮----
+func (q *Queries) ListFlashcardSets(ctx context.Context) ([]FlashcardSet, error)
+⋮----
+var items []FlashcardSet
+⋮----
+var i FlashcardSet
+⋮----
+const updateFlashcardSetDescription = `-- name: UpdateFlashcardSetDescription :one
+UPDATE flashcard_sets SET set_description = $1, updated_at = LOCALTIMESTAMP(2) WHERE id = $2 RETURNING set_description
+`
+⋮----
+type UpdateFlashcardSetDescriptionParams struct {
+	SetDescription string
+	ID             int32
+}
+⋮----
+func (q *Queries) UpdateFlashcardSetDescription(ctx context.Context, arg UpdateFlashcardSetDescriptionParams) (string, error)
+⋮----
+var set_description string
+⋮----
+const updateFlashcardSetName = `-- name: UpdateFlashcardSetName :one
+UPDATE flashcard_sets SET set_name = $1, updated_at = LOCALTIMESTAMP(2) WHERE id = $2 RETURNING set_name
+`
+⋮----
+type UpdateFlashcardSetNameParams struct {
+	SetName string
+	ID      int32
+}
+⋮----
+func (q *Queries) UpdateFlashcardSetName(ctx context.Context, arg UpdateFlashcardSetNameParams) (string, error)
+⋮----
+var set_name string
+⋮----
+const verifySetMember = `-- name: VerifySetMember :one
+SELECT user_id, set_id, role, set_score, is_private from set_user WHERE set_id = $1 AND user_id = $2
+`
+⋮----
+type VerifySetMemberParams struct {
+	SetID  int32
+	UserID int32
+}
+⋮----
+func (q *Queries) VerifySetMember(ctx context.Context, arg VerifySetMemberParams) (SetUser, error)
+⋮----
+var i SetUser
+</file>
+
+<file path="go/db/flashcards.sql.go">
+// Code generated by sqlc. DO NOT EDIT.
+// versions:
+//   sqlc v1.29.0
+// source: flashcards.sql
+⋮----
+package db
+⋮----
+import (
+	"context"
+)
+⋮----
+"context"
+⋮----
+const createFlashcard = `-- name: CreateFlashcard :one
+INSERT INTO flashcards (front, back, set_id) VALUES ($1, $2, $3) RETURNING id, front, back, set_id, created_at, updated_at
+`
+⋮----
+type CreateFlashcardParams struct {
+	Front string
+	Back  string
+	SetID int32
+}
+⋮----
+func (q *Queries) CreateFlashcard(ctx context.Context, arg CreateFlashcardParams) (Flashcard, error)
+⋮----
+var i Flashcard
+⋮----
+const deleteFlashcard = `-- name: DeleteFlashcard :exec
+DELETE FROM flashcards WHERE id = $1
+`
+⋮----
+func (q *Queries) DeleteFlashcard(ctx context.Context, id int32) error
+⋮----
+const getFlashcardById = `-- name: GetFlashcardById :one
+SELECT id, front, back, set_id, created_at, updated_at FROM flashcards WHERE id = $1
+`
+⋮----
+func (q *Queries) GetFlashcardById(ctx context.Context, id int32) (Flashcard, error)
+⋮----
+const listFlashcardsOfASet = `-- name: ListFlashcardsOfASet :many
+SELECT id, front, back, set_id, created_at, updated_at FROM flashcards WHERE set_id = $1
+`
+⋮----
+func (q *Queries) ListFlashcardsOfASet(ctx context.Context, setID int32) ([]Flashcard, error)
+⋮----
+var items []Flashcard
+⋮----
+var i Flashcard
+⋮----
+const updateFlashcardBack = `-- name: UpdateFlashcardBack :one
+UPDATE flashcards SET back = $1, updated_at = LOCALTIMESTAMP(2) WHERE id = $2 RETURNING back
+`
+⋮----
+type UpdateFlashcardBackParams struct {
+	Back string
+	ID   int32
+}
+⋮----
+func (q *Queries) UpdateFlashcardBack(ctx context.Context, arg UpdateFlashcardBackParams) (string, error)
+⋮----
+var back string
+⋮----
+const updateFlashcardFront = `-- name: UpdateFlashcardFront :one
+UPDATE flashcards SET front = $1, updated_at = LOCALTIMESTAMP(2) WHERE id = $2 RETURNING front
+`
+⋮----
+type UpdateFlashcardFrontParams struct {
+	Front string
+	ID    int32
+}
+⋮----
+func (q *Queries) UpdateFlashcardFront(ctx context.Context, arg UpdateFlashcardFrontParams) (string, error)
+⋮----
+var front string
+⋮----
+const updateFlashcardSetId = `-- name: UpdateFlashcardSetId :one
+UPDATE flashcards SET set_id = $1, updated_at = LOCALTIMESTAMP(2) WHERE id = $2 RETURNING set_id
+`
+⋮----
+type UpdateFlashcardSetIdParams struct {
+	SetID int32
+	ID    int32
+}
+⋮----
+func (q *Queries) UpdateFlashcardSetId(ctx context.Context, arg UpdateFlashcardSetIdParams) (int32, error)
+⋮----
+var set_id int32
+⋮----
+const verifyFlashcardOwner = `-- name: VerifyFlashcardOwner :one
+SELECT user_id, set_id, role, set_score, is_private from set_user WHERE user_id = $1 AND set_id = (SELECT set_id FROM flashcards WHERE id = $2) AND role = 'owner'
+`
+⋮----
+type VerifyFlashcardOwnerParams struct {
+	UserID int32
+	ID     int32
+}
+⋮----
+func (q *Queries) VerifyFlashcardOwner(ctx context.Context, arg VerifyFlashcardOwnerParams) (SetUser, error)
+⋮----
+var i SetUser
+</file>
+
+<file path="go/db/set_user.sql.go">
+// Code generated by sqlc. DO NOT EDIT.
+// versions:
+//   sqlc v1.29.0
+// source: set_user.sql
+⋮----
+package db
+⋮----
+import (
+	"context"
+)
+⋮----
+"context"
+⋮----
+const joinSet = `-- name: JoinSet :exec
+INSERT INTO set_user (user_id, set_id, role) VALUES ($1, $2, $3)
+`
+⋮----
+type JoinSetParams struct {
+	UserID int32
+	SetID  int32
+	Role   string
+}
+⋮----
+func (q *Queries) JoinSet(ctx context.Context, arg JoinSetParams) error
+⋮----
+const leaveSet = `-- name: LeaveSet :exec
+DELETE FROM set_user WHERE user_id = $1 AND set_id = $2
+`
+⋮----
+type LeaveSetParams struct {
+	UserID int32
+	SetID  int32
+}
+⋮----
+func (q *Queries) LeaveSet(ctx context.Context, arg LeaveSetParams) error
+⋮----
+const listSetsOfAUser = `-- name: ListSetsOfAUser :many
+SELECT set_id, role, set_name, set_description FROM set_user JOIN flashcard_sets ON set_user.set_id = flashcard_sets.id WHERE user_id = $1 ORDER BY set_name
+`
+⋮----
+type ListSetsOfAUserRow struct {
+	SetID          int32
+	Role           string
+	SetName        string
+	SetDescription string
+}
+⋮----
+func (q *Queries) ListSetsOfAUser(ctx context.Context, userID int32) ([]ListSetsOfAUserRow, error)
+⋮----
+var items []ListSetsOfAUserRow
+⋮----
+var i ListSetsOfAUserRow
+</file>
+
+<file path="sqlc/schema.sql">
+create table users (
+  id SERIAL,
+  username TEXT not null unique,
+  first_name TEXT not null,
+  last_name TEXT not null,
+  email TEXT not null unique,
+  password TEXT not null,
+  reset_token TEXT,
+  last_login DATE not null default CURRENT_DATE,
+  login_streak INTEGER not null default 1,
+  created_at TIMESTAMP not null default LOCALTIMESTAMP(2),
+  updated_at TIMESTAMP not null default LOCALTIMESTAMP(2),
+  check (LENGTH(password) >= 8),
+  primary key (id)
+);
+
+create table flashcard_sets (
+  id SERIAL,
+  set_name TEXT not null,
+  set_description TEXT not null,
+  created_at TIMESTAMP not null default LOCALTIMESTAMP(2),
+  updated_at TIMESTAMP not null default LOCALTIMESTAMP(2),
+  primary key (id)
+);
+
+create table flashcards (
+  id SERIAL,
+  front TEXT not null,
+  back TEXT not null,
+  set_id INTEGER not null,
+  created_at TIMESTAMP not null default LOCALTIMESTAMP(2),
+  updated_at TIMESTAMP not null default LOCALTIMESTAMP(2),
+  primary key (id),
+  foreign KEY (set_id) references flashcard_sets (id) on delete CASCADE on update CASCADE
+);
+
+create table classes (
+  id SERIAL,
+  class_name TEXT not null,
+  class_description TEXT not null,
+  created_at TIMESTAMP not null default LOCALTIMESTAMP(2),
+  updated_at TIMESTAMP not null default LOCALTIMESTAMP(2),
+  primary key (id)
+);
+
+create table card_history (
+  user_id INTEGER not null,
+  card_id INTEGER not null,
+  score INTEGER default 0 not null,
+  times_attempted INTEGER default 1 not null,
+  is_mastered BOOLEAN not null default false,
+  created_at TIMESTAMP not null default LOCALTIMESTAMP(2),
+  primary key (user_id, card_id),
+  foreign KEY (user_id) references users (id) on delete CASCADE on update CASCADE,
+  foreign KEY (card_id) references flashcards (id) on delete CASCADE on update CASCADE
+);
+
+create table class_user (
+  user_id INTEGER not null,
+  class_id INTEGER not null,
+  role TEXT not null check (role in ('student', 'teacher')) default 'student',
+  primary key (user_id, class_id),
+  foreign KEY (user_id) references users (id) on delete CASCADE on update CASCADE,
+  foreign KEY (class_id) references classes (id) on delete CASCADE on update CASCADE
+);
+
+create table class_set (
+  class_id INTEGER,
+  set_id INTEGER,
+  primary key (class_id, set_id),
+  foreign KEY (class_id) references classes (id) on delete CASCADE on update CASCADE,
+  foreign KEY (set_id) references flashcard_sets (id) on delete CASCADE on update CASCADE
+);
+
+create table set_user (
+  user_id INTEGER,
+  set_id INTEGER,
+  role TEXT not null check (role in ('user', 'owner')) default 'user',
+  set_score INTEGER not null default 0,
+  is_private BOOLEAN not null default false,
+  primary key (user_id, set_id),
+  foreign KEY (user_id) references users (id) on delete CASCADE on update CASCADE,
+  foreign KEY (set_id) references flashcard_sets (id) on delete CASCADE on update CASCADE
+);
+</file>
+
+<file path="sqlc/script.sql">
+drop schema public CASCADE;
+
+create schema public;
+
+set
+  SEARCH_PATH to public;
+
+create table users (
+  id SERIAL,
+  username TEXT not null unique,
+  first_name TEXT not null,
+  last_name TEXT not null,
+  email TEXT not null unique,
+  password TEXT not null,
+  reset_token TEXT,
+  last_login DATE not null default CURRENT_DATE,
+  login_streak INTEGER not null default 1,
+  created_at TIMESTAMP not null default LOCALTIMESTAMP(2),
+  updated_at TIMESTAMP not null default LOCALTIMESTAMP(2),
+  check (LENGTH(password) >= 8),
+  primary key (id)
+) TABLESPACE pg_default;
+
+create table flashcard_sets (
+  id SERIAL,
+  set_name TEXT not null,
+  set_description TEXT not null,
+  created_at TIMESTAMP not null default LOCALTIMESTAMP(2),
+  updated_at TIMESTAMP not null default LOCALTIMESTAMP(2),
+  primary key (id)
+) TABLESPACE pg_default;
+
+create table flashcards (
+  id SERIAL,
+  front TEXT not null,
+  back TEXT not null,
+  set_id INTEGER not null,
+  created_at TIMESTAMP not null default LOCALTIMESTAMP(2),
+  updated_at TIMESTAMP not null default LOCALTIMESTAMP(2),
+  primary key (id),
+  foreign KEY (set_id) references flashcard_sets (id) on delete CASCADE on update CASCADE
+) TABLESPACE pg_default;
+
+create table classes (
+  id SERIAL,
+  class_name TEXT not null,
+  class_description TEXT not null,
+  created_at TIMESTAMP not null default LOCALTIMESTAMP(2),
+  updated_at TIMESTAMP not null default LOCALTIMESTAMP(2),
+  primary key (id)
+) TABLESPACE pg_default;
+
+create table card_history (
+  user_id INTEGER not null,
+  card_id INTEGER not null,
+  score INTEGER default 0 not null,
+  times_attempted INTEGER default 1 not null,
+  is_mastered BOOLEAN not null default false,
+  created_at TIMESTAMP not null default LOCALTIMESTAMP(2),
+  primary key (user_id, card_id),
+  foreign KEY (user_id) references users (id) on delete CASCADE on update CASCADE,
+  foreign KEY (card_id) references flashcards (id) on delete CASCADE on update CASCADE
+) TABLESPACE pg_default;
+
+create table class_user (
+  user_id INTEGER not null,
+  class_id INTEGER not null,
+  role TEXT not null check (role in ('student', 'teacher')) default 'student',
+  primary key (user_id, class_id),
+  foreign KEY (user_id) references users (id) on delete CASCADE on update CASCADE,
+  foreign KEY (class_id) references classes (id) on delete CASCADE on update CASCADE
+) TABLESPACE pg_default;
+
+create table class_set (
+  class_id INTEGER,
+  set_id INTEGER,
+  primary key (class_id, set_id),
+  foreign KEY (class_id) references classes (id) on delete CASCADE on update CASCADE,
+  foreign KEY (set_id) references flashcard_sets (id) on delete CASCADE on update CASCADE
+) TABLESPACE pg_default;
+
+create table set_user (
+  user_id INTEGER,
+  set_id INTEGER,
+  role TEXT not null check (role in ('user', 'owner')) default 'user',
+  set_score INTEGER not null default 0,
+  is_private BOOLEAN not null default false,
+  primary key (user_id, set_id),
+  foreign KEY (user_id) references users (id) on delete CASCADE on update CASCADE,
+  foreign KEY (set_id) references flashcard_sets (id) on delete CASCADE on update CASCADE
+) TABLESPACE pg_default;
+
+insert into
+  users (username, email, password, first_name, last_name)
+values
+  (
+    'john_doe',
+    'john@example.com',
+    'password123',
+    'John',
+    'Doe'
+  ),
+  (
+    'jane_smith',
+    'jane@example.com',
+    'password456',
+    'Jane',
+    'Smith'
+  ),
+  (
+    'bob_johnson',
+    'bob@example.com',
+    'password789',
+    'Bob',
+    'Johnson'
+  ),
+  (
+    'alice_brown',
+    'alice@example.com',
+    'password012',
+    'Alice',
+    'Brown'
+  ),
+  (
+    'charlie_davis',
+    'charlie@example.com',
+    'password345',
+    'Charlie',
+    'Davis'
+  ),
+  (
+    'david_wilson',
+    'david@example.com',
+    'password678',
+    'David',
+    'Wilson'
+  ),
+  (
+    'emily_taylor',
+    'emily@example.com',
+    'password234',
+    'Emily',
+    'Taylor'
+  ),
+  (
+    'frank_martin',
+    'frank@example.com',
+    'password890',
+    'Frank',
+    'Martin'
+  ),
+  (
+    'grace_hall',
+    'grace@example.com',
+    'password567',
+    'Grace',
+    'Hall'
+  ),
+  (
+    'henry_baker',
+    'henry@example.com',
+    'password123',
+    'Henry',
+    'Baker'
+  ),
+  (
+    'isabella_clark',
+    'isabella@example.com',
+    'password456',
+    'Isabella',
+    'Clark'
+  ),
+  (
+    'james_parker',
+    'james@example.com',
+    'password789',
+    'James',
+    'Parker'
+  ),
+  (
+    'katherine_white',
+    'katherine@example.com',
+    'password345',
+    'Katherine',
+    'White'
+  ),
+  (
+    'lucas_garcia',
+    'lucas@example.com',
+    'password012',
+    'Lucas',
+    'Garcia'
+  ),
+  (
+    'mary_lewis',
+    'mary@example.com',
+    'password678',
+    'Mary',
+    'Lewis'
+  );
+
+insert into
+  flashcard_sets (set_name, set_description)
+values
+  ('Basic Spanish', 'Common Spanish phrases'),
+  (
+    'Python Basics',
+    'Python programming fundamentals'
+  ),
+  ('US History', 'Key events in US history'),
+  ('Chemistry Elements', 'Basic chemistry elements'),
+  ('French Vocabulary', 'Common French words'),
+  (
+    'Advanced Spanish',
+    'Complex Spanish grammar and phrases'
+  ),
+  (
+    'Data Structures',
+    'Python data structures and algorithms'
+  ),
+  ('World History', 'Global historical events'),
+  (
+    'Organic Chemistry',
+    'Chemistry of organic compounds'
+  ),
+  (
+    'German Vocabulary',
+    'Common German words and phrases'
+  ),
+  ('Statistics', 'Statistical concepts and formulas'),
+  ('Philosophy', 'Major philosophical concepts'),
+  ('Biology', 'Basic biology concepts'),
+  ('Economics', 'Economic principles and theories'),
+  ('Physics', 'Basic physics concepts');
+
+insert into
+  flashcards (set_id, front, back)
+values
+  (1, 'Hello', 'Hola'),
+  (1, 'Goodbye', 'Adiós'),
+  (1, 'Thank you', 'Gracias'),
+  (2, 'print()', 'Output function'),
+  (2, 'len()', 'Length function'),
+  (2, 'list()', 'Create list object'),
+  (3, '1776', 'Declaration of Independence'),
+  (3, '1861', 'Start of Civil War'),
+  (3, '1945', 'End of World War II'),
+  (4, 'H', 'Hydrogen'),
+  (4, 'He', 'Helium'),
+  (4, 'Li', 'Lithium'),
+  (5, 'Bonjour', 'Hello'),
+  (5, 'Au revoir', 'Goodbye'),
+  (5, 'Merci', 'Thank you'),
+  (6, 'list.sort()', 'Sorts list in-place'),
+  (6, 'list.reverse()', 'Reverses list in-place'),
+  (6, 'dict.keys()', 'Returns dictionary keys'),
+  (7, '1776', 'American Revolution'),
+  (7, '1914', 'Start of WWI'),
+  (7, '1945', 'End of WWII'),
+  (8, 'H2O', 'Water'),
+  (8, 'CO2', 'Carbon dioxide'),
+  (8, 'NaCl', 'Sodium chloride'),
+  (9, 'Bonjour', 'Hello'),
+  (9, 'Danke', 'Thank you'),
+  (9, 'Auf Wiedersehen', 'Goodbye'),
+  (10, 'mean()', 'Average value'),
+  (10, 'median()', 'Middle value'),
+  (10, 'std()', 'Standard deviation'),
+  (11, 'Plato', 'Greek philosopher'),
+  (11, 'Aristotle', 'Student of Plato'),
+  (11, 'Socrates', 'Questioning method'),
+  (12, 'cell', 'Basic unit of life'),
+  (12, 'DNA', 'Genetic material'),
+  (12, 'RNA', 'Protein synthesis'),
+  (13, 'supply', 'Producer offerings'),
+  (13, 'demand', 'Consumer desire'),
+  (13, 'market', 'Buyer/seller interaction'),
+  (14, 'force', 'Push/pull interaction'),
+  (14, 'energy', 'Ability to do work'),
+  (14, 'momentum', 'Mass x velocity');
+
+insert into
+  classes (class_name, class_description)
+values
+  ('Spanish 101', 'Beginner Spanish course'),
+  ('Python Programming', 'Introduction to Python'),
+  ('US History Survey', 'Overview of US history'),
+  (
+    'Chemistry Fundamentals',
+    'Basic chemistry concepts'
+  ),
+  ('French 101', 'Beginner French course'),
+  ('Spanish 202', 'Intermediate Spanish course'),
+  ('Data Science', 'Introduction to data analysis'),
+  ('World History', 'Global historical perspectives'),
+  (
+    'Chemistry Lab',
+    'Practical chemistry experiments'
+  ),
+  ('German 101', 'Beginner German course'),
+  ('Statistics', 'Statistical analysis methods'),
+  ('Philosophy 101', 'Introduction to philosophy'),
+  ('Biology Lab', 'Practical biology experiments'),
+  ('Economics 101', 'Basic economic principles'),
+  ('Physics Lab', 'Practical physics experiments');
+
+insert into
+  class_user (user_id, class_id, role)
+values
+  (1, 1, 'student'),
+  (2, 2, 'teacher'),
+  (3, 1, 'student'),
+  (4, 3, 'student'),
+  (5, 4, 'teacher'),
+  (1, 2, 'student'),
+  (3, 5, 'student'),
+  (4, 4, 'student'),
+  (6, 6, 'student'),
+  (7, 7, 'teacher'),
+  (8, 8, 'student'),
+  (9, 9, 'student'),
+  (10, 10, 'teacher'),
+  (11, 11, 'student'),
+  (12, 12, 'student'),
+  (13, 13, 'teacher'),
+  (6, 7, 'student'),
+  (8, 10, 'student');
+
+insert into
+  card_history (
+    user_id,
+    card_id,
+    score,
+    times_attempted,
+    is_mastered
+  )
+values
+  (1, 1, 90, 3, true),
+  (1, 2, 80, 2, false),
+  (2, 4, 95, 1, true),
+  (3, 7, 85, 2, false),
+  (4, 10, 88, 3, false),
+  (5, 13, 92, 2, true),
+  (1, 5, 75, 1, false),
+  (3, 15, 85, 2, false),
+  (4, 12, 90, 3, true),
+  (6, 15, 85, 2, false),
+  (7, 16, 95, 1, true),
+  (8, 17, 88, 3, false),
+  (9, 18, 92, 2, true),
+  (10, 19, 75, 1, false),
+  (11, 20, 90, 3, true),
+  (12, 21, 80, 2, false),
+  (13, 22, 85, 2, false),
+  (6, 23, 78, 1, false),
+  (8, 24, 95, 2, true);
+
+insert into
+  class_set (class_id, set_id)
+values
+  (1, 1),
+  (2, 2),
+  (3, 3),
+  (4, 4),
+  (5, 5),
+  (2, 3),
+  (6, 6),
+  (7, 7),
+  (8, 8),
+  (9, 9),
+  (10, 10),
+  (11, 11),
+  (12, 12),
+  (13, 13),
+  (14, 14),
+  (6, 13);
+
+insert into
+  set_user (user_id, set_id, role, set_score, is_private)
+values
+  (1, 1, 'user', 450, false),
+  (2, 2, 'owner', 500, false),
+  (3, 1, 'user', 380, false),
+  (4, 3, 'user', 420, false),
+  (5, 4, 'owner', 480, false),
+  (1, 5, 'user', 400, false),
+  (6, 6, 'user', 380, false),
+  (7, 7, 'owner', 500, false),
+  (8, 8, 'user', 420, false),
+  (9, 9, 'user', 400, false),
+  (10, 10, 'owner', 480, false),
+  (11, 11, 'user', 440, false),
+  (12, 12, 'user', 460, false),
+  (13, 13, 'owner', 450, false),
+  (6, 13, 'user', 390, false),
+  (8, 10, 'user', 410, false);
+
+create or replace function update_set_score () RETURNS TRIGGER
+set
+  SEARCH_PATH = public as $$
+
+DECLARE
+   setid INTEGER;
+
+BEGIN
+    setid = (SELECT set_id FROM flashcards WHERE id = NEW.card_id);
+	INSERT INTO set_user (user_id, set_id, role, set_score, is_private) VALUES (NEW.user_id, setid, NEW.role, NEW.score, DEFAULT)
+	ON CONFLICT (user_id, set_id)
+	DO UPDATE SET set_score = (set_user.set_score + 1) 
+	WHERE NEW.user_id = set_user.user_id AND set_user.set_id = setid;
+  
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+create
+or replace trigger update_score_trigger BEFORE
+update on card_history for EACH row when (OLD.score is distinct from NEW.score)
+execute FUNCTION update_set_score ();
+
+create or replace function update_login_streak () RETURNS TRIGGER
+set
+  SEARCH_PATH = public as $$
+
+BEGIN
+    IF NEW.last_login::date - OLD.last_login::date = 1 THEN
+        NEW.login_streak := OLD.login_streak + 1;
+    ELSIF NEW.last_login::date - OLD.last_login::date > 1 THEN
+        NEW.login_streak := 1;
+    END IF;
+
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+create
+or replace trigger update_streak_trigger BEFORE
+update on users for EACH row when (NEW.last_login is distinct from OLD.last_login)
+execute PROCEDURE update_login_streak ();
+</file>
+
+<file path="src/components/auth/ConfirmResetPass.tsx">
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { useToast } from '@/components/ui/use-toast';
+import { makeHttpCall } from '@/utils/makeHttpCall';
+import { AlertCircle } from 'lucide-react';
+import { useState } from 'react';
+import { useHistory, useLocation } from 'react-router-dom';
+⋮----
+const validateForm = () =>
+⋮----
+// Token validation
+⋮----
+// Password validation
+⋮----
+// Confirm password validation
+⋮----
+const handleSubmit = async (e: React.FormEvent) =>
+⋮----
+// Validate form before submission
+⋮----
+// Make API call to reset password
+⋮----
+// Redirect to login page
+⋮----
+// Handle specific error types
+</file>
+
+<file path="src/components/ClassDetailControls.tsx">
+import { IonButton, IonIcon } from '@ionic/react';
+import { addOutline, arrowBackOutline, createOutline } from 'ionicons/icons';
+</file>
+
+<file path="src/components/StudentList.tsx">
+import {
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardTitle,
+  IonIcon,
+  IonItem,
+  IonList,
+} from '@ionic/react';
+⋮----
+import { trashOutline } from 'ionicons/icons';
+</file>
+
+<file path="src/contexts/ThemeContext.tsx">
+import { createContext, useContext, useEffect, useState } from 'react';
+⋮----
+type Theme = 'light' | 'dark';
+⋮----
+interface ThemeContextType {
+  theme: Theme;
+  setTheme: (theme: Theme) => void;
+}
+⋮----
+export function ThemeProvider(
+⋮----
+// Will check localStorage first, if not found, will use 'light' as default
+⋮----
+// Update localStorage
+⋮----
+// Update DOM
+⋮----
+export function useTheme()
+</file>
+
+<file path="src/hooks/useFlashcardQueries.ts">
+import type { Flashcard, FlashcardSet } from '@/types/globalTypes';
+import { makeHttpCall } from '@/utils/makeHttpCall';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+⋮----
+// Flashcard set details hook - Get a specific flashcard set
+export function useFlashcardSetDetails(id: string)
+⋮----
+staleTime: 5 * 60 * 1000, // 5 minutes
+⋮----
+// Flashcard cards hook - Get all cards in a set
+export function useFlashcardCards(id: string)
+⋮----
+staleTime: 5 * 60 * 1000, // 5 minutes
+⋮----
+// Update card study status mutation - Mark card as mastered
+export function useUpdateCardStudyStatus()
+⋮----
+// We don't need to invalidate any queries here as this doesn't change the cards,
+// just records study history
+</file>
+
+<file path="src/hooks/useSetQueries.ts">
+import type { Flashcard, FlashcardSet } from '@/types/globalTypes';
+import { makeHttpCall } from '@/utils/makeHttpCall';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+⋮----
+// Set details hook - Get a specific flashcard set
+export function useSetDetails(id: string)
+⋮----
+staleTime: 5 * 60 * 1000, // 5 minutes
+⋮----
+// Set cards hook - Get all cards in a set
+export function useSetCards(id: string)
+⋮----
+staleTime: 5 * 60 * 1000, // 5 minutes
+⋮----
+// Update set mutation - Update set name or description
+type UpdateSetArgs = {
+  id: string;
+  field: 'set_name' | 'set_description';
+  value: string;
+};
+⋮----
+export function useUpdateSet()
+⋮----
+// Update card mutation - Update card front or back
+type UpdateCardArgs = {
+  id: number;
+  field: 'front' | 'back';
+  value: string;
+};
+⋮----
+export function useUpdateCard()
+⋮----
+// We need to invalidate the setCards query that contains this card
+// First find the card to get its setId
+⋮----
+// Add card mutation - Add a new card to a set
+type AddCardArgs = {
+  setId: number;
+  front: string;
+  back: string;
+};
+⋮----
+export function useAddCard()
+⋮----
+// Delete card mutation - Remove a card from a set
+export function useDeleteCard()
+⋮----
+// Similar to update, find the set that contains this card
+⋮----
+// Delete set mutation - Remove a flashcard set
+export function useDeleteSet()
+⋮----
+// Invalidate both the set details and its cards
+⋮----
+// Also invalidate any user sets queries that might contain this set
+</file>
+
+<file path="src/pages/NotFound.tsx">
+import { Navbar } from '@/components/Navbar';
+import { IonContent, IonPage } from '@ionic/react';
+import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+⋮----
+const NotFound = () =>
+</file>
+
+<file path="go/db/models.go">
+// Code generated by sqlc. DO NOT EDIT.
+// versions:
+//   sqlc v1.29.0
+⋮----
+package db
+⋮----
+import (
+	"github.com/jackc/pgx/v5/pgtype"
+)
+⋮----
+"github.com/jackc/pgx/v5/pgtype"
+⋮----
+type CardHistory struct {
+	UserID         int32
+	CardID         int32
+	Score          int32
+	TimesAttempted int32
+	IsMastered     bool
+	CreatedAt      pgtype.Timestamp
+}
+⋮----
+type Class struct {
+	ID               int32
+	ClassName        string
+	ClassDescription string
+	CreatedAt        pgtype.Timestamp
+	UpdatedAt        pgtype.Timestamp
+}
+⋮----
+type ClassSet struct {
+	ClassID int32
+	SetID   int32
+}
+⋮----
+type ClassUser struct {
+	UserID  int32
+	ClassID int32
+	Role    string
+}
+⋮----
+type Flashcard struct {
+	ID        int32
+	Front     string
+	Back      string
+	SetID     int32
+	CreatedAt pgtype.Timestamp
+	UpdatedAt pgtype.Timestamp
+}
+⋮----
+type FlashcardSet struct {
+	ID             int32
+	SetName        string
+	SetDescription string
+	CreatedAt      pgtype.Timestamp
+	UpdatedAt      pgtype.Timestamp
+}
+⋮----
+type SetUser struct {
+	UserID    int32
+	SetID     int32
+	Role      string
+	SetScore  int32
+	IsPrivate bool
+}
+⋮----
+type User struct {
+	ID          int32
+	Username    string
+	FirstName   string
+	LastName    string
+	Email       string
+	Password    string
+	ResetToken  pgtype.Text
+	LastLogin   pgtype.Date
+	LoginStreak int32
+	CreatedAt   pgtype.Timestamp
+	UpdatedAt   pgtype.Timestamp
+}
+</file>
+
+<file path="go/routes/routes.go">
+package routes
+⋮----
+import (
+	"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/controllers"
+	"github.com/go-chi/chi/v5"
+)
+⋮----
+"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/controllers"
+"github.com/go-chi/chi/v5"
+⋮----
+// every protected route is preceded by /api
+func Protected(r *chi.Mux, h *controllers.DBHandler)
+⋮----
+// -------------------complex-------------------------
+⋮----
+// these are upserts, one each for (in)correct
+⋮----
+r.Delete("/", h.RemoveSetFromClass) //never called
+⋮----
+// r.Get("/getstudents", h.ListStudentsOfAClass)
+// r.Get("/getteacher", h.ListTeachersOfAClass)
+⋮----
+r.Delete("/", h.LeaveSet) //never called
+⋮----
+// -------------------simple-------------------------
+⋮----
+// r.Post("/logout", h.Logout)
+⋮----
+r.Delete("/", h.DeleteClass) //never called
+⋮----
+r.Use(h.VerifySetMemberMW) // Ensure only the owner can update/delete
+⋮----
+// r.Put("/set_id", h.UpdateFlashcard)
+⋮----
+r.Use(h.VerifySetMemberMW) // Ensure only the owner can update/delete the set
+⋮----
+// CreateUser and GetUserBy{Email,Username} are called from the unprotected routes
+// no mw seems necessary here - id comes from cookie only
+⋮----
+// r.Get("/list", h.ListUsers)
+⋮----
+// auth
+func Unprotected(r *chi.Mux, h *controllers.DBHandler)
+</file>
+
+<file path="src/components/auth/ResetPass.tsx">
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { useToast } from '@/components/ui/use-toast';
+import { makeHttpCall } from '@/utils/makeHttpCall';
+import { AlertCircle } from 'lucide-react';
+import { useState } from 'react';
+import { useHistory } from 'react-router-dom';
+⋮----
+const validateForm = () =>
+⋮----
+const handleSubmit = async (e: React.FormEvent) =>
+⋮----
+// Make API call to send reset token
+⋮----
+// Navigate to the confirmation page with the email
+</file>
+
+<file path="src/components/FlashCard.tsx">
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { useUpdateCardStudyStatus } from '@/hooks/useFlashcardQueries';
+import { Check, X } from 'lucide-react';
+import { useState } from 'react';
+⋮----
+export const FlashCard = (props) =>
+⋮----
+const handleScoreUpdate = async (isCorrect: boolean) =>
+⋮----
+const handleLearningClick = () =>
+⋮----
+const handleMasteredClick = () =>
+⋮----
+onClick=
+</file>
+
+<file path="src/components/FlashcardListEditor.tsx">
+import {
+  IonButton,
+  IonCard,
+  IonCardContent,
+  IonIcon,
+  IonTextarea,
+} from '@ionic/react';
+import { addOutline, trashOutline } from 'ionicons/icons';
+</file>
+
+<file path="src/components/Leaderboard.tsx">
+import {
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardTitle,
+  IonItem,
+  IonList,
+} from '@ionic/react';
+import { motion } from 'framer-motion'; // Import Framer Motion for animations
+⋮----
+{/* Add a scrollable container */}
+⋮----
+// Wrap each item with a motion.div for animation
+</file>
+
+<file path="src/hooks/useClassQueries.ts">
+import type {
+  Class,
+  FlashcardSet,
+  GetClassScoresRow,
+  ListMembersOfAClassRow,
+  ListSetsOfAUserRow,
+} from '@/types/globalTypes';
+import { makeHttpCall } from '@/utils/makeHttpCall';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+⋮----
+// Class details hook
+export function useClassDetails(id: string)
+⋮----
+staleTime: 5 * 60 * 1000, // 5 minutes
+⋮----
+// Class flashcard sets hook
+export function useClassSets(id: string)
+⋮----
+// Class members hook
+export function useClassMembers(id: string)
+⋮----
+// Class leaderboard hook
+export function useClassLeaderboard(id: string)
+⋮----
+// User's available sets hook
+export function useUserSets()
+⋮----
+// Class update mutation
+type UpdateClassArgs = { id: string; field: string; value: string };
+⋮----
+export function useUpdateClass()
+⋮----
+// Delete student from class mutation
+export function useDeleteStudent(class_id: string)
+⋮----
+// Add set to class mutation
+type AddSetToClassArgs = { classId: string; setId: number };
+⋮----
+export function useAddSetToClass()
+</file>
+
+<file path="vite.config.ts">
+import react from '@vitejs/plugin-react-swc';
+import { componentTagger } from 'lovable-tagger';
+import path from 'path';
+import { defineConfig } from 'vite';
+⋮----
+function manualChunks(id: string)
+</file>
+
+<file path="go/controllers/auth.go">
+package controllers
+⋮----
+import (
+	"crypto/rand"
+	"encoding/base64"
+	"encoding/json"
+	"errors"
+	"fmt"
+	"net/http"
+	"net/smtp"
+	"os"
+	"strings"
+	"time"
+
+	"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/db"
+	"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/middleware"
+	"github.com/jackc/pgx/v5/pgtype"
+	"golang.org/x/crypto/bcrypt"
+)
+⋮----
+"crypto/rand"
+"encoding/base64"
+"encoding/json"
+"errors"
+"fmt"
+"net/http"
+"net/smtp"
+"os"
+"strings"
+"time"
+⋮----
+"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/db"
+"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/middleware"
+"github.com/jackc/pgx/v5/pgtype"
+"golang.org/x/crypto/bcrypt"
+⋮----
+// Login handles user authentication
+func (h *DBHandler) Login(w http.ResponseWriter, r *http.Request)
+⋮----
+var req LoginRequest
+⋮----
+// Create session cookie
+⋮----
+// login and streak
+⋮----
+// Signup handles user registration
+func (h *DBHandler) Signup(w http.ResponseWriter, r *http.Request)
+⋮----
+var req SignupRequest
+⋮----
+// Validate required fields
+⋮----
+// Check if username already exists
+⋮----
+// Check if email already exists
+⋮----
+func (h *DBHandler) SendResetPasswordToken(w http.ResponseWriter, r *http.Request)
+⋮----
+// Store the reset token in the database
+⋮----
+func (h *DBHandler) ResetPassword(w http.ResponseWriter, r *http.Request)
+⋮----
+func generateUniqueToken() (string, error)
+⋮----
+func SendEmail(w http.ResponseWriter, to, subject, body string) error
+⋮----
+func CheckPasswordStrength(password string) error
+</file>
+
+<file path="go/controllers/classes.go">
+package controllers
+⋮----
+import (
+	"encoding/json"
+	"net/http"
+	"path"
+	"time"
+
+	"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/db"
+	"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/middleware"
+)
+⋮----
+"encoding/json"
+"net/http"
+"path"
+"time"
+⋮----
+"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/db"
+"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/middleware"
+⋮----
+func (h *DBHandler) ListClasses(w http.ResponseWriter, r *http.Request)
+⋮----
+// curl http://localhost:8000/api/classes/list | jq
+⋮----
+func (h *DBHandler) GetClassById(w http.ResponseWriter, r *http.Request)
+⋮----
+// curl http://localhost:8000/api/classes/ -H "id: 1"
+⋮----
+func (h *DBHandler) GetClassLeaderboard(w http.ResponseWriter, r *http.Request)
+⋮----
+// curl http://localhost:8000/api/classes/leaderboard -H "id: 1"
+⋮----
+func (h *DBHandler) CreateClass(w http.ResponseWriter, r *http.Request)
+⋮----
+// curl -X POST --cookie "cookie" localhost:8000/api/classes/ -H "class_name: Exploring Knights Errant" -H "class_description: Knights Errant"
+⋮----
+// "private"
+⋮----
+// Get user_id from context (set by AuthMiddleware)
+⋮----
+func (h *DBHandler) UpdateClass(w http.ResponseWriter, r *http.Request)
+⋮----
+// curl -X PUT http://localhost:8000/api/classes/class_description -H "id: 9" -H "class_description: 1st german"
+⋮----
+var res string
+⋮----
+func (h *DBHandler) DeleteClass(w http.ResponseWriter, r *http.Request)
+⋮----
+// curl -X DELETE http://localhost:8000/api/classes/ -H "id: 2"
+⋮----
+// no body is sent with a 204 response
+⋮----
+// func (h *DBHandler) GetClassScores(w http.ResponseWriter, r *http.Request) {
+// 	// curl -GET http://localhost:8000/classes/get_scores -H "class_id: 1"
+⋮----
+// 	query, ctx, conn, err := getQueryConnAndContext(r, h)
+// 	if err != nil {
+// 		logAndSendError(w, err, "Error connecting to database", http.StatusInternalServerError)
+// 		return
+// 	}
+// 	defer conn.Release()
+⋮----
+// 	headerVals, err := getHeaderVals(r, "class_id")
+⋮----
+// 		logAndSendError(w, err, "Header error", http.StatusBadRequest)
+⋮----
+// 	classID, err := getInt32Id(headerVals["class_id"])
+⋮----
+// 		logAndSendError(w, err, "Invalid class id", http.StatusBadRequest)
+⋮----
+// 	scores, err := query.GetClassScores(ctx, classID)
+⋮----
+// 		logAndSendError(w, err, "Error getting scores", http.StatusInternalServerError)
+⋮----
+// 	w.Header().Set("Content-Type", "application/json")
+// 	if err = json.NewEncoder(w).Encode(scores); err != nil {
+// 		logAndSendError(w, err, "Error encoding response", http.StatusInternalServerError)
+⋮----
+// }
+</file>
+
+<file path="go/controllers/flashcard_sets.go">
+package controllers
+⋮----
+import (
+	"encoding/json"
+	"net/http"
+	"path"
+	"time"
+
+	"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/db"
+	"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/middleware"
+)
+⋮----
+"encoding/json"
+"net/http"
+"path"
+"time"
+⋮----
+"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/db"
+"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/middleware"
+⋮----
+func (h *DBHandler) ListFlashcardSets(w http.ResponseWriter, r *http.Request)
+⋮----
+// curl http://localhost:8000/api/flashcards/sets/list | jq
+⋮----
+func (h *DBHandler) GetFlashcardSetById(w http.ResponseWriter, r *http.Request)
+⋮----
+// curl http://localhost:8000/api/flashcards/sets/ -H "id: 1"
+⋮----
+func (h *DBHandler) CreateFlashcardSet(w http.ResponseWriter, r *http.Request)
+⋮----
+// curl -X POST localhost:8000/api/flashcards/sets -H "name: Knights Errant" -H "description: collection of famous knights"
+⋮----
+// Get user_id from context (set by AuthMiddleware)
+⋮----
+func (h *DBHandler) UpdateFlashcardSet(w http.ResponseWriter, r *http.Request)
+⋮----
+// curl -X PUT localhost:8000/api/flashcards/sets/set_name -H "id: 1" -H "set_name: Knights Errant"
+⋮----
+var res string
+⋮----
+func (h *DBHandler) DeleteFlashcardSet(w http.ResponseWriter, r *http.Request)
+⋮----
+// curl -X DELETE http://localhost:8000/api/flashcards/sets -H "id: 1"
+⋮----
+// no body is sent with a 204 response
+</file>
+
+<file path="go/controllers/users.go">
+package controllers
+⋮----
+import (
+	"encoding/json"
+	"net/http"
+	"path"
+	"strings"
+	"time"
+
+	"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/db"
+	"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/middleware"
+	"golang.org/x/crypto/bcrypt"
+)
+⋮----
+"encoding/json"
+"net/http"
+"path"
+"strings"
+"time"
+⋮----
+"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/db"
+"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/middleware"
+"golang.org/x/crypto/bcrypt"
+⋮----
+// func (h *DBHandler) ListUsers(w http.ResponseWriter, r *http.Request) {
+// 	// curl http://localhost:8000/api/users/list | jq
+⋮----
+// 	query, ctx, conn, err := getQueryConnAndContext(r, h)
+// 	if err != nil {
+// 		logAndSendError(w, err, "Database connection error", http.StatusInternalServerError)
+// 		return
+// 	}
+// 	defer conn.Release()
+⋮----
+// 	users, err := query.ListUsers(ctx)
+⋮----
+// 		logAndSendError(w, err, "Error getting users from DB", http.StatusInternalServerError)
+⋮----
+// 	w.Header().Set("Content-Type", "application/json")
+// 	if err := json.NewEncoder(w).Encode(users); err != nil {
+// 		logAndSendError(w, err, "Error encoding response", http.StatusInternalServerError)
+⋮----
+// }
+⋮----
+// GetUser handles retrieving user information
+func (h *DBHandler) GetUserById(w http.ResponseWriter, r *http.Request)
+⋮----
+// curl http://localhost:8000/api/users/ -H "id: 1"
+⋮----
+// Get user_id from context (set by AuthMiddleware)
+⋮----
+// ID:        user.ID,
+⋮----
+// UpdatedAt: user.UpdatedAt.Time,
+⋮----
+// UpdateUser handles updating user information
+func (h *DBHandler) UpdateUser(w http.ResponseWriter, r *http.Request)
+⋮----
+// curl -X PUT http://localhost:8000/api/users/email -H "id: 1" -H "email: a@a.com"
+⋮----
+var res string
+⋮----
+// DeleteUser handles user account deletion
+func (h *DBHandler) DeleteUser(w http.ResponseWriter, r *http.Request)
+⋮----
+// no body is sent with a 204 response
+</file>
+
+<file path="go/db/users.sql.go">
+// Code generated by sqlc. DO NOT EDIT.
+// versions:
+//   sqlc v1.29.0
+// source: users.sql
+⋮----
+package db
+⋮----
+import (
+	"context"
+
+	"github.com/jackc/pgx/v5/pgtype"
+)
+⋮----
+"context"
+⋮----
+"github.com/jackc/pgx/v5/pgtype"
+⋮----
+const createResetToken = `-- name: CreateResetToken :exec
+UPDATE users SET reset_token = $1, updated_at = LOCALTIMESTAMP(2) WHERE id = $2
+`
+⋮----
+type CreateResetTokenParams struct {
+	ResetToken pgtype.Text
+	ID         int32
+}
+⋮----
+func (q *Queries) CreateResetToken(ctx context.Context, arg CreateResetTokenParams) error
+⋮----
+const createUser = `-- name: CreateUser :one
+INSERT INTO users (username, first_name, last_name, email, password) VALUES ($1, $2, $3, $4, $5) RETURNING id, username, first_name, last_name, email, password, reset_token, last_login, login_streak, created_at, updated_at
+`
+⋮----
+type CreateUserParams struct {
+	Username  string
+	FirstName string
+	LastName  string
+	Email     string
+	Password  string
+}
+⋮----
+func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, error)
+⋮----
+var i User
+⋮----
+const deleteUser = `-- name: DeleteUser :exec
+DELETE FROM users WHERE id = $1
+`
+⋮----
+func (q *Queries) DeleteUser(ctx context.Context, id int32) error
+⋮----
+const getUserByEmail = `-- name: GetUserByEmail :one
+SELECT id, username, first_name, last_name, email, password, reset_token, last_login, login_streak, created_at, updated_at FROM users WHERE email = $1
+`
+⋮----
+func (q *Queries) GetUserByEmail(ctx context.Context, email string) (User, error)
+⋮----
+const getUserById = `-- name: GetUserById :one
+SELECT id, username, first_name, last_name, email, login_streak, created_at, updated_at FROM users WHERE id = $1
+`
+⋮----
+type GetUserByIdRow struct {
+	ID          int32
+	Username    string
+	FirstName   string
+	LastName    string
+	Email       string
+	LoginStreak int32
+	CreatedAt   pgtype.Timestamp
+	UpdatedAt   pgtype.Timestamp
+}
+⋮----
+func (q *Queries) GetUserById(ctx context.Context, id int32) (GetUserByIdRow, error)
+⋮----
+var i GetUserByIdRow
+⋮----
+const getUserByUsername = `-- name: GetUserByUsername :one
+SELECT id, username, first_name, last_name, email, created_at, updated_at FROM users WHERE username = $1
+`
+⋮----
+type GetUserByUsernameRow struct {
+	ID        int32
+	Username  string
+	FirstName string
+	LastName  string
+	Email     string
+	CreatedAt pgtype.Timestamp
+	UpdatedAt pgtype.Timestamp
+}
+⋮----
+func (q *Queries) GetUserByUsername(ctx context.Context, username string) (GetUserByUsernameRow, error)
+⋮----
+var i GetUserByUsernameRow
+⋮----
+const listUsers = `-- name: ListUsers :many
+SELECT id, username, first_name, last_name, email, created_at, updated_at FROM users ORDER BY last_name, first_name
+`
+⋮----
+type ListUsersRow struct {
+	ID        int32
+	Username  string
+	FirstName string
+	LastName  string
+	Email     string
+	CreatedAt pgtype.Timestamp
+	UpdatedAt pgtype.Timestamp
+}
+⋮----
+func (q *Queries) ListUsers(ctx context.Context) ([]ListUsersRow, error)
+⋮----
+var items []ListUsersRow
+⋮----
+var i ListUsersRow
+⋮----
+const updateEmail = `-- name: UpdateEmail :one
+UPDATE users SET email = $1, updated_at = LOCALTIMESTAMP(2) WHERE id = $2 RETURNING email
+`
+⋮----
+type UpdateEmailParams struct {
+	Email string
+	ID    int32
+}
+⋮----
+func (q *Queries) UpdateEmail(ctx context.Context, arg UpdateEmailParams) (string, error)
+⋮----
+var email string
+⋮----
+const updateFirstname = `-- name: UpdateFirstname :one
+UPDATE users SET first_name = $1, updated_at = LOCALTIMESTAMP(2) WHERE id = $2 RETURNING first_name
+`
+⋮----
+type UpdateFirstnameParams struct {
+	FirstName string
+	ID        int32
+}
+⋮----
+func (q *Queries) UpdateFirstname(ctx context.Context, arg UpdateFirstnameParams) (string, error)
+⋮----
+var first_name string
+⋮----
+const updateLastLogin = `-- name: UpdateLastLogin :exec
+UPDATE users SET last_login = CURRENT_DATE, updated_at = LOCALTIMESTAMP(2) WHERE id = $1
+`
+⋮----
+func (q *Queries) UpdateLastLogin(ctx context.Context, id int32) error
+⋮----
+const updateLastname = `-- name: UpdateLastname :one
+UPDATE users SET last_name = $1, updated_at = LOCALTIMESTAMP(2) WHERE id = $2 RETURNING last_name
+`
+⋮----
+type UpdateLastnameParams struct {
+	LastName string
+	ID       int32
+}
+⋮----
+func (q *Queries) UpdateLastname(ctx context.Context, arg UpdateLastnameParams) (string, error)
+⋮----
+var last_name string
+⋮----
+const updatePassword = `-- name: UpdatePassword :exec
+UPDATE users SET password = $1, updated_at = LOCALTIMESTAMP(2) WHERE id = $2
+`
+⋮----
+type UpdatePasswordParams struct {
+	Password string
+	ID       int32
+}
+⋮----
+func (q *Queries) UpdatePassword(ctx context.Context, arg UpdatePasswordParams) error
+⋮----
+const updatePasswordAndClearResetToken = `-- name: UpdatePasswordAndClearResetToken :exec
+UPDATE users SET password = $1, reset_token = NULL, updated_at = LOCALTIMESTAMP(2) WHERE id = $2
+`
+⋮----
+type UpdatePasswordAndClearResetTokenParams struct {
+	Password string
+	ID       int32
+}
+⋮----
+func (q *Queries) UpdatePasswordAndClearResetToken(ctx context.Context, arg UpdatePasswordAndClearResetTokenParams) error
+⋮----
+const updateUsername = `-- name: UpdateUsername :one
+UPDATE users SET username = $1, updated_at = LOCALTIMESTAMP(2) WHERE id = $2 RETURNING username
+`
+⋮----
+type UpdateUsernameParams struct {
+	Username string
+	ID       int32
+}
+⋮----
+func (q *Queries) UpdateUsername(ctx context.Context, arg UpdateUsernameParams) (string, error)
+⋮----
+var username string
+</file>
+
+<file path="sqlc/queries/simple/users.sql">
+-- name: ListUsers :many
+SELECT id, username, first_name, last_name, email, created_at, updated_at FROM users ORDER BY last_name, first_name;
+
+-- name: GetUserById :one
+SELECT id, username, first_name, last_name, email, login_streak, created_at, updated_at FROM users WHERE id = $1;
+
+-- name: GetUserByEmail :one
+SELECT * FROM users WHERE email = $1;
+
+-- name: GetUserByUsername :one
+SELECT id, username, first_name, last_name, email, created_at, updated_at FROM users WHERE username = $1;
+
+-- name: CreateUser :one
+INSERT INTO users (username, first_name, last_name, email, password) VALUES ($1, $2, $3, $4, $5) RETURNING *;
+
+-- name: UpdateUsername :one
+UPDATE users SET username = $1, updated_at = LOCALTIMESTAMP(2) WHERE id = $2 RETURNING username;
+
+-- name: UpdateEmail :one
+UPDATE users SET email = $1, updated_at = LOCALTIMESTAMP(2) WHERE id = $2 RETURNING email;
+
+-- name: UpdateFirstname :one
+UPDATE users SET first_name = $1, updated_at = LOCALTIMESTAMP(2) WHERE id = $2 RETURNING first_name;
+
+-- name: UpdateLastname :one
+UPDATE users SET last_name = $1, updated_at = LOCALTIMESTAMP(2) WHERE id = $2 RETURNING last_name;
+
+-- name: UpdatePassword :exec
+UPDATE users SET password = $1, updated_at = LOCALTIMESTAMP(2) WHERE id = $2;
+
+-- name: UpdateLastLogin :exec
+UPDATE users SET last_login = CURRENT_DATE, updated_at = LOCALTIMESTAMP(2) WHERE id = $1;
+
+-- name: DeleteUser :exec
+DELETE FROM users WHERE id = $1;
+
+-- name: CreateResetToken :exec
+UPDATE users SET reset_token = $1, updated_at = LOCALTIMESTAMP(2) WHERE id = $2;
+
+-- name: UpdatePasswordAndClearResetToken :exec
+UPDATE users SET password = $1, reset_token = NULL, updated_at = LOCALTIMESTAMP(2) WHERE id = $2;
+
+-- execresult annotation is buggy, trying exec https://github.com/sqlc-dev/sqlc/issues/3699#issuecomment-2486892414
+</file>
+
+<file path="src/components/ClassDetailHeader.tsx">
+import { EditableField } from '@/utils/EditableField';
+import { IonButton, IonIcon } from '@ionic/react';
+import { createOutline } from 'ionicons/icons';
+</file>
+
+<file path="src/components/SetCardList.tsx">
+import {
+  IonButton,
+  IonCard,
+  IonCardContent,
+  IonIcon,
+  IonItem,
+  IonSpinner,
+  IonText,
+  IonTextarea,
+} from '@ionic/react';
+import { addOutline, trashOutline } from 'ionicons/icons';
+⋮----
+// Check if we have cards to display
+⋮----
+// --- Edit Mode Card --- //
+⋮----
+// --- Display Mode Card --- //
+</file>
+
+<file path="src/components/SetOverviewControls.tsx">
+import { IonButton } from '@ionic/react';
+</file>
+
+<file path="src/pages/Index.tsx">
+import { AuthForm } from '@/components/auth/AuthForm';
+import { IonContent, IonPage } from '@ionic/react';
+⋮----
+const Index = () =>
+</file>
+
+<file path="tailwind.config.ts">
+import type { Config } from 'tailwindcss';
+import tailwindAnimate from 'tailwindcss-animate';
+</file>
+
+<file path="go/controllers/util.go">
+package controllers
+⋮----
+import (
+	"context"
+	"errors"
+	"net/http"
+
+	"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/db"
+	"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/middleware"
+	"github.com/jackc/pgx/v5/pgxpool"
+)
+⋮----
+"context"
+"errors"
+"net/http"
+⋮----
+"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/db"
+"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/middleware"
+"github.com/jackc/pgx/v5/pgxpool"
+⋮----
+// wraps mw handler that wraps db pool
+type DBHandler struct {
+	middleware.Handler
+}
+⋮----
+// User represents the user data that will be sent to the client
+type User struct {
+	// ID        int32
+	Username    string `json:"username"`
+	Email       string `json:"email"`
+	FirstName   string `json:"first_name"`
+	LastName    string `json:"last_name"`
+	LoginStreak int32  `json:"login_streak"`
+	CreatedAt   string `json:"created_at"`
+	// UpdatedAt time.Time
+	NumClasses     int `json:"numClasses"`
+	CardsStudied   int `json:"cardsStudied"`
+	CardsMastered  int `json:"cardsMastered"`
+	TotalCardViews any `json:"totalCardViews"`
+}
+⋮----
+// ID        int32
+⋮----
+// UpdatedAt time.Time
+⋮----
+type Class struct {
+	ID               int32
+	ClassName        string
+	ClassDescription string
+	CreatedAt        string
+	UpdatedAt        string
+	Role             string
+}
+⋮----
+type FlashcardSet struct {
+	ID             int32
+	SetName        string
+	SetDescription string
+	CreatedAt      string
+	UpdatedAt      string
+	Role           string
+}
+⋮----
+// LoginRequest represents the login request body
+type LoginRequest struct {
+	Email    string
+	Password string
+}
+⋮----
+// SignupRequest represents the signup request body
+type SignupRequest struct {
+	Username  string
+	Email     string
+	Password  string
+	FirstName string `json:"first_name"`
+	LastName  string `json:"last_name"`
+}
+⋮----
+var errContext error = errors.New("error retrieving from context")
+var errHeader error = errors.New("error retrieving from headers")
+⋮----
+const (
+	back              string = "back"
+	card_id           string = "card_id"
+	class_description string = "class_description"
+	class_id          string = "class_id"
+	class_name        string = "class_name"
+	correct           string = "correct"
+	email             string = "email"
+	first_name        string = "first_name"
+	front             string = "front"
+	id                string = "id"
+	incorrect         string = "incorrect"
+	last_name         string = "last_name"
+	owner             string = "owner"
+	password          string = "password"
+	roleStr           string = "role"
+	set_description   string = "set_description"
+	set_id            string = "set_id"
+	set_name          string = "set_name"
+	student_id        string = "student_id"
+	teacher           string = "teacher"
+	username          string = "username"
+	token             string = "token"
+)
+⋮----
+func logAndSendError(w http.ResponseWriter, err error, msg string, statusCode int)
+⋮----
+func getInt32Id(val string) (id int32, err error)
+⋮----
+func getHeaderVals(r *http.Request, headers ...string) (map[string]string, error)
+⋮----
+func getQueryConnAndContext(r *http.Request, h *DBHandler) (query *db.Queries, ctx context.Context, conn *pgxpool.Conn, err error)
+⋮----
+// keygen:
+// key := make([]byte, num)
+// rand.Read(key)
+// dst := make([]byte, base64.StdEncoding.EncodedLen(len(key)))
+// base64.StdEncoding.Encode(dst, key)
+// fmt.Println(string(dst))
+⋮----
+// k := paseto.NewV4SymmetricKey()
+// fmt.Println(k.ExportHex())
+// https://go.dev/play/p/bClzAlvZnnq
+</file>
+
+<file path="go/middleware/util.go">
+package middleware
+⋮----
+import (
+	"context"
+	"errors"
+	"fmt"
+	"log"
+	"net/http"
+	"slices"
+	"strconv"
+	"strings"
+
+	"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/db"
+	"github.com/jackc/pgx/v5/pgxpool"
+)
+⋮----
+"context"
+"errors"
+"fmt"
+"log"
+"net/http"
+"slices"
+"strconv"
+"strings"
+⋮----
+"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/db"
+"github.com/jackc/pgx/v5/pgxpool"
+⋮----
+type Handler struct {
+	DB *pgxpool.Pool
+}
+⋮----
+type userIDKey string
+type classIDKey string
+type flashcardIDKey string
+type setIDKey string
+type userRoleKey string
+⋮----
+var errContext error = errors.New("error retrieving from context")
+var errHeader error = errors.New("error retrieving from headers")
+⋮----
+const (
+	userKey      userIDKey      = "userID"
+	classKey     classIDKey     = "classID"
+	flashcardKey flashcardIDKey = "flashcardID"
+	setKey       setIDKey       = "setID"
+	roleKey      userRoleKey    = "userRole"
+	sessionName  string         = "cowboy-cards-session"
+	id           string         = "id"
+	no_role      string         = "no role"
+	class_id     string         = "class_id"
+	set_id       string         = "set_id"
+)
+⋮----
+func LogAndSendError(w http.ResponseWriter, err error, msg string, statusCode int)
+⋮----
+func GetUserIDFromContext(ctx context.Context) (id int32, ok bool)
+⋮----
+func GetClassIDFromContext(ctx context.Context) (id int32, ok bool)
+⋮----
+func GetFlashcardIDFromContext(ctx context.Context) (id int32, ok bool)
+⋮----
+func GetSetIDFromContext(ctx context.Context) (id int32, ok bool)
+⋮----
+func GetRoleFromContext(ctx context.Context) (role string, ok bool)
+⋮----
+func GetInt32Id(val string) (id int32, err error)
+⋮----
+func GetHeaderVals(r *http.Request, headers ...string) (map[string]string, error)
+⋮----
+func GetQueryConnAndContext(r *http.Request, h *Handler) (query *db.Queries, ctx context.Context, conn *pgxpool.Conn, err error)
+</file>
+
+<file path="src/components/SetOverviewHeader.tsx">
+import { EditableField } from '@/utils/EditableField';
+import { IonButton, IonIcon, IonSpinner } from '@ionic/react';
+import { arrowBackOutline } from 'ionicons/icons';
+</file>
+
+<file path="src/components/UserAccountFirstRow.tsx">
+import { EditableField } from '@/utils/EditableField';
+import InfoRow from '@/utils/InfoRow';
+import {
+  IonButton,
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardTitle,
+  IonIcon,
+} from '@ionic/react';
+import { createOutline } from 'ionicons/icons';
+</file>
+
+<file path="src/pages/CreateClass.tsx">
+import { Footer } from '@/components/Footer';
+import { Navbar } from '@/components/Navbar';
+import type { NewClass } from '@/types/globalTypes';
+import { makeHttpCall } from '@/utils/makeHttpCall';
+import {
+  IonButton,
+  IonCard,
+  IonCardContent,
+  IonContent,
+  IonPage,
+  IonText,
+  IonTextarea,
+} from '@ionic/react';
+import { useEffect, useState } from 'react';
+⋮----
+// const [isPrivate, setIsPrivate] = useState(false);
+// const [textToCopy, setTextToCopy] = useState('This is the text to be copied');
+// const [showToast, setShowToast] = useState(false);
+// const [showSuccess, setShowSuccess] = useState(false);
+⋮----
+// const copyToClipboard = async () => {
+//   try {
+//     await navigator.clipboard.writeText(textToCopy);
+//     setShowToast(true);
+//   } catch (err) {
+//     console.error('Failed to copy text', err);
+//   }
+// };
+⋮----
+async function submitForm()
+⋮----
+{/* <IonItem>
+              
+              Public/Private will not be in MVP
+
+              <IonCheckbox
+                labelPlacement="start"
+                justify="start"
+                checked={isPrivate}
+                onIonChange={(e) => {
+                  setIsPrivate(e.detail.checked);
+                }}
+              >
+                Private
+              </IonCheckbox>
+              <IonRadioGroup
+                onIonChange={(e) => {
+                  const value = e.detail.value;
+                  setIsPrivate(value === 'private');
+                  setFormData((prev) => ({
+                    ...prev,
+                    joinCode: value === 'private' ? crypto.randomUUID() : '',
+                  }));
+                }}
+              >
+                <IonRadio value="public">Public</IonRadio>
+                <IonRadio value="private">Private</IonRadio>
+              </IonRadioGroup>
+            </IonItem> */}
+⋮----
+{/* 
+          {showSuccess && (
+            <IonText>
+              {isPrivate && (
+                <p>
+                  Class created successfully! Please save this join code: <br />
+                  <b>{lastJoinCode}</b>
+                </p>
+              )}
+              {!isPrivate && <p>Class created successfully!</p>}
+              <IonButton onClick={copyToClipboard}>Copy to Clipboard</IonButton>
+              <IonToast
+                isOpen={showToast}
+                onDidDismiss={() => setShowToast(false)}
+                message="Text copied to clipboard!"
+                duration={2000}
+              />
+            </IonText>
+          )} */}
+</file>
+
+<file path="index.html">
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="shortcut icon" type="image/jpg" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cowboy Cards</title>
+    <meta name="author" content="2025 HSU CSCI Senior Project Class" />
+    <!-- Facebook Meta Tags -->
+    <meta property="og:url" content="%VITE_API_BASE%" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Cowboy Cards" />
+    <meta property="og:description" content="2025 HSU CSCI Senior Project" />
+    <meta property="og:image" content="%VITE_API_BASE%/og-image.webp" />
+    <!-- Twitter Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta property="twitter:domain" content="cowboy-cards.dsouth.org" />
+    <meta property="twitter:url" content="%VITE_API_BASE%" />
+    <meta name="twitter:title" content="Cowboy Cards" />
+    <meta name="twitter:description" content="2025 HSU CSCI Senior Project" />
+    <meta name="twitter:image" content="%VITE_API_BASE%/og-image.webp" />
+    <!-- ---- -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Ewert&display=swap&text=%20abdorswyC"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rye&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Smokum&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+</file>
+
+<file path="go/app/app.go">
+package app
+⋮----
+import (
+	"context"
+	"log"
+	"net/http"
+	"os"
+	"time"
+
+	"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/controllers"
+	"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/middleware"
+	"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/routes"
+	"github.com/go-chi/chi/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
+	_ "github.com/joho/godotenv/autoload"
+	"github.com/urfave/negroni/v3"
+)
+⋮----
+"context"
+"log"
+"net/http"
+"os"
+"time"
+⋮----
+"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/controllers"
+"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/middleware"
+"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/routes"
+"github.com/go-chi/chi/v5"
+"github.com/jackc/pgx/v5/pgxpool"
+_ "github.com/joho/godotenv/autoload"
+"github.com/urfave/negroni/v3"
+⋮----
+func LoadPoolConfig() (config *pgxpool.Config)
+⋮----
+var (
+		dburl  = os.Getenv("DATABASE_URL")
+⋮----
+func CreatePool(config *pgxpool.Config) (h *controllers.DBHandler)
+⋮----
+// Enable SSL for Supabase
+// conn.TLSConfig = &tls.Config{
+// 	MinVersion: tls.VersionTLS12,
+// }
+⋮----
+func Init()
+⋮----
+//mw for protected routes only
+⋮----
+//mw for every route
+⋮----
+n := negroni.Classic() // serves "./public"
+⋮----
+n.Use(negroni.HandlerFunc(middleware.SetCredsHeaders)) //dev only, not necessary in prod w/ same origin
+</file>
+
+<file path="src/App.tsx">
+import { AuthForm } from '@/components/auth/AuthForm';
+import ConfirmResetPass from '@/components/auth/ConfirmResetPass';
+import ResetPass from '@/components/auth/ResetPass';
+import { Toaster as Sonner } from '@/components/ui/sonner';
+import { Toaster } from '@/components/ui/toaster';
+import { TooltipProvider } from '@/components/ui/tooltip';
+import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
+import { IonReactRouter } from '@ionic/react-router';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { Suspense } from 'react';
+import { Route } from 'react-router-dom';
+import { ThemeProvider } from './contexts/ThemeContext';
+import ClassDetail from './pages/ClassDetail';
+import CreateClass from './pages/CreateClass';
+import CreateSet from './pages/CreateSet';
+import Flashcard from './pages/Flashcard';
+import Home from './pages/Home';
+import Index from './pages/Index';
+import NotFound from './pages/NotFound';
+import PublicCards from './pages/PublicCards';
+import PublicClasses from './pages/PublicClasses';
+import SetOverview from './pages/SetOverview';
+import UserAccount from './pages/UserAccount';
+⋮----
+/* Core CSS required for Ionic components to work properly */
+⋮----
+/* Basic CSS for apps built with Ionic */
+⋮----
+/* Optional CSS utils that can be commented out */
+⋮----
+/* Theme variables */
+// import './theme/variables.css'; Removed this import
+⋮----
+// const Home = React.lazy(() => import('./pages/Home'));
+// const PublicCards = React.lazy(() => import('./pages/PublicCards'));
+// const PublicClasses = React.lazy(() => import('./pages/PublicClasses'));
+</file>
+
+<file path="src/index.css">
+/* Core CSS required for Ionic components to work properly */
+⋮----
+/* Basic CSS for apps built with Ionic */
+⋮----
+/* Optional CSS utils that can be commented out */
+/* import '@ionic/react/css/padding.css'; */
+/* import '@ionic/react/css/float-elements.css'; */
+/* import '@ionic/react/css/text-alignment.css'; */
+/* import '@ionic/react/css/text-transformation.css'; */
+/* import '@ionic/react/css/flex-utils.css'; */
+/* import '@ionic/react/css/display.css'; */
+⋮----
+/* Ionic Variables and Theming. For more info, please see:
+http://ionicframework.com/docs/theming/ */
+⋮----
+:root {
+⋮----
+/** fonts **/
+⋮----
+/** primary **/
+⋮----
+/** secondary **/
+⋮----
+/** tertiary **/
+⋮----
+/** success **/
+⋮----
+/** warning **/
+⋮----
+/** danger **/
+⋮----
+/** dark **/
+⋮----
+/** medium **/
+⋮----
+/** light **/
+⋮----
+/*
+   * Dark Colors
+   * -------------------------------------------
+   */
+⋮----
+:root.dark,
+⋮----
+/*
+   * iOS Dark Theme
+   * -------------------------------------------
+   */
+⋮----
+.ios :root.dark,
+⋮----
+.ios ion-modal {
+⋮----
+/*
+   * Material Design Dark Theme
+   * -------------------------------------------
+   */
+⋮----
+.md :root.dark,
+⋮----
+/* Tailwind Directives & Layers */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+⋮----
+@layer base {
+⋮----
+.dark {
+⋮----
+* {
+⋮----
+@apply border-border;
+⋮----
+body {
+⋮----
+.flip-card {
+⋮----
+.flip-card.flipped {
+⋮----
+.flip-card-front,
+⋮----
+.flip-card-back {
+⋮----
+.muted-item {
+⋮----
+:root.dark ion-segment-button {
+⋮----
+ion-segment-button {
+⋮----
+:root.dark ion-card-title {
+⋮----
+ion-card-title {
+⋮----
+.searchbar-input.sc-ion-searchbar-md {
+</file>
+
+<file path="src/components/FlashcardSetList.tsx">
+import type { Flashcard } from '@/types/globalTypes';
+import {
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardTitle,
+  IonCol,
+  IonGrid,
+  IonRow,
+} from '@ionic/react';
+import { useState } from 'react';
+import { useHistory } from 'react-router-dom';
+</file>
+
+<file path="src/components/Footer.tsx">
+import {
+  IonButton,
+  IonButtons,
+  IonFooter,
+  IonIcon,
+  IonText,
+  IonToolbar,
+} from '@ionic/react';
+import { home } from 'ionicons/icons';
+import { Link } from 'react-router-dom';
+⋮----
+const Footer = () =>
+⋮----
+{/*/!* Add Button *!/*/}
+{/*<IonButtons slot="primary">*/}
+{/*    <IonButton expand="full" routerLink="/create">*/}
+{/*        <IonIcon icon={addCircle} />*/}
+{/*    </IonButton>*/}
+{/*</IonButtons>*/}
+⋮----
+{/*/!* Settings Button *!/*/}
+{/*<IonButtons slot="end">*/}
+{/*    <IonButton routerLink="/settings">*/}
+{/*        <IonIcon icon={settings} />*/}
+{/*    </IonButton>*/}
+{/*</IonButtons>*/}
+</file>
+
+<file path="src/components/LoginStreakCard.tsx">
+import {
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardTitle,
+} from '@ionic/react';
+import { useEffect, useState } from 'react';
+import { useInView } from 'react-intersection-observer';
+⋮----
+const IMAGE_SIZE = 256; // Size of the image in pixels
+⋮----
+export default function LoginStreakCard(props)
+</file>
+
+<file path="src/pages/UserAccount.tsx">
+import { Footer } from '@/components/Footer';
+import { Navbar } from '@/components/Navbar';
+import { useTheme } from '@/contexts/ThemeContext';
+import type { User } from '@/types/globalTypes';
+import { makeHttpCall } from '@/utils/makeHttpCall';
+import {
+  IonButton,
+  IonContent,
+  IonIcon,
+  IonPage,
+  IonSpinner,
+  useIonToast,
+} from '@ionic/react';
+import { arrowBackOutline } from 'ionicons/icons';
+import { useEffect, useState } from 'react';
+import UserAccountFirstRow from '../components/UserAccountFirstRow';
+import UserAccountSecondRow from '../components/UserAccountSecondRow';
+⋮----
+const toggleClassDetails = (classID: number) =>
+⋮----
+const handleEdit = () =>
+⋮----
+const handleSave = async () =>
+⋮----
+const validateForm = () =>
+⋮----
+const handleChange = (e: CustomEvent) =>
+⋮----
+const fetchUserData = async () =>
+</file>
+
+<file path="src/types/globalTypes.ts">
+export interface CardHistory {
+  UserID: number;
+  CardID: number;
+  Score: number;
+  TimesAttempted: number;
+  IsMastered: boolean;
+  CreatedAt: string;
+}
+⋮----
+export interface Class {
+  ID: number;
+  ClassName: string;
+  ClassDescription: string;
+  CreatedAt: string;
+  UpdatedAt: string;
+  Role: string;
+}
+⋮----
+export interface Flashcard {
+  ID: number;
+  Front: string;
+  Back: string;
+  SetID: number;
+  CreatedAt: string;
+  UpdatedAt: string;
+}
+⋮----
+export interface FlashcardSet {
+  ID: number;
+  SetName: string;
+  SetDescription: string;
+  CreatedAt: string;
+  UpdatedAt: string;
+  Role: string;
+}
+⋮----
+// to hide first and last name from GetClassLeaderboardRow go type
+export interface GetClassScoresRow {
+  UserID: number;
+  Username: string;
+  ClassScore: number;
+}
+⋮----
+export interface ListClassesOfAUserRow {
+  ClassID: number;
+  Role: string;
+  ClassName: string;
+  ClassDescription: string;
+}
+⋮----
+export interface ListMembersOfAClassRow {
+  UserID: number;
+  ClassID: number;
+  Role: string;
+  FirstName: string;
+  LastName: string;
+  Username: string;
+}
+⋮----
+export interface ListSetsOfAUserRow {
+  SetID: number;
+  Role: string;
+  SetName: string;
+  SetDescription: string;
+}
+⋮----
+export interface NewClass {
+  ClassName: string;
+  ClassDescription: string;
+}
+⋮----
+export interface User {
+  username: string;
+  email: string;
+  first_name: string;
+  last_name: string;
+  login_streak: number;
+  created_at: string;
+  numClasses: number;
+  cardsStudied: number;
+  cardsMastered: number;
+  totalCardViews: number;
+}
+</file>
+
+<file path="src/utils/makeHttpCall.ts">
+type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
+type CredentialOptions = 'include' | 'omit' | 'same-origin';
+⋮----
+// Interface defining the structure of options that can be passed to fetch requests
+interface FetchOptions {
+  method: HttpMethod; // eslint-disable-next-line
+  headers: any;
+  credentials?: CredentialOptions;
+  body?: string; //JSON
+}
+⋮----
+method: HttpMethod; // eslint-disable-next-line
+⋮----
+body?: string; //JSON
+⋮----
+credentials: 'include', //dev only, remove in prod same origin
+⋮----
+/**
+ * Universal fetch utility for making HTTP requests
+ * This is a wrapper around the native fetch API that provides consistent error handling
+ * and response parsing
+ * Can return any type of data
+ *
+ * @param url The URL to fetch from
+ * @param options Request options including method, headers, and body
+ * @returns Promise with the parsed response data
+ */
+export async function makeHttpCall<T>(
+  url: string = '',
+  options: FetchOptions = defaultOpts
+): Promise<T>
+⋮----
+// Make the actual HTTP request
+⋮----
+// Check if the req failed: 4xx, 5xx
+⋮----
+// Handle specific auth error types
+//   if (data.code === 'duplicate_email') {
+//     throw new Error('This email is already registered');
+//   } else if (data.code === 'duplicate_username') {
+//     throw new Error('This username is already taken');
+//   } else if (data.code === 'invalid_credentials') {
+//     throw new Error('Invalid email or password');
+//   } else {
+//     throw new Error(data.message || 'Authentication failed');
+//   }
+⋮----
+// Handle 204 No Content specifically
+⋮----
+return null as T; // Return null or appropriate value for no content
+⋮----
+// For other successful responses, parse JSON
+</file>
+
+<file path="src/components/UserAccountSecondRow.tsx">
+import {
+  IonAlert,
+  IonButton,
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardTitle,
+  IonSelect,
+  IonSelectOption,
+} from '@ionic/react';
+import LoginStreakCard from './LoginStreakCard';
+</file>
+
+<file path="src/pages/CreateSet.tsx">
+import { Footer } from '@/components/Footer';
+import { Navbar } from '@/components/Navbar';
+import type { FlashcardSet } from '@/types/globalTypes';
+import { makeHttpCall } from '@/utils/makeHttpCall';
+import {
+  IonButton,
+  IonCard,
+  IonCardContent,
+  IonContent,
+  IonPage,
+  IonText,
+  IonTextarea,
+} from '@ionic/react';
+import { useState } from 'react';
+import { useHistory } from 'react-router-dom';
+⋮----
+const saveSet = async () =>
+</file>
+
+<file path="package.json">
+{
+  "name": "cowboy_cards",
+  "private": true,
+  "version": "1.0.1",
+  "description": "Flashcard app for HSU 2025 CSCI Senior Project class",
+  "type": "module",
+  "scripts": {
+    "dev:live": "VITE_API_BASE=https://cowboy-cards.dsouth.org vite",
+    "dev:local": "VITE_API_BASE=http://localhost:8000 vite",
+    "go": "go run go/main.go",
+    "sqlc:gen": "sqlc generate -f sqlc/sqlc.yaml",
+    "build:staging": "VITE_API_BASE=https://cowboy-cards.dsouth.org vite build --mode staging",
+    "build:prod": "VITE_API_BASE=https://cowboy-cards.org vite build --mode production",
+    "build:dev": "vite build --mode development",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "author": "senior project class",
+  "homepage": "https://github.com/HSU-Senior-Project-2025/Cowboy_Cards#readme",
+  "dependencies": {
+    "@capacitor/android": "7.0.1",
+    "@capacitor/core": "^7.0.1",
+    "@capacitor/ios": "7.0.1",
+    "@hookform/resolvers": "^3.9.0",
+    "@ionic/react": "^7.8.6",
+    "@ionic/react-router": "^7.8.6",
+    "@radix-ui/react-accordion": "^1.2.0",
+    "@radix-ui/react-alert-dialog": "^1.1.1",
+    "@radix-ui/react-aspect-ratio": "^1.1.0",
+    "@radix-ui/react-avatar": "^1.1.0",
+    "@radix-ui/react-checkbox": "^1.1.1",
+    "@radix-ui/react-collapsible": "^1.1.0",
+    "@radix-ui/react-context-menu": "^2.2.1",
+    "@radix-ui/react-dialog": "^1.1.2",
+    "@radix-ui/react-dropdown-menu": "^2.1.1",
+    "@radix-ui/react-hover-card": "^1.1.1",
+    "@radix-ui/react-label": "^2.1.0",
+    "@radix-ui/react-menubar": "^1.1.1",
+    "@radix-ui/react-navigation-menu": "^1.2.0",
+    "@radix-ui/react-popover": "^1.1.1",
+    "@radix-ui/react-progress": "^1.1.0",
+    "@radix-ui/react-radio-group": "^1.2.0",
+    "@radix-ui/react-scroll-area": "^1.1.0",
+    "@radix-ui/react-select": "^2.1.1",
+    "@radix-ui/react-separator": "^1.1.0",
+    "@radix-ui/react-slider": "^1.2.0",
+    "@radix-ui/react-slot": "^1.1.0",
+    "@radix-ui/react-switch": "^1.1.0",
+    "@radix-ui/react-tabs": "^1.1.0",
+    "@radix-ui/react-toast": "^1.2.1",
+    "@radix-ui/react-toggle": "^1.1.0",
+    "@radix-ui/react-toggle-group": "^1.1.0",
+    "@radix-ui/react-tooltip": "^1.1.4",
+    "@tanstack/react-query": "^5.67.2",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "cmdk": "^1.0.0",
+    "date-fns": "^3.6.0",
+    "embla-carousel-react": "^8.3.0",
+    "framer-motion": "^12.7.4",
+    "input-otp": "^1.2.4",
+    "lucide-react": "^0.462.0",
+    "next-themes": "^0.3.0",
+    "postcss-cli": "^11.0.0",
+    "react": "^18.3.1",
+    "react-day-picker": "^8.10.1",
+    "react-dom": "^18.3.1",
+    "react-hook-form": "^7.53.0",
+    "react-intersection-observer": "^9.16.0",
+    "react-resizable-panels": "^2.1.3",
+    "react-router": "^5.3.4",
+    "react-router-dom": "^5.3.4",
+    "recharts": "^2.12.7",
+    "sonner": "^1.5.0",
+    "tailwind-merge": "^2.5.2",
+    "tailwindcss-animate": "^1.0.7",
+    "vaul": "^0.9.3",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^7.0.1",
+    "@eslint/js": "^9.9.0",
+    "@tailwindcss/typography": "^0.5.15",
+    "@types/node": "^22.5.5",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react-swc": "^3.5.0",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^9.9.0",
+    "eslint-plugin-react-hooks": "^5.1.0-rc.0",
+    "eslint-plugin-react-refresh": "^0.4.9",
+    "globals": "^15.9.0",
+    "lovable-tagger": "^1.0.19",
+    "postcss": "^8.4.47",
+    "tailwindcss": "^3.4.11",
+    "typescript": "^5.5.3",
+    "typescript-eslint": "^8.0.1",
+    "vite": "5.4.18"
+  }
+}
+</file>
+
+<file path="src/components/auth/AuthForm.tsx">
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { useToast } from '@/components/ui/use-toast';
+import { makeHttpCall } from '@/utils/makeHttpCall';
+import { useIonRouter } from '@ionic/react';
+import { AlertCircle, LogIn } from 'lucide-react';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+⋮----
+// Login form fields
+⋮----
+// Additional signup form fields
+⋮----
+// Form validation
+⋮----
+// Basic validation before submitting
+const validateForm = () =>
+⋮----
+// Email validation
+⋮----
+// Password validation
+⋮----
+// Username validation (only for signup)
+⋮----
+const handleSubmit = async (e: React.FormEvent) =>
+⋮----
+// Validate form before submission
+⋮----
+// Login request
+⋮----
+// Signup request
+⋮----
+// Show success message
+⋮----
+// Navigate to the home page using Ionic's router
+⋮----
+// If no specific error was set, set a general error
+⋮----
+const resetForm = () =>
+⋮----
+onChange=
+⋮----
+{/* <IonButton
+            expand="block"
+            className="flex items-center justify-center space-x-2"
+            onClick={() => {
+              // Add your Google sign-in logic here
+              console.log('Sign in with Google clicked');
+            }}
+          >
+            <IonIcon
+              slot="start"
+              src="https://www.gstatic.com/marketing-cms/assets/images/d5/dc/cfe9ce8b4425b410b49b7f2dd3f3/g.webp=s96-fcrop64=1,00000000ffffffff-rw"
+              className="h-5 w-5"
+            />
+            <p></p>
+            Sign in with Google
+            <img
+              slot="start"
+              src="https://www.gstatic.com/marketing-cms/assets/images/d5/dc/cfe9ce8b4425b410b49b7f2dd3f3/g.webp=s96-fcrop64=1,00000000ffffffff-rw"
+              className="h-10 w-10"
+            />
+          </IonButton> */}
+</file>
+
+<file path="src/pages/PublicCards.tsx">
+import { Footer } from '@/components/Footer';
+import { Navbar } from '@/components/Navbar';
+import type { FlashcardSet } from '@/types/globalTypes';
+import { makeHttpCall } from '@/utils/makeHttpCall';
+import {
+  IonCard,
+  IonCardHeader,
+  IonCardSubtitle,
+  IonCardTitle,
+  IonContent,
+  IonPage,
+  IonSearchbar,
+} from '@ionic/react';
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+⋮----
+async function fetchSets()
+⋮----
+value={searchText} // eslint-disable-next-line
+</file>
+
+<file path="src/components/AddSetToClassDialog.tsx">
+import { useAddSetToClass, useUserSets } from '@/hooks/useClassQueries';
+import {
+  IonButton,
+  IonButtons,
+  IonContent,
+  IonHeader,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonModal,
+  IonRadio,
+  IonRadioGroup,
+  IonSpinner,
+  IonText,
+  IonTitle,
+  IonToolbar,
+  useIonToast,
+} from '@ionic/react';
+import { useEffect, useState } from 'react';
+⋮----
+// Use React Query hooks
+⋮----
+// Filter sets that are not already in the class
+⋮----
+// Reset selected set when dialog opens/closes
+⋮----
+const handleAddSet = async () =>
+</file>
+
+<file path="src/pages/PublicClasses.tsx">
+import { Footer } from '@/components/Footer';
+import { Navbar } from '@/components/Navbar';
+import type { Class } from '@/types/globalTypes';
+import { makeHttpCall } from '@/utils/makeHttpCall';
+import {
+  IonButton,
+  IonCard,
+  IonCardHeader,
+  IonCardSubtitle,
+  IonCardTitle,
+  IonContent,
+  IonPage,
+  IonSearchbar,
+} from '@ionic/react';
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+⋮----
+const fetchClasses = async () =>
+⋮----
+value={searchText} // eslint-disable-next-line
+⋮----
+onClick=
+</file>
+
+<file path="src/components/Navbar.tsx">
+import { useTheme } from '@/contexts/ThemeContext';
+import {
+  IonButton,
+  IonButtons,
+  IonContent,
+  IonHeader,
+  IonIcon,
+  IonItem,
+  IonList,
+  IonMenu,
+  IonMenuToggle,
+  IonPopover,
+  IonToolbar,
+  useIonRouter,
+} from '@ionic/react';
+import { add, close, menu, moon, personCircle, sunny } from 'ionicons/icons';
+import { useState } from 'react';
+⋮----
+const openPopover = (event)
+const closePopover = ()
+⋮----
+const handleMenuItemClick = (route) =>
+⋮----
+const toggleDarkMode = () =>
+⋮----
+{/* <IonTitle
+              color="primary"
+              className="hidden xs:block text-2xl sm:text-3xl lg:text-4xl font-ewert"
+            >
+              Cowboy Cards
+            </IonTitle> */}
+</file>
+
+<file path="src/pages/ClassDetail.tsx">
+import AddSetToClassDialog from '@/components/AddSetToClassDialog';
+import ClassDetailControls from '@/components/ClassDetailControls';
+import ClassDetailHeader from '@/components/ClassDetailHeader';
+import ClassDetailTabs from '@/components/ClassDetailTabs';
+import FlashcardSetList from '@/components/FlashcardSetList';
+import { Footer } from '@/components/Footer';
+import LeaderboardTab from '@/components/LeaderboardTab';
+import { Navbar } from '@/components/Navbar';
+import StudentTab from '@/components/StudentTab';
+import { type CarouselApi } from '@/components/ui/carousel';
+import {
+  useClassDetails,
+  useClassLeaderboard,
+  useClassMembers,
+  useClassSets,
+  useDeleteStudent,
+  useUpdateClass,
+} from '@/hooks/useClassQueries';
+import { IonContent, IonPage } from '@ionic/react';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+⋮----
+// React Query hooks
+⋮----
+const handleEdit = () =>
+⋮----
+const validateForm = () =>
+⋮----
+const handleSave = async () =>
+⋮----
+const handleChange = (e: CustomEvent) =>
+⋮----
+const handleCancel = () =>
+⋮----
+const handleDeleteStudent = async (studentId: number | null) =>
+⋮----
+// Error and loading handling
+</file>
+
+<file path="src/pages/Home.tsx">
+import { Footer } from '@/components/Footer';
+import { Navbar } from '@/components/Navbar';
+import type {
+  ListClassesOfAUserRow,
+  ListSetsOfAUserRow,
+} from '@/types/globalTypes';
+import { makeHttpCall } from '@/utils/makeHttpCall';
+import {
+  IonButton,
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardSubtitle,
+  IonCardTitle,
+  IonContent,
+  IonIcon,
+  IonLabel,
+  IonPage,
+  IonSegment,
+  IonSegmentButton,
+  IonSpinner,
+  useIonViewWillEnter,
+} from '@ionic/react';
+import { addOutline, bookOutline, listOutline } from 'ionicons/icons';
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+⋮----
+const fetchClassesOfUser = async () =>
+⋮----
+const fetchSetsOfUser = async () =>
+⋮----
+{/* <IonText className="text-sm text-gray-600">
+                          {cls.sets} sets
+                        </IonText> */}
+⋮----
+{/* <IonText className="text-sm text-gray-600">
+                          {set.cards} cards
+                        </IonText> */}
+</file>
+
+<file path="src/pages/SetOverview.tsx">
+import { Footer } from '@/components/Footer';
+import { Navbar } from '@/components/Navbar';
+import SetCardList from '@/components/SetCardList';
+import SetOverviewControls from '@/components/SetOverviewControls';
+import SetOverviewHeader from '@/components/SetOverviewHeader';
+import {
+  useAddCard,
+  useDeleteCard,
+  useDeleteSet,
+  useSetCards,
+  useSetDetails,
+  useUpdateCard,
+  useUpdateSet,
+} from '@/hooks/useSetQueries';
+import type { Flashcard } from '@/types/globalTypes';
+import {
+  IonAlert,
+  IonContent,
+  IonPage,
+  IonSpinner,
+  useIonToast,
+} from '@ionic/react';
+import { useState } from 'react';
+import { useHistory, useParams } from 'react-router-dom';
+⋮----
+// React Query hooks
+⋮----
+// Mutations
+⋮----
+// UI state
+⋮----
+// Check if user is the owner of the set
+⋮----
+// Loading state derived from React Query
+⋮----
+// Error handling
+⋮----
+const handleEdit = () =>
+⋮----
+const handleMetadataChange = (e: CustomEvent) =>
+⋮----
+const handleCardChange = (
+    index: number,
+    field: 'Front' | 'Back',
+    value: string | null | undefined
+) =>
+⋮----
+const handleAddCard = () =>
+⋮----
+const handleRemoveCard = (index: number) =>
+⋮----
+const validateMetadata = () =>
+⋮----
+const validateCards = () =>
+⋮----
+const handleSave = async () =>
+⋮----
+// Update set metadata if changed
+⋮----
+// Process card changes
+⋮----
+// Delete removed cards
+⋮----
+// Add/update cards
+⋮----
+// New card
+⋮----
+// Existing card
+⋮----
+// Update front if changed
+⋮----
+// Update back if changed
+⋮----
+const handleCancel = () =>
+⋮----
+const handleDeleteSet = async () =>
+⋮----
+const handleBackClick = () =>
+</file>
+
+<file path="go/middleware/middleware.go">
+package middleware
+⋮----
+import (
+	"context"
+	"log"
+	"net/http"
+	"path"
+	"slices"
+	"strings"
+
+	"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/db"
+	"github.com/rs/cors"
+)
+⋮----
+"context"
+"log"
+"net/http"
+"path"
+"slices"
+"strings"
+⋮----
+"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/db"
+"github.com/rs/cors"
+⋮----
+var (
+	allowList = []string{"https://cowboy-cards.org", "https://cowboy-cards.dsouth.org", "http://localhost:8080", "http://10.84.16.34:8080"} // last one is mobile dev only, should change every time, so check
+	Cors      = cors.New(cors.Options{
+		AllowedOrigins: allowList,
+		AllowedMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders: []string{"*"},
+		ExposedHeaders: []string{"Link"},
+		// ExposedHeaders:   []string{"Link", "X-CSRF-Token"}, // Expose CSRF token header
+		AllowCredentials: true,
+		Debug:            false,
+		MaxAge:           300,
+	})
+⋮----
+allowList = []string{"https://cowboy-cards.org", "https://cowboy-cards.dsouth.org", "http://localhost:8080", "http://10.84.16.34:8080"} // last one is mobile dev only, should change every time, so check
+⋮----
+// ExposedHeaders:   []string{"Link", "X-CSRF-Token"}, // Expose CSRF token header
+⋮----
+func SetCacheControlHeader(w http.ResponseWriter, r *http.Request, next http.HandlerFunc)
+⋮----
+func SetCredsHeaders(w http.ResponseWriter, r *http.Request, next http.HandlerFunc)
+⋮----
+func (h *Handler) VerifyClassMemberMW(next http.Handler) http.Handler
+⋮----
+// Get user_id from context (set by AuthMiddleware)
+⋮----
+var (
+			route   = r.URL.Path
+			classID int32
+		)
+⋮----
+func (h *Handler) VerifySetMemberMW(next http.Handler) http.Handler
+⋮----
+var (
+			method = r.Method
+			setID  int32
+		)
+</file>
+
+<file path="src/pages/Flashcard.tsx">
+import { FlashCard } from '@/components/FlashCard';
+import { Footer } from '@/components/Footer';
+import { Navbar } from '@/components/Navbar';
+import {
+  Carousel,
+  type CarouselApi,
+  CarouselContent,
+  CarouselItem,
+} from '@/components/ui/carousel';
+import {
+  useFlashcardCards,
+  useFlashcardSetDetails,
+} from '@/hooks/useFlashcardQueries';
+import type { Flashcard } from '@/types/globalTypes';
+import {
+  IonButton,
+  IonContent,
+  IonIcon,
+  IonPage,
+  IonSpinner,
+  useIonToast,
+} from '@ionic/react';
+import { arrowBackOutline } from 'ionicons/icons';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+⋮----
+// React Query hooks
+⋮----
+// Loading state derived from React Query
+⋮----
+// Error handling
+⋮----
+const onSelect = () =>
+⋮----
+const handleAdvance = () =>
+⋮----
+{/* Flashcards */}
+</file>
+
+</files>

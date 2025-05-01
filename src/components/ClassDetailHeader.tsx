@@ -60,8 +60,11 @@ const ClassDetailHeader = (props) => {
               {props.loading ? 'Loading...' : props.classData.ClassDescription}
             </p>
             <IonButton
-              className="rounded-lg flex-grow md:flex-grow-0 mt-4"
-              style={{ '--border-radius': '0.5rem' }}
+              className="rounded-lg mt-4 w-auto inline-block"
+              style={{
+                '--border-radius': '0.5rem',
+                maxWidth: 'fit-content',
+              }}
               routerLink="/home"
               color="primary"
             >
