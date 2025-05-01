@@ -18,7 +18,7 @@ const Footer = () => {
   }
 
   return (
-    <IonFooter className="hidden md:flex ion-no-border">
+    <IonFooter className=" ion-no-border">
       <IonToolbar>
         <IonButtons slot="start">
           <IonButton>
