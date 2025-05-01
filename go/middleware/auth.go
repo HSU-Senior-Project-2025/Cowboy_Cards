@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"context"
+	"encoding/hex"
 	"errors"
 	"log"
 	"net/http"
@@ -14,28 +15,26 @@ import (
 // ***************************
 // *  LIVE backend           *
 // ***************************
-// var (
-// 	buildenv   = os.Getenv("BUILDENV")
-// 	sessionKey = os.Getenv("SESSION_KEY")
-// 	sKey, _    = hex.DecodeString(sessionKey)
-// 	store      = sessions.NewCookieStore(sKey)
-// )
+var (
+	buildenv   = os.Getenv("BUILDENV")
+	sessionKey = os.Getenv("SESSION_KEY")
+	sKey, _    = hex.DecodeString(sessionKey)
+	store      = sessions.NewCookieStore(sKey)
+)
 
 // ************************************************
 // * uncomment this block and comment out the one *
 // * above to dev with the LOCAL backend          *
 // ************************************************
-var (
-buildenv = os.Getenv("BUILDENV")
-	store = sessions.NewCookieStore([]byte{95, 65, 12, 40})
-)
+// var (
+// buildenv = os.Getenv("BUILDENV")
+// 	store = sessions.NewCookieStore([]byte{95, 65, 12, 40})
+// )
 
 func init() {
 	log.Println("init")
 	log.Println("mw init: ", buildenv)
 
-
-	// FIXME: Find a way to deploy the necessary settings for live web and live mobile so the app can work without the dev server running locally
 	// MaxAge=0 means no Max-Age attribute specified and the cookie will be
 	// deleted after the browser session ends.
 	// MaxAge<0 means delete cookie immediately.
