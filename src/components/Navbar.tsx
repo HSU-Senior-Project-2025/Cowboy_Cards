@@ -24,7 +24,11 @@ const Navbar = () => {
   const { theme, setTheme } = useTheme();
 
   // Skip rendering on Index page
-  if (location.pathname === '/') {
+  if (
+    location.pathname === '/' ||
+    location.pathname === '/reset-password' ||
+    location.pathname === '/confirm-reset-password'
+  ) {
     return null;
   }
 
@@ -42,10 +46,10 @@ const Navbar = () => {
 
   return (
     <>
-      <IonMenu side="start" contentId="main-content">
+      <IonMenu side='start' contentId='main-content'>
         <IonHeader>
           <IonToolbar>
-            <IonButtons slot="start">
+            <IonButtons slot='start'>
               <IonMenuToggle>
                 <IonButton>
                   <IonIcon icon={close} />
@@ -83,7 +87,7 @@ const Navbar = () => {
 
       <IonHeader>
         <IonToolbar>
-          <IonButtons slot="start">
+          <IonButtons slot='start'>
             <IonMenuToggle>
               <IonButton>
                 <IonIcon icon={menu} />
@@ -92,15 +96,15 @@ const Navbar = () => {
           </IonButtons>
 
           <div
-            className="cursor-pointer"
+            className='cursor-pointer'
             onClick={() => ionRouter.push('/home')}
           >
             <img
-              src="/Spirit-Cowboy-Profile-Only.png"
-              alt="Cowboy Cards Logo"
-              className="h-8 w-auto me:hidden block"
+              src='/Spirit-Cowboy-Profile-Only.png'
+              alt='Cowboy Cards Logo'
+              className='h-8 w-auto me:hidden block'
             />
-            <h2 className="hidden me:block text-2xl sm:text-3xl md:text-4xl text-ellipsis overflow-hidden whitespace-nowrap font-ewert text-[color:--ion-color-primary]">
+            <h2 className='hidden me:block text-2xl sm:text-3xl md:text-4xl text-ellipsis overflow-hidden whitespace-nowrap font-ewert text-[color:--ion-color-primary]'>
               Cowboy Cards
             </h2>
             {/* <IonTitle
@@ -111,9 +115,9 @@ const Navbar = () => {
             </IonTitle> */}
           </div>
 
-          <IonButtons slot="end">
+          <IonButtons slot='end'>
             <IonButton onClick={openPopover}>
-              <IonIcon icon={add} className="text-[32px] stroke-[2]" />
+              <IonIcon icon={add} className='text-[32px] stroke-[2]' />
             </IonButton>
             <IonPopover
               event={popoverEvent}
@@ -152,17 +156,17 @@ const Navbar = () => {
                 </IonList>
               </IonContent>
             </IonPopover>
-            <IonButton fill="clear" onClick={toggleDarkMode}>
+            <IonButton fill='clear' onClick={toggleDarkMode}>
               <IonIcon
-                slot="icon-only"
+                slot='icon-only'
                 icon={theme === 'dark' ? sunny : moon}
               />
             </IonButton>
           </IonButtons>
 
-          <IonButtons slot="end">
-            <IonButton routerLink="/user-account">
-              <IonIcon icon={personCircle} size="large" />
+          <IonButtons slot='end'>
+            <IonButton routerLink='/user-account'>
+              <IonIcon icon={personCircle} size='large' />
             </IonButton>
           </IonButtons>
         </IonToolbar>

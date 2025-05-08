@@ -54,12 +54,11 @@ const ResetPass = () => {
 
     try {
       // Make API call to send reset token
-      await makeHttpCall('/reset-password/request', {
+      await makeHttpCall('/send-reset-password-token', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          email,
         },
-        body: JSON.stringify({ email }),
       });
 
       toast({
@@ -73,15 +72,22 @@ const ResetPass = () => {
     } catch (error) {
       console.error('Reset password request error:', error);
 
-      setErrors({
-        general:
-          'An error occurred while processing your request. Please try again.',
-      });
+      // Handle specific error types
+      let errorMessage = 'An unexpected error occurred. Please try again.';
 
-      toast({
-        title: 'Reset request failed',
-        description: 'Please try again later.',
-        variant: 'destructive',
+      if (error.message) {
+        if (error.message.includes('Invalid email')) {
+          errorMessage = 'The provided email address is not registered.';
+        } else if (error.message.includes('Database connection error')) {
+          errorMessage =
+            'Unable to connect to the server. Please try again later.';
+        } else {
+          errorMessage = error.message;
+        }
+      }
+
+      setErrors({
+        general: errorMessage,
       });
     } finally {
       setIsLoading(false);
@@ -89,10 +95,10 @@ const ResetPass = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <Card className="w-11/12 max-w-[350px]">
+    <div className='flex items-center justify-center min-h-screen bg-gray-100'>
+      <Card className='w-11/12 max-w-[350px]'>
         <CardHeader>
-          <CardTitle className="text-4xl tracking-wide font-smokum font-bold">
+          <CardTitle className='text-4xl tracking-wide font-smokum font-bold'>
             Reset Password
           </CardTitle>
           <CardDescription>
@@ -100,36 +106,36 @@ const ResetPass = () => {
           </CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
-          <CardContent className="space-y-4">
+          <CardContent className='space-y-4'>
             {errors.general && (
-              <Alert variant="destructive" className="mb-4">
-                <AlertCircle className="h-4 w-4" />
+              <Alert variant='destructive' className='mb-4'>
+                <AlertCircle className='h-4 w-4' />
                 <AlertDescription>{errors.general}</AlertDescription>
               </Alert>
             )}
-            <div className="space-y-2">
+            <div className='space-y-2'>
               <Label
-                className="text-3xl tracking-wide font-smokum font-bold"
-                htmlFor="email"
+                className='text-3xl tracking-wide font-smokum font-bold'
+                htmlFor='email'
               >
                 Email
               </Label>
               <Input
-                id="email"
-                type="email"
-                placeholder="name@example.com"
+                id='email'
+                type='email'
+                placeholder='name@example.com'
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 className={errors.email ? 'border-red-500' : ''}
               />
               {errors.email && (
-                <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+                <p className='text-red-500 text-xs mt-1'>{errors.email}</p>
               )}
             </div>
           </CardContent>
-          <CardFooter className="flex flex-col space-y-4">
-            <Button type="submit" className="w-full" disabled={isLoading}>
+          <CardFooter className='flex flex-col space-y-4'>
+            <Button type='submit' className='w-full' disabled={isLoading}>
               {isLoading ? 'Sending...' : 'Send Reset Token'}
             </Button>
           </CardFooter>

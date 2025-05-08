@@ -123,14 +123,14 @@ const SetOverview = () => {
   const handleAddCard = () => {
     if (!flashcardSetData) return;
     const newCard: Flashcard = {
-      ID: 0 - editedCards.filter((c) => c.ID <= 0).length - 1,
+      ID: 0 - (editedCards || []).filter((c) => c.ID <= 0).length - 1,
       Front: '',
       Back: '',
       SetID: flashcardSetData.ID,
       CreatedAt: new Date().toISOString(),
       UpdatedAt: new Date().toISOString(),
     };
-    setEditedCards((prevCards) => [...prevCards, newCard]);
+    setEditedCards((prevCards) => [...(prevCards || []), newCard]);
   };
 
   const handleRemoveCard = (index: number) => {
@@ -229,10 +229,12 @@ const SetOverview = () => {
       }
 
       // Process card changes
-      const originalCardMap = new Map(cards?.map((card) => [card.ID, card]));
+      const originalCardMap = new Map(
+        (cards || []).map((card) => [card.ID, card])
+      );
 
       // Delete removed cards
-      for (const originalCard of cards) {
+      for (const originalCard of cards || []) {
         if (
           !editedCards.some((c) => c.ID === originalCard.ID) &&
           originalCard.ID > 0
@@ -352,10 +354,10 @@ const SetOverview = () => {
   if (isLoading && !isEditing) {
     return (
       <IonPage>
-        <IonContent className="">
+        <IonContent className=''>
           <Navbar />
-          <div className="flex items-center justify-center h-64">
-            <IonSpinner name="circular" />
+          <div className='flex items-center justify-center h-64'>
+            <IonSpinner name='circular' />
           </div>
         </IonContent>
         <Footer />
@@ -367,8 +369,8 @@ const SetOverview = () => {
     <IonPage>
       <Navbar />
       <IonContent>
-        <div className="container max-w-4xl mx-auto px-4 py-8">
-          <div className="flex flex-col md:flex-row justify-between items-start gap-4 mb-6">
+        <div className='container max-w-4xl mx-auto px-4 py-8'>
+          <div className='flex flex-col md:flex-row justify-between items-start gap-4 mb-6'>
             <SetOverviewHeader
               loading={isLoading}
               flashcardSetData={flashcardSetData}

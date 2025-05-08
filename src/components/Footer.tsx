@@ -13,16 +13,20 @@ const Footer = () => {
   const location = useLocation();
 
   // Skip rendering on Index page
-  if (location.pathname === '/') {
+  if (
+    location.pathname === '/' ||
+    location.pathname === '/reset-password' ||
+    location.pathname === '/confirm-reset-password'
+  ) {
     return null;
   }
 
   return (
-    <IonFooter className="hidden md:flex ion-no-border">
+    <IonFooter className='hidden md:flex ion-no-border'>
       <IonToolbar>
-        <IonButtons slot="start">
+        <IonButtons slot='start'>
           <IonButton>
-            <Link to="/home">
+            <Link to='/home'>
               <IonIcon icon={home} />
             </Link>
           </IonButton>
@@ -42,7 +46,7 @@ const Footer = () => {
         {/*    </IonButton>*/}
         {/*</IonButtons>*/}
 
-        <IonText className="mx-auto text-center text-sm">
+        <IonText className='mx-auto text-center text-sm'>
           &copy;Cowboy Cards 2025. Built for learning and fun.
         </IonText>
       </IonToolbar>
