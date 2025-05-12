@@ -48,7 +48,6 @@ create table card_history (
   card_id INTEGER not null,
   score INTEGER default 0 not null,
   times_attempted INTEGER default 1 not null,
-  is_mastered BOOLEAN not null default false,
   created_at TIMESTAMP not null default LOCALTIMESTAMP(2),
   primary key (user_id, card_id),
   foreign KEY (user_id) references users (id) on delete CASCADE on update CASCADE,
@@ -77,7 +76,6 @@ create table set_user (
   set_id INTEGER,
   role TEXT not null check (role in ('user', 'owner')) default 'user',
   set_score INTEGER not null default 0,
-  is_private BOOLEAN not null default false,
   primary key (user_id, set_id),
   foreign KEY (user_id) references users (id) on delete CASCADE on update CASCADE,
   foreign KEY (set_id) references flashcard_sets (id) on delete CASCADE on update CASCADE

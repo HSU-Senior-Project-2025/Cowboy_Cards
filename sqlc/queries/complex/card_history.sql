@@ -21,8 +21,5 @@ JOIN flashcard_sets ON flashcards.set_id = flashcard_sets.id WHERE user_id = $1 
 -- name: GetCardsStudied :one
 SELECT COUNT(card_id) FROM card_history WHERE user_id = $1;
 
--- name: GetCardsMastered :one
-SELECT COUNT(is_mastered) FROM card_history WHERE user_id = $1 AND is_mastered = TRUE;
-
 -- name: GetTotalCardViews :one
 SELECT COALESCE(SUM(times_attempted), 0) FROM card_history WHERE user_id = $1;
