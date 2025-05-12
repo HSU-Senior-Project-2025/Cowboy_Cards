@@ -83,16 +83,13 @@ const ConfirmResetPass = () => {
 
     try {
       // Make API call to reset password
-      await makeHttpCall('/reset-password/confirm', {
+      await makeHttpCall('/reset-password', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email,
-          token,
           password,
-        }),
+          token,
+          email,
+        },
       });
 
       toast({
@@ -102,7 +99,7 @@ const ConfirmResetPass = () => {
       });
 
       // Redirect to login page
-      history.push('/auth');
+      history.push('/');
     } catch (error) {
       console.error('Password reset error:', error);
 
