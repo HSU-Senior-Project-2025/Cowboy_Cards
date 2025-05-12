@@ -197,6 +197,9 @@ The Cowboy Cards Team
 		http.Error(w, "Failed to send password reset email", http.StatusInternalServerError)
 		return
 	}
+
+	w.Header().Set("Content-Type", "application/json")
+  w.Write([]byte(`{"success": true}`))
 }
 
 func (h *DBHandler) ResetPassword(w http.ResponseWriter, r *http.Request) {

@@ -53,7 +53,7 @@ export const FlashCard = (props) => {
           onClick={handleLearningClick}
         >
           <X className="mr-2 h-4 w-4" />
-          Learning
+          Not yet
         </Button>
         <Button
           id="shadcn-button"
@@ -61,7 +61,7 @@ export const FlashCard = (props) => {
           onClick={handleMasteredClick}
         >
           <Check className="mr-2 h-4 w-4" />
-          Mastered
+          Got it
         </Button>
       </div>
     </div>
