@@ -9,6 +9,17 @@ import (
 	"context"
 )
 
+const getTotalScore = `-- name: GetTotalScore :one
+SELECT COALESCE(SUM(set_score), 0) FROM set_user WHERE user_id = $1
+`
+
+func (q *Queries) GetTotalScore(ctx context.Context, userID int32) (interface{}, error) {
+	row := q.db.QueryRow(ctx, getTotalScore, userID)
+	var coalesce interface{}
+	err := row.Scan(&coalesce)
+	return coalesce, err
+}
+
 const joinSet = `-- name: JoinSet :exec
 INSERT INTO set_user (user_id, set_id, role) VALUES ($1, $2, $3)
 `

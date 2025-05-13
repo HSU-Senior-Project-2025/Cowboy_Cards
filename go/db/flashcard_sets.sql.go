@@ -120,7 +120,7 @@ func (q *Queries) UpdateFlashcardSetName(ctx context.Context, arg UpdateFlashcar
 }
 
 const verifySetMember = `-- name: VerifySetMember :one
-SELECT user_id, set_id, role, set_score, is_private from set_user WHERE set_id = $1 AND user_id = $2
+SELECT user_id, set_id, role, set_score from set_user WHERE set_id = $1 AND user_id = $2
 `
 
 type VerifySetMemberParams struct {
@@ -136,7 +136,6 @@ func (q *Queries) VerifySetMember(ctx context.Context, arg VerifySetMemberParams
 		&i.SetID,
 		&i.Role,
 		&i.SetScore,
-		&i.IsPrivate,
 	)
 	return i, err
 }

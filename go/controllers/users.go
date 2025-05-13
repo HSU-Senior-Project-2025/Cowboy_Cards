@@ -78,9 +78,9 @@ func (h *DBHandler) GetUserById(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	cardsMastered, err := qtx.GetCardsMastered(ctx, userID)
+	totalScore, err := qtx.GetTotalScore(ctx, userID)
 	if err != nil {
-		logAndSendError(w, err, "Error getting cards mastered", http.StatusInternalServerError)
+		logAndSendError(w, err, "Error getting total score", http.StatusInternalServerError)
 		return
 	}
 
@@ -97,18 +97,16 @@ func (h *DBHandler) GetUserById(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response := User{
-		// ID:        user.ID,
-		Username:    user.Username,
-		Email:       user.Email,
-		FirstName:   user.FirstName,
-		LastName:    user.LastName,
-		LoginStreak: user.LoginStreak,
-		CreatedAt:   user.CreatedAt.Time.Format(time.DateTime),
-		// UpdatedAt: user.UpdatedAt.Time,
+		Username:       user.Username,
+		Email:          user.Email,
+		FirstName:      user.FirstName,
+		LastName:       user.LastName,
+		LoginStreak:    user.LoginStreak,
+		CreatedAt:      user.CreatedAt.Time.Format(time.DateTime),
 		NumClasses:     len(classes),
 		CardsStudied:   int(cardsStudied),
-		CardsMastered:  int(cardsMastered),
 		TotalCardViews: totalCardViews,
+		TotalScore:     totalScore,
 	}
 
 	w.Header().Set("Content-Type", "application/json")

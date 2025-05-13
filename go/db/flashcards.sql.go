@@ -140,7 +140,7 @@ func (q *Queries) UpdateFlashcardSetId(ctx context.Context, arg UpdateFlashcardS
 }
 
 const verifyFlashcardOwner = `-- name: VerifyFlashcardOwner :one
-SELECT user_id, set_id, role, set_score, is_private from set_user WHERE user_id = $1 AND set_id = (SELECT set_id FROM flashcards WHERE id = $2) AND role = 'owner'
+SELECT user_id, set_id, role, set_score from set_user WHERE user_id = $1 AND set_id = (SELECT set_id FROM flashcards WHERE id = $2) AND role = 'owner'
 `
 
 type VerifyFlashcardOwnerParams struct {
@@ -156,7 +156,6 @@ func (q *Queries) VerifyFlashcardOwner(ctx context.Context, arg VerifyFlashcardO
 		&i.SetID,
 		&i.Role,
 		&i.SetScore,
-		&i.IsPrivate,
 	)
 	return i, err
 }

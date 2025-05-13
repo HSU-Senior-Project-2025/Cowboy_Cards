@@ -28,7 +28,7 @@ export function useFlashcardCards(id: string) {
   });
 }
 
-// Update card study status mutation - Mark card as mastered
+// Update card study status mutation - Mark card as correct/incorrect
 export function useUpdateCardStudyStatus() {
   const queryClient = useQueryClient();
 

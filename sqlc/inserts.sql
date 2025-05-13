@@ -1,3 +1,6 @@
+set
+  SEARCH_PATH to public;
+
 insert into
   flashcards (set_id, front, back)
 values
@@ -493,13 +496,19 @@ values
 insert into
   set_user (user_id, set_id, role, set_score)
 values
-  (1, 15, 'owner', 0),
+  (2, 15, 'owner', 0),
+  (2, 16, 'owner', 0),
+  (2, 17, 'owner', 0),
   (1, 18, 'owner', 0),
   (1, 19, 'owner', 0),
   (1, 20, 'owner', 0);
 
 insert into
-  set_user (user_id, set_id, role, set_score)
+  class_set (class_id, set_id)
 values
-  (2, 16, 'owner', 0),
-  (2, 17, 'owner', 0);
+  (16, 15),
+  (16, 16),
+  (16, 17),
+  (17, 18),
+  (17, 19),
+  (17, 20);

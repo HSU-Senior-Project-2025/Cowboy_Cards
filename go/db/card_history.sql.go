@@ -38,17 +38,6 @@ func (q *Queries) GetCardScore(ctx context.Context, arg GetCardScoreParams) (Get
 	return i, err
 }
 
-const getCardsMastered = `-- name: GetCardsMastered :one
-SELECT COUNT(is_mastered) FROM card_history WHERE user_id = $1 AND is_mastered = TRUE
-`
-
-func (q *Queries) GetCardsMastered(ctx context.Context, userID int32) (int64, error) {
-	row := q.db.QueryRow(ctx, getCardsMastered, userID)
-	var count int64
-	err := row.Scan(&count)
-	return count, err
-}
-
 const getCardsStudied = `-- name: GetCardsStudied :one
 SELECT COUNT(card_id) FROM card_history WHERE user_id = $1
 `

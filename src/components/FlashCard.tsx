@@ -22,11 +22,11 @@ export const FlashCard = (props) => {
     }
   };
 
-  const handleLearningClick = () => {
+  const handleIncorrectClick = () => {
     handleScoreUpdate(false);
   };
 
-  const handleMasteredClick = () => {
+  const handleCorrectClick = () => {
     handleScoreUpdate(true);
   };
 
@@ -50,7 +50,7 @@ export const FlashCard = (props) => {
           variant="outline"
           id="shadcn-button"
           className="w-32"
-          onClick={handleLearningClick}
+          onClick={handleIncorrectClick}
         >
           <X className="mr-2 h-4 w-4" />
           Not yet
@@ -58,7 +58,7 @@ export const FlashCard = (props) => {
         <Button
           id="shadcn-button"
           className="w-32"
-          onClick={handleMasteredClick}
+          onClick={handleCorrectClick}
         >
           <Check className="mr-2 h-4 w-4" />
           Got it

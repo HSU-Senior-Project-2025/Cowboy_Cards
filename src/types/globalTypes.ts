@@ -1,12 +1,3 @@
-export interface CardHistory {
-  UserID: number;
-  CardID: number;
-  Score: number;
-  TimesAttempted: number;
-  IsMastered: boolean;
-  CreatedAt: string;
-}
-
 export interface Class {
   ID: number;
   ClassName: string;
@@ -78,6 +69,6 @@ export interface User {
   created_at: string;
   numClasses: number;
   cardsStudied: number;
-  cardsMastered: number;
   totalCardViews: number;
+  totalScore: number;
 }

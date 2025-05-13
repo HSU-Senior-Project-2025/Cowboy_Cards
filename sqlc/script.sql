@@ -88,111 +88,112 @@ create table set_user (
   foreign KEY (set_id) references flashcard_sets (id) on delete CASCADE on update CASCADE
 ) TABLESPACE pg_default;
 
+--pws are 4ededed$ED
 insert into
   users (username, email, password, first_name, last_name)
 values
   (
     'john_doe',
     'john@example.com',
-    'edededed',
+    '$2a$10$NeGG/swWku/ZWPVXmfBZiuj9l7.1AMmzb/Mgzl8awfTFV1Uqh5C8y',
     'John',
     'Doe'
   ),
   (
     'jane_smith',
     'jane@example.com',
-    'edededed',
+    '$2a$10$NeGG/swWku/ZWPVXmfBZiuj9l7.1AMmzb/Mgzl8awfTFV1Uqh5C8y',
     'Jane',
     'Smith'
   ),
   (
     'bob_johnson',
     'bob@example.com',
-    'edededed',
+    '$2a$10$NeGG/swWku/ZWPVXmfBZiuj9l7.1AMmzb/Mgzl8awfTFV1Uqh5C8y',
     'Bob',
     'Johnson'
   ),
   (
     'alice_brown',
     'alice@example.com',
-    'edededed',
+    '$2a$10$NeGG/swWku/ZWPVXmfBZiuj9l7.1AMmzb/Mgzl8awfTFV1Uqh5C8y',
     'Alice',
     'Brown'
   ),
   (
     'charlie_davis',
     'charlie@example.com',
-    'edededed',
+    '$2a$10$NeGG/swWku/ZWPVXmfBZiuj9l7.1AMmzb/Mgzl8awfTFV1Uqh5C8y',
     'Charlie',
     'Davis'
   ),
   (
     'david_wilson',
     'david@example.com',
-    'edededed',
+    '$2a$10$NeGG/swWku/ZWPVXmfBZiuj9l7.1AMmzb/Mgzl8awfTFV1Uqh5C8y',
     'David',
     'Wilson'
   ),
   (
     'emily_taylor',
     'emily@example.com',
-    'edededed',
+    '$2a$10$NeGG/swWku/ZWPVXmfBZiuj9l7.1AMmzb/Mgzl8awfTFV1Uqh5C8y',
     'Emily',
     'Taylor'
   ),
   (
     'frank_martin',
     'frank@example.com',
-    'edededed',
+    '$2a$10$NeGG/swWku/ZWPVXmfBZiuj9l7.1AMmzb/Mgzl8awfTFV1Uqh5C8y',
     'Frank',
     'Martin'
   ),
   (
     'grace_hall',
     'grace@example.com',
-    'edededed',
+    '$2a$10$NeGG/swWku/ZWPVXmfBZiuj9l7.1AMmzb/Mgzl8awfTFV1Uqh5C8y',
     'Grace',
     'Hall'
   ),
   (
     'henry_baker',
     'henry@example.com',
-    'edededed',
+    '$2a$10$NeGG/swWku/ZWPVXmfBZiuj9l7.1AMmzb/Mgzl8awfTFV1Uqh5C8y',
     'Henry',
     'Baker'
   ),
   (
     'isabella_clark',
     'isabella@example.com',
-    'edededed',
+    '$2a$10$NeGG/swWku/ZWPVXmfBZiuj9l7.1AMmzb/Mgzl8awfTFV1Uqh5C8y',
     'Isabella',
     'Clark'
   ),
   (
     'james_parker',
     'james@example.com',
-    'edededed',
+    '$2a$10$NeGG/swWku/ZWPVXmfBZiuj9l7.1AMmzb/Mgzl8awfTFV1Uqh5C8y',
     'James',
     'Parker'
   ),
   (
     'katherine_white',
     'katherine@example.com',
-    'edededed',
+    '$2a$10$NeGG/swWku/ZWPVXmfBZiuj9l7.1AMmzb/Mgzl8awfTFV1Uqh5C8y',
     'Katherine',
     'White'
   ),
   (
     'lucas_garcia',
     'lucas@example.com',
-    'edededed',
+    '$2a$10$NeGG/swWku/ZWPVXmfBZiuj9l7.1AMmzb/Mgzl8awfTFV1Uqh5C8y',
     'Lucas',
     'Garcia'
   ),
   (
     'mary_lewis',
     'mary@example.com',
-    'edededed',
+    '$2a$10$NeGG/swWku/ZWPVXmfBZiuj9l7.1AMmzb/Mgzl8awfTFV1Uqh5C8y',
     'Mary',
     'Lewis'
   );
@@ -431,47 +432,27 @@ insert into
 values
   (
     'Basic Koiné Greek',
-    'Common vocabulary words for students of Biblical (Koiné) Greek.'
-  );
-
-insert into
-  flashcard_sets (set_name, set_description)
-values
+    'Common vocabulary words for students of Biblical (Koiné) Greek'
+  ),
   (
     'Intermediate Koiné Greek',
-    'Expanding vocabulary, verb forms, and syntax.'
-  );
-
-insert into
-  flashcard_sets (set_name, set_description)
-values
+    'Expanding vocabulary, verb forms, and syntax'
+  ),
   (
     'Advanced Koiné Greek',
-    'Less common words, participles, subjunctive/optative moods.'
-  );
-
-insert into
-  flashcard_sets (set_name, set_description)
-values
+    'Less common words, participles, subjunctive/optative moods'
+  ),
   (
     'Basic Biblical Hebrew',
-    'Common vocabulary words for students of Biblical Hebrew.'
-  );
-
-insert into
-  flashcard_sets (set_name, set_description)
-values
+    'Common vocabulary words for students of Biblical Hebrew'
+  ),
   (
     'Intermediate Biblical Hebrew',
-    'Expanding vocabulary and grammar for Biblical Hebrew.'
-  );
-
-insert into
-  flashcard_sets (set_name, set_description)
-values
+    'Expanding vocabulary and grammar for Biblical Hebrew'
+  ),
   (
     'Advanced Biblical Hebrew',
-    'Less common words, rarer stems, and complex concepts.'
+    'Less common words, rarer stems, and complex concepts'
   );
 
 insert into
@@ -479,31 +460,11 @@ insert into
 values
   (
     'Biblical Greek Studies',
-    'Comprehensive course covering Basic to Advanced Biblical Greek.'
-  );
-
-insert into
-  class_user (user_id, class_id, role)
-values
-  (
-    2,
-    (
-      select
-        id
-      from
-        classes
-      where
-        class_name = 'Biblical Greek Studies'
-    ),
-    'teacher'
-  );
-
-insert into
-  classes (class_name, class_description)
-values
+    'Comprehensive course covering Basic to Advanced Biblical Greek'
+  ),
   (
     'Biblical Hebrew Studies',
-    'Comprehensive course covering Basic to Advanced Biblical Hebrew.'
+    'Comprehensive course covering Basic to Advanced Biblical Hebrew'
   );
 
 insert into
@@ -518,6 +479,18 @@ values
         classes
       where
         class_name = 'Biblical Hebrew Studies'
+    ),
+    'teacher'
+  ),
+  (
+    2,
+    (
+      select
+        id
+      from
+        classes
+      where
+        class_name = 'Biblical Greek Studies'
     ),
     'teacher'
   );

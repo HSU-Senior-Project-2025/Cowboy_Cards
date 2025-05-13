@@ -13,7 +13,6 @@ type CardHistory struct {
 	CardID         int32
 	Score          int32
 	TimesAttempted int32
-	IsMastered     bool
 	CreatedAt      pgtype.Timestamp
 }
 
@@ -54,11 +53,10 @@ type FlashcardSet struct {
 }
 
 type SetUser struct {
-	UserID    int32
-	SetID     int32
-	Role      string
-	SetScore  int32
-	IsPrivate bool
+	UserID   int32
+	SetID    int32
+	Role     string
+	SetScore int32
 }
 
 type User struct {

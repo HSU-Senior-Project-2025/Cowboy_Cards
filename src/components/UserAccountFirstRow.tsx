@@ -91,9 +91,10 @@ const UserAccountFirstRow = (props) => {
             />
             <InfoRow label="Classes Taken" value={props.userInfo?.numClasses} />
             <InfoRow
-              label="Total Card Views"
-              value={props.userInfo?.totalCardViews}
+              label="Cards Studied/Total Views"
+              value={`${props.userInfo?.cardsStudied} / ${props.userInfo?.totalCardViews}`}
             />
+            <InfoRow label="Total Score" value={props.userInfo?.totalScore} />
           </div>
         </IonCardContent>
       </IonCard>
