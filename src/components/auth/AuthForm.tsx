@@ -15,6 +15,7 @@ import { makeHttpCall } from '@/utils/makeHttpCall';
 import { useIonRouter } from '@ionic/react';
 import { AlertCircle, LogIn } from 'lucide-react';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 export const AuthForm = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -290,9 +291,9 @@ export const AuthForm = () => {
             )}
           </div>
           {isLogin && (
-            <a href="/reset-password" className="text-sm text-primary">
+            <Link to="/reset-password" className="text-sm text-primary">
               Forgot password?
-            </a>
+            </Link>
           )}
         </CardContent>
         <CardFooter className="flex flex-col space-y-4">
