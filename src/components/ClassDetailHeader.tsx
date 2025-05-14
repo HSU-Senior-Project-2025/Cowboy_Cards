@@ -63,7 +63,7 @@ const ClassDetailHeader = (props) => {
               className="rounded-lg mt-4 w-auto inline-block"
               style={{
                 '--border-radius': '0.5rem',
-                'max-width': 'fit-content',
+                maxWidth: 'fit-content',
               }}
               routerLink="/home"
               color="primary"

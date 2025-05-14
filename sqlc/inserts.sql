@@ -496,12 +496,42 @@ values
 insert into
   set_user (user_id, set_id, role, set_score)
 values
-  (2, 15, 'owner', 0),
-  (2, 16, 'owner', 0),
-  (2, 17, 'owner', 0),
-  (1, 18, 'owner', 0),
-  (1, 19, 'owner', 0),
-  (1, 20, 'owner', 0);
+  (2, 15, 'owner', 10),
+  (1, 15, 'user', 4),
+  (3, 15, 'user', 14),
+  (4, 15, 'user', 24),
+  (5, 15, 'user', 9),
+  (6, 15, 'user', 11),
+  (2, 16, 'owner', 20),
+  (11, 16, 'user', 7),
+  (13, 16, 'user', 11),
+  (4, 16, 'user', 4),
+  (1, 16, 'user', 19),
+  (7, 16, 'user', 21),
+  (2, 17, 'owner', 30),
+  (9, 17, 'user', 3),
+  (5, 17, 'user', 12),
+  (3, 17, 'user', 15),
+  (11, 17, 'user', 8),
+  (8, 17, 'user', 6),
+  (1, 18, 'owner', 10),
+  (2, 18, 'user', 13),
+  (9, 18, 'user', 22),
+  (4, 18, 'user', 5),
+  (14, 18, 'user', 18),
+  (7, 18, 'user', 13),
+  (1, 19, 'owner', 20),
+  (12, 19, 'user', 3),
+  (5, 19, 'user', 2),
+  (8, 19, 'user', 15),
+  (13, 19, 'user', 18),
+  (10, 19, 'user', 23),
+  (1, 20, 'owner', 30),
+  (11, 20, 'user', 13),
+  (6, 20, 'user', 12),
+  (7, 20, 'user', 25),
+  (12, 20, 'user', 8),
+  (10, 20, 'user', 3);
 
 insert into
   class_set (class_id, set_id)
@@ -512,3 +542,271 @@ values
   (17, 18),
   (17, 19),
   (17, 20);
+
+insert into
+  class_user (user_id, class_id, role)
+values
+  (
+    2,
+    (
+      select
+        id
+      from
+        classes
+      where
+        class_name = 'Biblical Hebrew Studies'
+    ),
+    'student'
+  ),
+  (
+    9,
+    (
+      select
+        id
+      from
+        classes
+      where
+        class_name = 'Biblical Hebrew Studies'
+    ),
+    'student'
+  ),
+  (
+    14,
+    (
+      select
+        id
+      from
+        classes
+      where
+        class_name = 'Biblical Hebrew Studies'
+    ),
+    'student'
+  ),
+  (
+    4,
+    (
+      select
+        id
+      from
+        classes
+      where
+        class_name = 'Biblical Hebrew Studies'
+    ),
+    'student'
+  ),
+  (
+    7,
+    (
+      select
+        id
+      from
+        classes
+      where
+        class_name = 'Biblical Hebrew Studies'
+    ),
+    'student'
+  ),
+  (
+    10,
+    (
+      select
+        id
+      from
+        classes
+      where
+        class_name = 'Biblical Hebrew Studies'
+    ),
+    'student'
+  ),
+  (
+    13,
+    (
+      select
+        id
+      from
+        classes
+      where
+        class_name = 'Biblical Hebrew Studies'
+    ),
+    'student'
+  ),
+  (
+    8,
+    (
+      select
+        id
+      from
+        classes
+      where
+        class_name = 'Biblical Hebrew Studies'
+    ),
+    'student'
+  ),
+  (
+    5,
+    (
+      select
+        id
+      from
+        classes
+      where
+        class_name = 'Biblical Hebrew Studies'
+    ),
+    'student'
+  ),
+  (
+    12,
+    (
+      select
+        id
+      from
+        classes
+      where
+        class_name = 'Biblical Hebrew Studies'
+    ),
+    'student'
+  ),
+  (
+    11,
+    (
+      select
+        id
+      from
+        classes
+      where
+        class_name = 'Biblical Hebrew Studies'
+    ),
+    'student'
+  ),
+  (
+    6,
+    (
+      select
+        id
+      from
+        classes
+      where
+        class_name = 'Biblical Hebrew Studies'
+    ),
+    'student'
+  ),
+  (
+    1,
+    (
+      select
+        id
+      from
+        classes
+      where
+        class_name = 'Biblical Greek Studies'
+    ),
+    'student'
+  ),
+  (
+    3,
+    (
+      select
+        id
+      from
+        classes
+      where
+        class_name = 'Biblical Greek Studies'
+    ),
+    'student'
+  ),
+  (
+    4,
+    (
+      select
+        id
+      from
+        classes
+      where
+        class_name = 'Biblical Greek Studies'
+    ),
+    'student'
+  ),
+  (
+    5,
+    (
+      select
+        id
+      from
+        classes
+      where
+        class_name = 'Biblical Greek Studies'
+    ),
+    'student'
+  ),
+  (
+    6,
+    (
+      select
+        id
+      from
+        classes
+      where
+        class_name = 'Biblical Greek Studies'
+    ),
+    'student'
+  ),
+  (
+    11,
+    (
+      select
+        id
+      from
+        classes
+      where
+        class_name = 'Biblical Greek Studies'
+    ),
+    'student'
+  ),
+  (
+    13,
+    (
+      select
+        id
+      from
+        classes
+      where
+        class_name = 'Biblical Greek Studies'
+    ),
+    'student'
+  ),
+  (
+    7,
+    (
+      select
+        id
+      from
+        classes
+      where
+        class_name = 'Biblical Greek Studies'
+    ),
+    'student'
+  ),
+  (
+    9,
+    (
+      select
+        id
+      from
+        classes
+      where
+        class_name = 'Biblical Greek Studies'
+    ),
+    'student'
+  ),
+  (
+    8,
+    (
+      select
+        id
+      from
+        classes
+      where
+        class_name = 'Biblical Greek Studies'
+    ),
+    'student'
+  );
