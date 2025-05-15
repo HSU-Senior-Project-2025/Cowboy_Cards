@@ -251,6 +251,14 @@ func (h *DBHandler) ResetPassword(w http.ResponseWriter, r *http.Request) {
 		logAndSendError(w, err, "Failed to update password", http.StatusBadRequest)
 		return
 	}
+
+	// Send a success response
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK) // Explicitly set 200 OK
+	if _, err := w.Write([]byte(`{"success": true,"message":"Password reset successfully"}`)); err != nil {
+		// If writing the response fails, log it. The headers might have already been sent.
+		logAndSendError(w, err, "Error writing success response for password reset", http.StatusInternalServerError)
+	}
 }
 
 func generateUniqueToken() (string, error) {

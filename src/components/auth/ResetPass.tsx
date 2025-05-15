@@ -12,6 +12,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/components/ui/use-toast';
 import { makeHttpCall } from '@/utils/makeHttpCall';
+import { IonPage } from '@ionic/react';
+import { IonContent } from '@ionic/react';
 import { AlertCircle } from 'lucide-react';
 import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
@@ -95,53 +97,57 @@ const ResetPass = () => {
   };
 
   return (
-    <div className='flex items-center justify-center min-h-screen bg-gray-100'>
-      <Card className='w-11/12 max-w-[350px]'>
-        <CardHeader>
-          <CardTitle className='text-4xl tracking-wide font-smokum font-bold'>
-            Reset Password
-          </CardTitle>
-          <CardDescription>
-            Enter your email to reset your password
-          </CardDescription>
-        </CardHeader>
-        <form onSubmit={handleSubmit}>
-          <CardContent className='space-y-4'>
-            {errors.general && (
-              <Alert variant='destructive' className='mb-4'>
-                <AlertCircle className='h-4 w-4' />
-                <AlertDescription>{errors.general}</AlertDescription>
-              </Alert>
-            )}
-            <div className='space-y-2'>
-              <Label
-                className='text-3xl tracking-wide font-smokum font-bold'
-                htmlFor='email'
-              >
-                Email
-              </Label>
-              <Input
-                id='email'
-                type='email'
-                placeholder='name@example.com'
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className={errors.email ? 'border-red-500' : ''}
-              />
-              {errors.email && (
-                <p className='text-red-500 text-xs mt-1'>{errors.email}</p>
-              )}
-            </div>
-          </CardContent>
-          <CardFooter className='flex flex-col space-y-4'>
-            <Button type='submit' className='w-full' disabled={isLoading}>
-              {isLoading ? 'Sending...' : 'Send Reset Token'}
-            </Button>
-          </CardFooter>
-        </form>
-      </Card>
-    </div>
+    <IonPage>
+      <IonContent>
+        <div className='flex items-center justify-center min-h-screen bg-gray-100'>
+          <Card className='w-11/12 max-w-[350px]'>
+            <CardHeader>
+              <CardTitle className='text-4xl tracking-wide font-smokum font-bold'>
+                Reset Password
+              </CardTitle>
+              <CardDescription>
+                Enter your email to reset your password
+              </CardDescription>
+            </CardHeader>
+            <form onSubmit={handleSubmit}>
+              <CardContent className='space-y-4'>
+                {errors.general && (
+                  <Alert variant='destructive' className='mb-4'>
+                    <AlertCircle className='h-4 w-4' />
+                    <AlertDescription>{errors.general}</AlertDescription>
+                  </Alert>
+                )}
+                <div className='space-y-2'>
+                  <Label
+                    className='text-3xl tracking-wide font-smokum font-bold'
+                    htmlFor='email'
+                  >
+                    Email
+                  </Label>
+                  <Input
+                    id='email'
+                    type='email'
+                    placeholder='name@example.com'
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    className={errors.email ? 'border-red-500' : ''}
+                  />
+                  {errors.email && (
+                    <p className='text-red-500 text-xs mt-1'>{errors.email}</p>
+                  )}
+                </div>
+              </CardContent>
+              <CardFooter className='flex flex-col space-y-4'>
+                <Button type='submit' className='w-full' disabled={isLoading}>
+                  {isLoading ? 'Sending...' : 'Send Reset Token'}
+                </Button>
+              </CardFooter>
+            </form>
+          </Card>
+        </div>
+      </IonContent>
+    </IonPage>
   );
 };
 
