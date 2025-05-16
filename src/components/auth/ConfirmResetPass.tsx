@@ -12,8 +12,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/components/ui/use-toast';
 import { makeHttpCall } from '@/utils/makeHttpCall';
-import { IonContent } from '@ionic/react';
-import { IonPage } from '@ionic/react';
+import { IonContent, IonPage } from '@ionic/react';
 import { AlertCircle } from 'lucide-react';
 import { useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
@@ -129,8 +128,8 @@ const ConfirmResetPass = () => {
   return (
     <IonPage>
       <IonContent>
-        <div className='flex items-center justify-center min-h-screen bg-gray-100'>
-          <Card className='w-[350px]'>
+        <div className="flex items-center justify-center min-h-screen bg-gray-100">
+          <Card className="w-[350px]">
             <CardHeader>
               <CardTitle>Reset Your Password</CardTitle>
               <CardDescription>
@@ -138,72 +137,72 @@ const ConfirmResetPass = () => {
               </CardDescription>
             </CardHeader>
             <form onSubmit={handleSubmit}>
-              <CardContent className='space-y-4'>
+              <CardContent className="space-y-4">
                 {errors.general && (
-                  <Alert variant='destructive' className='mb-4'>
-                    <AlertCircle className='h-4 w-4' />
+                  <Alert variant="destructive" className="mb-4">
+                    <AlertCircle className="h-4 w-4" />
                     <AlertDescription>{errors.general}</AlertDescription>
                   </Alert>
                 )}
 
-                <div className='space-y-2'>
-                  <Label htmlFor='token'>Reset Token</Label>
+                <div className="space-y-2">
+                  <Label htmlFor="token">Reset Token</Label>
                   <Input
-                    id='token'
-                    type='text'
-                    placeholder='Enter the token from your email'
+                    id="token"
+                    type="text"
+                    placeholder="Enter the token from your email"
                     value={token}
                     onChange={(e) => setToken(e.target.value)}
                     required
                     className={errors.token ? 'border-red-500' : ''}
                   />
                   {errors.token && (
-                    <p className='text-red-500 text-xs mt-1'>{errors.token}</p>
+                    <p className="text-red-500 text-xs mt-1">{errors.token}</p>
                   )}
                 </div>
 
-                <div className='space-y-2'>
-                  <Label htmlFor='password'>New Password</Label>
+                <div className="space-y-2">
+                  <Label htmlFor="password">New Password</Label>
                   <Input
-                    id='password'
-                    type='password'
-                    placeholder='Enter your new password'
+                    id="password"
+                    type="password"
+                    placeholder="Enter your new password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
                     className={errors.password ? 'border-red-500' : ''}
                   />
                   {errors.password && (
-                    <p className='text-red-500 text-xs mt-1'>
+                    <p className="text-red-500 text-xs mt-1">
                       {errors.password}
                     </p>
                   )}
-                  <p className='text-xs text-gray-500'>
+                  <p className="text-xs text-gray-500">
                     Password must be at least 8 characters long
                   </p>
                 </div>
 
-                <div className='space-y-2'>
-                  <Label htmlFor='confirmPassword'>Confirm Password</Label>
+                <div className="space-y-2">
+                  <Label htmlFor="confirmPassword">Confirm Password</Label>
                   <Input
-                    id='confirmPassword'
-                    type='password'
-                    placeholder='Confirm your new password'
+                    id="confirmPassword"
+                    type="password"
+                    placeholder="Confirm your new password"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     required
                     className={errors.confirmPassword ? 'border-red-500' : ''}
                   />
                   {errors.confirmPassword && (
-                    <p className='text-red-500 text-xs mt-1'>
+                    <p className="text-red-500 text-xs mt-1">
                       {errors.confirmPassword}
                     </p>
                   )}
                 </div>
               </CardContent>
-              <CardFooter className='flex flex-col space-y-4'>
-                <Button type='submit' className='w-full' disabled={isLoading}>
-                  {isLoading ? 'Processing...' : 'Reset Password'}
+              <CardFooter className="flex flex-col space-y-4">
+                <Button type="submit" className="w-full" disabled={isLoading}>
+                  {isLoading ? 'Processing...' : 'Reset password'}
                 </Button>
               </CardFooter>
             </form>
