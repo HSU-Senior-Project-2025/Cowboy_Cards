@@ -5,7 +5,7 @@ const ClassDetailControls = (props) => {
   return (
     <div className="flex justify-between items-center mb-4">
       {props.isTeacher && (
-        <div className="flex flex-col md:flex-row gap-2">
+        <div className="gap-2">
           <IonButton
             className="rounded-lg flex-grow md:flex-grow-0"
             style={{ '--border-radius': '0.5rem' }}

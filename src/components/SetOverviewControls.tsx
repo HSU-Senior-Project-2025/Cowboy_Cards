@@ -3,6 +3,15 @@ import { IonButton } from '@ionic/react';
 const SetOverviewControls = (props) => {
   return (
     <>
+      <IonButton
+        className="rounded-lg flex-grow md:flex-grow-0"
+        color={'primary'}
+        style={{ '--border-radius': '0.5rem' }}
+        routerLink={props.studyLink}
+        disabled={props.isEditing}
+      >
+        Study Set
+      </IonButton>
       {props.isOwner && !props.isEditing && (
         <>
           <IonButton
@@ -42,16 +51,6 @@ const SetOverviewControls = (props) => {
           </IonButton>
         </>
       )}
-
-      <IonButton
-        className="rounded-lg flex-grow md:flex-grow-0"
-        color={'primary'}
-        style={{ '--border-radius': '0.5rem' }}
-        routerLink={props.studyLink}
-        disabled={props.isEditing}
-      >
-        Study Set
-      </IonButton>
     </>
   );
 };

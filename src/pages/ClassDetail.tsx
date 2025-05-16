@@ -149,7 +149,7 @@ const ClassDetail = () => {
           {queryError && (
             <div className="text-red-500">{queryError.message}</div>
           )}
-          <div className="flex flex-col md:flex-row justify-between items-start gap-4 mb-6">
+          <div className="gap-4 mb-6">
             <ClassDetailHeader
               classData={classData}
               isTeacher={isTeacher}
