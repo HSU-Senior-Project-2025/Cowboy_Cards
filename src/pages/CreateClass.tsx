@@ -70,19 +70,19 @@ const CreateClass = () => {
       <Navbar />
       <IonContent>
         <div
-          id="main-content"
-          className="container mx-auto px-4 py-8 max-w-4xl"
+          id='main-content'
+          className='container mx-auto px-4 py-8 max-w-4xl'
         >
           {loading && <div>Loading...</div>}
-          {error && <div className="text-red-500 mt-2">{error}</div>}
-          <h1 className="text-4xl tracking-wide font-bold font-smokum mb-6">
+          {error && <div className='text-red-500 mt-2'>{error}</div>}
+          <h1 className='text-4xl tracking-wide font-bold font-smokum mb-6'>
             Create New Class
           </h1>
           <form>
-            <IonCard className="mb-6 rounded-lg border shadow-sm">
+            <IonCard className='mb-6 rounded-lg border shadow-sm'>
               <IonCardContent>
                 <IonTextarea
-                  placeholder="Enter Class Name"
+                  placeholder='Enter Class Name'
                   value={formData.className}
                   onIonChange={(e) =>
                     setFormData((prev) => ({
@@ -92,11 +92,11 @@ const CreateClass = () => {
                   }
                   rows={1}
                   autoGrow
-                  className="w-full text-xl font-bold mb-2"
+                  className='w-full text-xl font-bold mb-2'
                   style={{ resize: 'none' }}
                 />
                 <IonTextarea
-                  placeholder="Enter Class Description"
+                  placeholder='Enter Class Description'
                   value={formData.description}
                   onIonChange={(e) =>
                     setFormData((prev) => ({
@@ -106,7 +106,7 @@ const CreateClass = () => {
                   }
                   rows={1}
                   autoGrow
-                  className="w-full text-base mt-4"
+                  className='w-full text-base mt-4'
                   style={{ resize: 'none' }}
                 />
               </IonCardContent>
@@ -139,14 +139,14 @@ const CreateClass = () => {
               </IonRadioGroup>
             </IonItem> */}
             </IonCard>
-            <div className="flex justify-center">
+            <div className='flex justify-center'>
               <IonButton
-                color="primary"
-                className="rounded-lg shadow-sm w-full md:w-auto"
+                color='primary'
+                className='rounded-lg shadow-sm w-full md:w-auto'
                 onClick={submitForm}
                 disabled={loading}
               >
-                {loading ? 'Creating...' : 'Create Set'}
+                {loading ? 'Creating...' : 'Create Class'}
               </IonButton>
             </div>
             {/* 
@@ -172,9 +172,9 @@ const CreateClass = () => {
           {showSuccess && (
             <IonToast
               isOpen={showSuccess}
-              color="success"
+              color='success'
               onDidDismiss={() => setShowSuccess(false)}
-              message="Class created successfully!"
+              message='Class created successfully!'
               duration={2000}
             />
           )}

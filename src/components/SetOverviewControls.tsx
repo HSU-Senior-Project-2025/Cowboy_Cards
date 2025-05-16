@@ -2,9 +2,9 @@ import { IonButton } from '@ionic/react';
 
 const SetOverviewControls = (props) => {
   return (
-    <>
+    <div className='flex flex-col items-end'>
       <IonButton
-        className="rounded-lg flex-grow md:flex-grow-0"
+        className='rounded-lg'
         color={'primary'}
         style={{ '--border-radius': '0.5rem' }}
         routerLink={props.studyLink}
@@ -15,14 +15,14 @@ const SetOverviewControls = (props) => {
       {props.isOwner && !props.isEditing && (
         <>
           <IonButton
-            className="rounded-lg flex-grow md:flex-grow-0"
+            className='rounded-lg flex-grow md:flex-grow-0'
             style={{ '--border-radius': '0.5rem' }}
             onClick={props.onEditClick}
           >
             Edit Set & Cards
           </IonButton>
           <IonButton
-            className="rounded-lg flex-grow md:flex-grow-0"
+            className='rounded-lg flex-grow md:flex-grow-0'
             color={'danger'}
             style={{ '--border-radius': '0.5rem' }}
             onClick={props.onDeleteClick}
@@ -34,24 +34,24 @@ const SetOverviewControls = (props) => {
       {props.isOwner && props.isEditing && (
         <>
           <IonButton
-            className="rounded-lg flex-grow md:flex-grow-0"
-            color="primary"
-            size="small"
+            className='rounded-lg flex-grow md:flex-grow-0'
+            color='primary'
+            size='small'
             onClick={props.onSaveClick}
           >
             Save All Changes
           </IonButton>
           <IonButton
-            className="rounded-lg flex-grow md:flex-grow-0"
-            color="medium"
-            size="small"
+            className='rounded-lg flex-grow md:flex-grow-0'
+            color='medium'
+            size='small'
             onClick={props.onCancelClick}
           >
             Cancel
           </IonButton>
         </>
       )}
-    </>
+    </div>
   );
 };
 
