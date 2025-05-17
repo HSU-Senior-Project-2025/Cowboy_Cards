@@ -30,8 +30,8 @@ const Leaderboard = (props) => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: index * 0.1 }}
               >
-                <IonItem className="muted-item p-3">
-                  <div className="flex items-center gap-3">
+                <IonItem className="muted-item py-3">
+                  <div className="flex items-center gap-2">
                     {index === 0 && (
                       <span className="text-yellow-500 text-xl">🥇</span>
                     )}
@@ -45,7 +45,7 @@ const Leaderboard = (props) => {
                       {entry.Username}
                     </span>
                   </div>
-                  <span slot="end" className="text-primary font-semibold">
+                  <span slot="end" className="text-primary font-semibold ml-2">
                     {entry.ClassScore} points
                   </span>
                 </IonItem>

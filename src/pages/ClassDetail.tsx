@@ -144,27 +144,27 @@ const ClassDetail = () => {
   return (
     <IonPage>
       <Navbar />
-      <IonContent className="ion-padding">
+      <IonContent>
         <div className="container max-w-4xl mx-auto px-4 py-8">
           {queryError && (
             <div className="text-red-500">{queryError.message}</div>
           )}
-          <div className="gap-4 mb-6">
+          <div className="flex flex-col sm:flex-row gap-4 mb-6">
             <ClassDetailHeader
-              classData={classData}
-              isTeacher={isTeacher}
               loading={queryLoading}
-              handleEdit={handleEdit}
+              classData={classData}
               isEditing={isEditing}
+              isTeacher={isTeacher}
               updatedInfo={updatedInfo}
               formErrors={formErrors}
+            />
+            <ClassDetailControls
+              isTeacher={isTeacher}
+              isEditing={isEditing}
+              handleEdit={handleEdit}
               handleChange={handleChange}
               handleSave={handleSave}
               handleCancel={handleCancel}
-            />
-            <ClassDetailControls
-              isEditing={isEditing}
-              isTeacher={isTeacher}
               classId={id}
               onAddSetClick={() => setShowAddSetDialog(true)}
             />
