@@ -163,6 +163,7 @@ const ClassDetail = () => {
               handleCancel={handleCancel}
             />
             <ClassDetailControls
+              isEditing={isEditing}
               isTeacher={isTeacher}
               classId={id}
               onAddSetClick={() => setShowAddSetDialog(true)}

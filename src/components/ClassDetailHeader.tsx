@@ -60,10 +60,9 @@ const ClassDetailHeader = (props) => {
               {props.loading ? 'Loading...' : props.classData.ClassDescription}
             </p>
             <IonButton
-              className="rounded-lg mt-4 w-auto inline-block"
+              className="rounded-lg mt-4 max-w-[200px]"
               style={{
                 '--border-radius': '0.5rem',
-                maxWidth: 'fit-content',
               }}
               routerLink="/home"
               color="primary"

@@ -4,10 +4,10 @@ import { addOutline, createOutline } from 'ionicons/icons';
 const ClassDetailControls = (props) => {
   return (
     <div className="flex justify-between items-center mb-4">
-      {props.isTeacher && (
-        <div className="gap-2">
+      {props.isTeacher && !props.isEditing && (
+        <div className="gap-2 mt-8">
           <IonButton
-            className="rounded-lg flex-grow md:flex-grow-0"
+            className="rounded-lg sm:ml-0 w-full sm:w-auto max-w-80"
             style={{ '--border-radius': '0.5rem' }}
             onClick={props.onAddSetClick}
             color="primary"
@@ -18,7 +18,7 @@ const ClassDetailControls = (props) => {
           </IonButton>
 
           <IonButton
-            className="rounded-lg flex-grow md:flex-grow-0"
+            className="rounded-lg sm:ml-0 w-full sm:w-auto max-w-80"
             style={{ '--border-radius': '0.5rem' }}
             routerLink={`/create-set?classId=${props.classId}`}
             color="primary"
