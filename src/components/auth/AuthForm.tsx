@@ -24,6 +24,7 @@ export const AuthForm = () => {
   // Login form fields
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
   // Additional signup form fields
   const [username, setUsername] = useState('');
@@ -35,6 +36,7 @@ export const AuthForm = () => {
     email?: string;
     username?: string;
     password?: string;
+    confirmPassword?: string;
     general?: string;
   }>({});
 
@@ -47,6 +49,7 @@ export const AuthForm = () => {
       email?: string;
       username?: string;
       password?: string;
+      confirmPassword?: string;
     } = {};
     let isValid = true;
 
@@ -66,6 +69,16 @@ export const AuthForm = () => {
     } else if (password.length < 8) {
       newErrors.password = 'Password must be at least 8 characters';
       isValid = false;
+    }
+
+    if (!isLogin) {
+      if (!confirmPassword) {
+        newErrors.confirmPassword = 'Confirm password is required';
+        isValid = false;
+      } else if (confirmPassword !== password) {
+        newErrors.confirmPassword = 'Passwords do not match';
+        isValid = false;
+      }
     }
 
     // Username validation (only for signup)
@@ -170,9 +183,9 @@ export const AuthForm = () => {
   };
 
   return (
-    <Card className="w-11/12 max-w-[350px] mb-8">
+    <Card className='w-11/12 max-w-[350px] mb-8'>
       <CardHeader>
-        <CardTitle className="text-4xl tracking-wide font-smokum font-bold">
+        <CardTitle className='text-4xl tracking-wide font-smokum font-bold'>
           {isLogin ? 'Welcome back' : 'Create account'}
         </CardTitle>
         <CardDescription>
@@ -182,63 +195,63 @@ export const AuthForm = () => {
         </CardDescription>
       </CardHeader>
       <form onSubmit={handleSubmit}>
-        <CardContent className="space-y-4">
+        <CardContent className='space-y-4'>
           {errors.general && (
-            <Alert variant="destructive" className="mb-4">
-              <AlertCircle className="h-4 w-4" />
+            <Alert variant='destructive' className='mb-4'>
+              <AlertCircle className='h-4 w-4' />
               <AlertDescription>{errors.general}</AlertDescription>
             </Alert>
           )}
 
           {!isLogin && (
             <>
-              <div className="space-y-2">
+              <div className='space-y-2'>
                 <Label
-                  className="text-3xl tracking-wide font-smokum font-bold"
-                  htmlFor="username"
+                  className='text-3xl tracking-wide font-smokum font-bold'
+                  htmlFor='username'
                 >
                   Username
                 </Label>
                 <Input
-                  id="username"
-                  type="text"
-                  placeholder="johndoe"
+                  id='username'
+                  type='text'
+                  placeholder='johndoe'
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   required
                   className={errors.username ? 'border-red-500' : ''}
                 />
                 {errors.username && (
-                  <p className="text-red-500 text-xs mt-1">{errors.username}</p>
+                  <p className='text-red-500 text-xs mt-1'>{errors.username}</p>
                 )}
               </div>
-              <div className="space-y-2">
+              <div className='space-y-2'>
                 <Label
-                  className="text-3xl tracking-wide font-smokum font-bold"
-                  htmlFor="firstName"
+                  className='text-3xl tracking-wide font-smokum font-bold'
+                  htmlFor='firstName'
                 >
                   First Name
                 </Label>
                 <Input
-                  id="firstName"
-                  type="text"
-                  placeholder="John"
+                  id='firstName'
+                  type='text'
+                  placeholder='John'
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
                   required
                 />
               </div>
-              <div className="space-y-2">
+              <div className='space-y-2'>
                 <Label
-                  className="text-3xl tracking-wide font-smokum font-bold"
-                  htmlFor="lastName"
+                  className='text-3xl tracking-wide font-smokum font-bold'
+                  htmlFor='lastName'
                 >
                   Last Name
                 </Label>
                 <Input
-                  id="lastName"
-                  type="text"
-                  placeholder="Doe"
+                  id='lastName'
+                  type='text'
+                  placeholder='Doe'
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
                   required
@@ -246,59 +259,82 @@ export const AuthForm = () => {
               </div>
             </>
           )}
-          <div className="space-y-2">
+          <div className='space-y-2'>
             <Label
-              className="text-3xl tracking-wide font-smokum font-bold"
-              htmlFor="email"
+              className='text-3xl tracking-wide font-smokum font-bold'
+              htmlFor='email'
             >
               Email
             </Label>
             <Input
-              id="email"
-              type="email"
-              placeholder="name@example.com"
+              id='email'
+              type='email'
+              placeholder='name@example.com'
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
               className={errors.email ? 'border-red-500' : ''}
             />
             {errors.email && (
-              <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+              <p className='text-red-500 text-xs mt-1'>{errors.email}</p>
             )}
           </div>
-          <div className="space-y-2">
+          <div className='space-y-2'>
             <Label
-              className="text-3xl tracking-wide font-smokum font-bold"
-              htmlFor="password"
+              className='text-3xl tracking-wide font-smokum font-bold'
+              htmlFor='password'
             >
               Password
             </Label>
             <Input
-              id="password"
-              type="password"
+              id='password'
+              type='password'
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
               className={errors.password ? 'border-red-500' : ''}
             />
             {errors.password && (
-              <p className="text-red-500 text-xs mt-1">{errors.password}</p>
+              <p className='text-red-500 text-xs mt-1'>{errors.password}</p>
             )}
             {!isLogin && (
-              <p className="text-xs text-gray-500 mt-1">
+              <p className='text-xs text-gray-500 mt-1'>
                 Password must be at least 8 characters long
               </p>
             )}
           </div>
+          {!isLogin && (
+            <div className='space-y-2'>
+              <Label
+                className='text-3xl tracking-wide font-smokum font-bold'
+                htmlFor='confirmPassword'
+              >
+                Confirm Password
+              </Label>
+              <Input
+                id='confirmPassword'
+                type='password'
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+                className={errors.confirmPassword ? 'border-red-500' : ''}
+              />
+              {errors.confirmPassword && (
+                <p className='text-red-500 text-xs mt-1'>
+                  {errors.confirmPassword}
+                </p>
+              )}
+            </div>
+          )}
           {isLogin && (
-            <Link to="/reset-password" className="text-sm text-primary">
+            <Link to='/reset-password' className='text-sm text-primary'>
               Forgot password?
             </Link>
           )}
         </CardContent>
-        <CardFooter className="flex flex-col space-y-4">
-          <Button type="submit" className="w-full" disabled={isLoading}>
-            <LogIn className="mr-2 h-4 w-4" />
+        <CardFooter className='flex flex-col space-y-4'>
+          <Button type='submit' className='w-full' disabled={isLoading}>
+            <LogIn className='mr-2 h-4 w-4' />
             {isLoading
               ? isLogin
                 ? 'Signing in...'
@@ -308,13 +344,13 @@ export const AuthForm = () => {
               : 'Sign up'}
           </Button>
           <Button
-            variant="link"
-            type="button"
+            variant='link'
+            type='button'
             onClick={() => {
               setIsLogin(!isLogin);
               resetForm();
             }}
-            className="text-sm"
+            className='text-sm'
             disabled={isLoading}
           >
             {isLogin
