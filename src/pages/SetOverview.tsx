@@ -354,10 +354,10 @@ const SetOverview = () => {
   if (isLoading && !isEditing) {
     return (
       <IonPage>
-        <IonContent className=''>
+        <IonContent className="">
           <Navbar />
-          <div className='flex items-center justify-center h-64'>
-            <IonSpinner name='circular' />
+          <div className="flex items-center justify-center h-64">
+            <IonSpinner name="circular" />
           </div>
         </IonContent>
         <Footer />
@@ -369,8 +369,8 @@ const SetOverview = () => {
     <IonPage>
       <Navbar />
       <IonContent>
-        <div className='container max-w-4xl mx-auto px-4 py-8'>
-          <div className='flex flex-row gap-4 mb-6'>
+        <div className="container max-w-4xl mx-auto px-4 py-8">
+          <div className="flex flex-col sm:flex-row gap-4 mb-6">
             <SetOverviewHeader
               loading={isLoading}
               flashcardSetData={flashcardSetData}
