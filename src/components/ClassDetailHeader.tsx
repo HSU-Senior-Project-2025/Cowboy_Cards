@@ -37,7 +37,7 @@ const ClassDetailHeader = (props) => {
             <h1 className="text-3xl font-bold">
               {props.classData.ClassName || 'Untitled Class'}
             </h1>
-            <p className="text-base mt-1 text-gray-700">
+            <p className="text-base mt-1 text-gray-700 dark:text-gray-400">
               {props.classData.ClassDescription || 'No description available'}
             </p>
             <IonButton
