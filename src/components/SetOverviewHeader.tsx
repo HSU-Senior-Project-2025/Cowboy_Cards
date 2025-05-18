@@ -37,7 +37,7 @@ const SetOverviewHeader = (props) => {
             <h1 className="text-3xl font-bold">
               {props.flashcardSetData.SetName || 'Untitled Set'}
             </h1>
-            <p className="text-base mt-1 text-gray-700">
+            <p className="text-base mt-1 text-gray-700 dark:text-gray-400">
               {props.flashcardSetData.SetDescription ||
                 'No description available'}
             </p>
