@@ -19,7 +19,6 @@ import {
   IonSegment,
   IonSegmentButton,
   IonSpinner,
-  useIonViewWillEnter,
 } from '@ionic/react';
 import { addOutline, bookOutline, listOutline } from 'ionicons/icons';
 import { useEffect, useState } from 'react';
@@ -68,11 +67,6 @@ const Home = () => {
     fetchClassesOfUser();
     fetchSetsOfUser();
   }, []);
-
-  useIonViewWillEnter(() => {
-    fetchClassesOfUser();
-    fetchSetsOfUser();
-  });
 
   return (
     <IonPage>
