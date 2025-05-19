@@ -22,6 +22,7 @@ import {
 } from '@ionic/react';
 import { useState } from 'react';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 
 const SetOverview = () => {
   const { id } = useParams<{ id: string }>();
@@ -29,19 +30,21 @@ const SetOverview = () => {
   const [presentToast] = useIonToast();
   const location = useLocation<{ fromClassId?: string }>();
   const fromClassId = location.state?.fromClassId;
+  const [isDeleted, setIsDeleted] = useState(false);
+  const queryClient = useQueryClient();
 
   // React Query hooks
   const {
     data: flashcardSetData,
     isLoading: isLoadingSet,
     error: setError,
-  } = useSetDetails(id);
+  } = useSetDetails(id, !isDeleted);
 
   const {
     data: cards = [],
     isLoading: isLoadingCards,
     error: cardsError,
-  } = useSetCards(id);
+  } = useSetCards(id, !isDeleted);
 
   // Mutations
   const updateSetMutation = useUpdateSet();
@@ -319,8 +322,13 @@ const SetOverview = () => {
       return;
     }
 
+    setIsDeleted(true);
     try {
       await deleteSetMutation.mutateAsync(id);
+
+      queryClient.removeQueries({ queryKey: ['set', id], exact: true });
+      queryClient.removeQueries({ queryKey: ['setCards', id], exact: true });
+
       presentToast({
         message: 'Set deleted successfully.',
         duration: 2000,
