@@ -1,3 +1,4 @@
+import { makeHttpCall } from '@/utils/makeHttpCall';
 import {
   IonAlert,
   IonButton,
@@ -136,7 +137,23 @@ const UserAccountSecondRow = (props) => {
           {
             text: 'Delete',
             handler: () => {
-              console.log('Account deleted');
+              try {
+                makeHttpCall('/api/users/', {
+                  method: 'DELETE',
+                  headers: {},
+                });
+                props.presentToast({
+                  message: 'Account deleted. Please close your browser.',
+                  duration: 5000,
+                  color: 'success',
+                });
+              } catch (error) {
+                props.presentToast({
+                  message: 'Error deleting account: ' + error,
+                  duration: 7000,
+                  color: 'danger',
+                });
+              }
             },
           },
         ]}

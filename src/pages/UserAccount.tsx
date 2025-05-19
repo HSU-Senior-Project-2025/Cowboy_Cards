@@ -127,10 +127,7 @@ const UserAccount = () => {
     setLoading(true);
     setError(null);
     try {
-      const data = await makeHttpCall<User>(`/api/users/`, {
-        method: 'GET',
-        headers: {},
-      });
+      const data = await makeHttpCall<User>(`/api/users/`);
       setUserInfo(data);
       setUpdatedInfo(data);
       console.log('data', data as User);
