@@ -79,11 +79,6 @@ const UserAccountSecondRow = (props) => {
         header="Change Password"
         inputs={[
           {
-            name: 'oldPassword',
-            type: 'password',
-            placeholder: 'Old Password',
-          },
-          {
             name: 'newPassword',
             type: 'password',
             placeholder: 'New Password',
@@ -104,17 +99,37 @@ const UserAccountSecondRow = (props) => {
           },
           {
             text: 'Save',
-            handler: (data) => {
+            handler: async (data) => {
               if (data.newPassword !== data.confirmPassword) {
                 props.presentToast({
                   message: 'Passwords do not match',
-                  duration: 2000,
+                  duration: 4000,
                   color: 'danger',
                 });
                 return true;
               }
 
-              console.log('Password changed');
+              try {
+                const resp = await makeHttpCall('/api/users/password', {
+                  method: 'PUT',
+                  headers: {
+                    password: data.newPassword,
+                  },
+                });
+                console.log(resp);
+                props.presentToast({
+                  message: 'Password changed.',
+                  duration: 5000,
+                  color: 'success',
+                });
+              } catch (error) {
+                props.presentToast({
+                  message: 'Error changing password: ' + error,
+                  duration: 7000,
+                  color: 'danger',
+                });
+              }
+
               return true;
             },
           },
@@ -136,12 +151,13 @@ const UserAccountSecondRow = (props) => {
           },
           {
             text: 'Delete',
-            handler: () => {
+            handler: async () => {
               try {
-                makeHttpCall('/api/users/', {
+                const resp = await makeHttpCall('/api/users/', {
                   method: 'DELETE',
                   headers: {},
                 });
+                console.log(resp);
                 props.presentToast({
                   message: 'Account deleted. Please close your browser.',
                   duration: 5000,
@@ -154,6 +170,7 @@ const UserAccountSecondRow = (props) => {
                   color: 'danger',
                 });
               }
+              return true;
             },
           },
         ]}

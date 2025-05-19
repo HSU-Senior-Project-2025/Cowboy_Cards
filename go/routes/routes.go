@@ -32,7 +32,7 @@ func Protected(r *chi.Mux, h *controllers.DBHandler) {
 	r.Route("/class_user", func(r chi.Router) {
 		r.Route("/", func(r chi.Router) {
 			r.Use(h.VerifyClassMemberMW)
-			r.Delete("/", h.LeaveClass) //never called
+			r.Delete("/", h.LeaveClass)
 		})
 
 		r.Post("/", h.JoinClass)
@@ -80,7 +80,7 @@ func Protected(r *chi.Mux, h *controllers.DBHandler) {
 			r.Put("/front", h.UpdateFlashcard)
 			r.Put("/back", h.UpdateFlashcard)
 			// r.Put("/set_id", h.UpdateFlashcard)
-			r.Delete("/", h.DeleteFlashcard) //never called
+			r.Delete("/", h.DeleteFlashcard)
 		})
 		r.Get("/", h.GetFlashcardById)
 		r.Get("/list", h.ListFlashcardsOfASet)
@@ -91,7 +91,7 @@ func Protected(r *chi.Mux, h *controllers.DBHandler) {
 				r.Get("/", h.GetFlashcardSetById)
 				r.Put("/set_name", h.UpdateFlashcardSet)
 				r.Put("/set_description", h.UpdateFlashcardSet)
-				r.Delete("/", h.DeleteFlashcardSet) //never called
+				r.Delete("/", h.DeleteFlashcardSet)
 			})
 			r.Get("/list", h.ListFlashcardSets)
 			r.Post("/", h.CreateFlashcardSet)
