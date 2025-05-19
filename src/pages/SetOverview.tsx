@@ -92,7 +92,7 @@ const SetOverview = () => {
       set_name: flashcardSetData.SetName || '',
       set_description: flashcardSetData.SetDescription || '',
     });
-    setEditedCards(cards?.map((card) => ({ ...card })));
+    setEditedCards((cards || []).map((card) => ({ ...card })));
     setIsEditing(true);
     setMetadataErrors({});
     setCardErrors({});
