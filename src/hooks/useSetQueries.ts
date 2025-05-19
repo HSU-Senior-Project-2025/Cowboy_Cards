@@ -3,7 +3,7 @@ import { makeHttpCall } from '@/utils/makeHttpCall';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 // Set details hook - Get a specific flashcard set
-export function useSetDetails(id: string) {
+export function useSetDetails(id: string, enabled: boolean = true) {
   return useQuery<FlashcardSet, Error>({
     queryKey: ['set', id],
     queryFn: () =>
@@ -11,12 +11,13 @@ export function useSetDetails(id: string) {
         method: 'GET',
         headers: { id },
       }),
+    enabled: enabled && !!id,
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }
 
 // Set cards hook - Get all cards in a set
-export function useSetCards(id: string) {
+export function useSetCards(id: string, enabled: boolean = true) {
   return useQuery<Flashcard[], Error>({
     queryKey: ['setCards', id],
     queryFn: () =>
@@ -24,6 +25,7 @@ export function useSetCards(id: string) {
         method: 'GET',
         headers: { set_id: id },
       }),
+    enabled: enabled && !!id,
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }
@@ -162,9 +164,6 @@ export function useDeleteSet() {
         headers: { id: setId },
       }),
     onSuccess: (_, setId) => {
-      // Invalidate both the set details and its cards
-      queryClient.invalidateQueries({ queryKey: ['set', setId] });
-      queryClient.invalidateQueries({ queryKey: ['setCards', setId] });
       // Also invalidate any user sets queries that might contain this set
       queryClient.invalidateQueries({ queryKey: ['userSets'] });
     },
