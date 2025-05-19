@@ -92,7 +92,7 @@ const SetOverview = () => {
       set_name: flashcardSetData.SetName || '',
       set_description: flashcardSetData.SetDescription || '',
     });
-    setEditedCards(cards?.map((card) => ({ ...card })));
+    setEditedCards((cards || []).map((card) => ({ ...card })));
     setIsEditing(true);
     setMetadataErrors({});
     setCardErrors({});
@@ -326,7 +326,7 @@ const SetOverview = () => {
         duration: 2000,
         color: 'success',
       });
-      history.push('/student-dashboard');
+      history.push('/home');
     } catch (error) {
       console.error('Failed to delete set:', error);
       let message = 'Unknown error during deletion';
