@@ -11,9 +11,11 @@ import {
   IonTextarea,
   IonToast,
 } from '@ionic/react';
+import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 
 const CreateClass = () => {
+  const queryClient = useQueryClient();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
@@ -21,19 +23,6 @@ const CreateClass = () => {
     description: '',
   });
   const [showSuccess, setShowSuccess] = useState(false);
-  // const [isPrivate, setIsPrivate] = useState(false);
-  // const [textToCopy, setTextToCopy] = useState('This is the text to be copied');
-  // const [showToast, setShowToast] = useState(false);
-  // const [showSuccess, setShowSuccess] = useState(false);
-
-  // const copyToClipboard = async () => {
-  //   try {
-  //     await navigator.clipboard.writeText(textToCopy);
-  //     setShowToast(true);
-  //   } catch (err) {
-  //     console.error('Failed to copy text', err);
-  //   }
-  // };
 
   const submitForm = async () => {
     if (loading) return;
@@ -58,6 +47,7 @@ const CreateClass = () => {
       });
 
       setShowSuccess(true);
+      queryClient.invalidateQueries({ queryKey: ['userClasses'] });
     } catch (error) {
       setError(`Failed to create class: ${error.message}`);
     } finally {
@@ -70,19 +60,19 @@ const CreateClass = () => {
       <Navbar />
       <IonContent>
         <div
-          id='main-content'
-          className='container mx-auto px-4 py-8 max-w-4xl'
+          id="main-content"
+          className="container mx-auto px-4 py-8 max-w-4xl"
         >
           {loading && <div>Loading...</div>}
-          {error && <div className='text-red-500 mt-2'>{error}</div>}
-          <h1 className='text-4xl tracking-wide font-bold font-smokum mb-6'>
+          {error && <div className="text-red-500 mt-2">{error}</div>}
+          <h1 className="text-4xl tracking-wide font-bold font-smokum mb-6">
             Create New Class
           </h1>
           <form>
-            <IonCard className='mb-6 rounded-lg border shadow-sm'>
+            <IonCard className="mb-6 rounded-lg border shadow-sm">
               <IonCardContent>
                 <IonTextarea
-                  placeholder='Enter Class Name'
+                  placeholder="Enter Class Name"
                   value={formData.className}
                   onIonChange={(e) =>
                     setFormData((prev) => ({
@@ -92,11 +82,11 @@ const CreateClass = () => {
                   }
                   rows={1}
                   autoGrow
-                  className='w-full text-xl font-bold mb-2'
+                  className="w-full text-xl font-bold mb-2"
                   style={{ resize: 'none' }}
                 />
                 <IonTextarea
-                  placeholder='Enter Class Description'
+                  placeholder="Enter Class Description"
                   value={formData.description}
                   onIonChange={(e) =>
                     setFormData((prev) => ({
@@ -106,7 +96,7 @@ const CreateClass = () => {
                   }
                   rows={1}
                   autoGrow
-                  className='w-full text-base mt-4'
+                  className="w-full text-base mt-4"
                   style={{ resize: 'none' }}
                 />
               </IonCardContent>
@@ -139,10 +129,10 @@ const CreateClass = () => {
               </IonRadioGroup>
             </IonItem> */}
             </IonCard>
-            <div className='flex justify-center'>
+            <div className="flex justify-center">
               <IonButton
-                color='primary'
-                className='rounded-lg shadow-sm w-full md:w-auto'
+                color="primary"
+                className="rounded-lg shadow-sm w-full md:w-auto"
                 onClick={submitForm}
                 disabled={loading}
               >
@@ -172,9 +162,9 @@ const CreateClass = () => {
           {showSuccess && (
             <IonToast
               isOpen={showSuccess}
-              color='success'
+              color="success"
               onDidDismiss={() => setShowSuccess(false)}
-              message='Class created successfully!'
+              message="Class created successfully!"
               duration={2000}
             />
           )}

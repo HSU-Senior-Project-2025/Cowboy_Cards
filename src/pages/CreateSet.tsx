@@ -12,10 +12,12 @@ import {
   IonTextarea,
   IonToast,
 } from '@ionic/react';
+import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 const CreateSet = () => {
+  const queryClient = useQueryClient();
   const history = useHistory();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -65,8 +67,7 @@ const CreateSet = () => {
       setDescription('');
 
       setShowSuccess(true);
-
-      // history.push(`/set-overview/${setResponse.ID}`);
+      queryClient.invalidateQueries({ queryKey: ['userSets'] });
     } catch (error) {
       console.error('Error saving flashcard set:', error);
       setError(`Failed to save flashcard set: ${error.message}`);
