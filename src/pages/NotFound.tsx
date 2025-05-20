@@ -1,6 +1,6 @@
 import { IonContent, IonPage } from '@ionic/react';
 import { useEffect } from 'react';
-import { useLocation } from 'react-router';
+import { useLocation } from 'react-router-dom';
 
 const NotFound = () => {
   const location = useLocation();

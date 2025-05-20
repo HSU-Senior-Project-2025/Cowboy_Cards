@@ -15,10 +15,10 @@ import { makeHttpCall } from '@/utils/makeHttpCall';
 import { IonContent, IonPage } from '@ionic/react';
 import { AlertCircle } from 'lucide-react';
 import { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router';
+import { useHistory, useLocation } from 'react-router-dom';
 
 const ConfirmResetPass = () => {
-  const location = useLocation();
+  const location = useLocation<{ email: string }>();
   const email = location.state?.email || '';
 
   const [password, setPassword] = useState('');
@@ -32,7 +32,7 @@ const ConfirmResetPass = () => {
     general?: string;
   }>({});
 
-  const navigate = useNavigate();
+  const history = useHistory();
   const { toast } = useToast();
 
   const validateForm = () => {
@@ -100,7 +100,7 @@ const ConfirmResetPass = () => {
       });
 
       // Redirect to login page
-      navigate('/');
+      history.push('/');
     } catch (error) {
       console.error('Password reset error:', error);
 

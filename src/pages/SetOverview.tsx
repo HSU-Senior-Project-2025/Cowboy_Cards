@@ -20,15 +20,15 @@ import {
   IonSpinner,
   useIonToast,
 } from '@ionic/react';
-import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 
 const SetOverview = () => {
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
+  const history = useHistory();
   const [presentToast] = useIonToast();
-  const location = useLocation();
+  const location = useLocation<{ fromClassId?: string }>();
   const fromClassId = location.state?.fromClassId;
   const [isDeleted, setIsDeleted] = useState(false);
   const queryClient = useQueryClient();
@@ -82,6 +82,11 @@ const SetOverview = () => {
     console.error('Query error:', error);
     let message = 'Unknown error';
     if (error instanceof Error) message = error.message;
+    presentToast({
+      message: `Error loading data: ${message}`,
+      duration: 3000,
+      color: 'danger',
+    });
   }
 
   const handleEdit = () => {
@@ -329,7 +334,7 @@ const SetOverview = () => {
         duration: 2000,
         color: 'success',
       });
-      navigate('/home');
+      history.push('/home');
     } catch (error) {
       console.error('Failed to delete set:', error);
       let message = 'Unknown error during deletion';
@@ -345,9 +350,9 @@ const SetOverview = () => {
   const handleBackClick = () => {
     if (!isEditing) {
       if (fromClassId) {
-        navigate(`/class/${fromClassId}`);
+        history.push(`/class/${fromClassId}`);
       } else {
-        navigate('/home');
+        history.push('/home');
       }
     }
   };

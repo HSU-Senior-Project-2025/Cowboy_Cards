@@ -6,10 +6,11 @@ import { Navbar } from '@/components/Navbar';
 import { Toaster as Sonner } from '@/components/ui/sonner';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
-import { IonApp, setupIonicReact } from '@ionic/react';
+import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
+import { IonReactRouter } from '@ionic/react-router';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Suspense } from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router';
+import { Route } from 'react-router-dom';
 import { ThemeProvider } from './contexts/ThemeContext';
 import ClassDetail from './pages/ClassDetail';
 import CreateClass from './pages/CreateClass';
@@ -56,33 +57,41 @@ function App() {
       <ThemeProvider>
         <TooltipProvider>
           <IonApp>
-            <BrowserRouter>
+            {/* @ts-expect-error - unsolvable type error */}
+            <IonReactRouter>
               <Suspense fallback={<div>Loading...</div>}>
                 <Navbar />
-                <div id="main-content">
-                  <Routes>
-                    <Route path="/" element={<Index />} />
-                    <Route path="/home" element={<Home />} />
-                    <Route path="/class/:id" element={<ClassDetail />} />
-                    <Route path="/auth" element={<AuthForm />} />
-                    <Route path="/reset-password" element={<ResetPass />} />
-                    <Route
-                      path="/confirm-reset-password"
-                      element={<ConfirmResetPass />}
-                    />
-                    <Route path="/public-cards" element={<PublicCards />} />
-                    <Route path="/user-account" element={<UserAccount />} />
-                    <Route path="/flashcards/:id" element={<Flashcard />} />
-                    <Route path="/create-set" element={<CreateSet />} />
-                    <Route path="/create-class" element={<CreateClass />} />
-                    <Route path="/public-classes" element={<PublicClasses />} />
-                    <Route path="/set-overview/:id" element={<SetOverview />} />
-                    <Route element={<NotFound />} />
-                  </Routes>
-                </div>
+                <IonRouterOutlet id="main-content">
+                  <Route exact path="/" component={Index} />
+                  <Route exact path="/home" component={Home} />
+                  <Route exact path="/class/:id" component={ClassDetail} />
+                  <Route exact path="/auth" component={AuthForm} />
+                  <Route exact path="/reset-password" component={ResetPass} />
+                  <Route
+                    exact
+                    path="/confirm-reset-password"
+                    component={ConfirmResetPass}
+                  />
+                  <Route exact path="/public-cards" component={PublicCards} />
+                  <Route exact path="/user-account" component={UserAccount} />
+                  <Route exact path="/flashcards/:id" component={Flashcard} />
+                  <Route exact path="/create-set" component={CreateSet} />
+                  <Route exact path="/create-class" component={CreateClass} />
+                  <Route
+                    exact
+                    path="/public-classes"
+                    component={PublicClasses}
+                  />
+                  <Route
+                    exact
+                    path="/set-overview/:id"
+                    component={SetOverview}
+                  />
+                  <Route component={NotFound} />
+                </IonRouterOutlet>
               </Suspense>
               <Footer />
-            </BrowserRouter>
+            </IonReactRouter>
           </IonApp>
           <Toaster />
           <Sonner />
