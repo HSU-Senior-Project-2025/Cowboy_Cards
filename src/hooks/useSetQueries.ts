@@ -47,7 +47,12 @@ export function useUpdateSet() {
         headers: { id, [field]: value },
       }),
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ['set', variables.id] });
+      queryClient.invalidateQueries({
+        queryKey: ['set', variables.id],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['userSets'],
+      });
     },
   });
 }

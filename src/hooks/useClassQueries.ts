@@ -93,7 +93,12 @@ export function useUpdateClass() {
         headers: { id, [field]: value },
       }),
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ['class', variables.id] });
+      queryClient.invalidateQueries({
+        queryKey: ['class', variables.id],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['userClasses'],
+      });
     },
   });
 }

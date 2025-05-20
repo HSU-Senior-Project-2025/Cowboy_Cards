@@ -157,12 +157,12 @@ const ClassDetail = () => {
               isTeacher={isTeacher}
               updatedInfo={updatedInfo}
               formErrors={formErrors}
+              handleChange={handleChange}
             />
             <ClassDetailControls
               isTeacher={isTeacher}
               isEditing={isEditing}
               handleEdit={handleEdit}
-              handleChange={handleChange}
               handleSave={handleSave}
               handleCancel={handleCancel}
               classId={id}
