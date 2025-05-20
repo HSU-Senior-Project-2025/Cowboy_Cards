@@ -16,9 +16,9 @@ import {
   useDeleteStudent,
   useUpdateClass,
 } from '@/hooks/useClassQueries';
-import { IonContent, IonPage } from '@ionic/react';
+import { IonContent, IonPage, useIonToast } from '@ionic/react';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router';
 
 const ClassDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -36,6 +36,7 @@ const ClassDetail = () => {
     classDescription?: string;
     general?: string;
   }>({});
+  const [presentToast] = useIonToast();
 
   // React Query hooks
   const {
@@ -106,7 +107,11 @@ const ClassDetail = () => {
       ]);
       setIsEditing(false);
     } catch (error) {
-      alert('Failed to update some fields. Please try again.');
+      presentToast({
+        message: 'Failed to update some fields. Please try again.',
+        duration: 3000,
+        color: 'danger',
+      });
     }
   };
 
@@ -125,7 +130,11 @@ const ClassDetail = () => {
     try {
       await deleteStudentMutation.mutateAsync(studentId);
     } catch (error) {
-      alert('Error deleting student');
+      presentToast({
+        message: 'Error deleting student',
+        duration: 3000,
+        color: 'danger',
+      });
     }
   };
 
@@ -157,12 +166,12 @@ const ClassDetail = () => {
               isTeacher={isTeacher}
               updatedInfo={updatedInfo}
               formErrors={formErrors}
+              handleChange={handleChange}
             />
             <ClassDetailControls
               isTeacher={isTeacher}
               isEditing={isEditing}
               handleEdit={handleEdit}
-              handleChange={handleChange}
               handleSave={handleSave}
               handleCancel={handleCancel}
               classId={id}

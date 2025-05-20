@@ -14,10 +14,12 @@ import {
 } from '@ionic/react';
 import { arrowBackOutline } from 'ionicons/icons';
 import { useCallback, useState } from 'react';
+import { useNavigate } from 'react-router';
 import UserAccountFirstRow from '../components/UserAccountFirstRow';
 import UserAccountSecondRow from '../components/UserAccountSecondRow';
 
 const UserAccount = () => {
+  const navigate = useNavigate();
   const { theme, setTheme } = useTheme();
   const [userInfo, setUserInfo] = useState<User>();
   const [loading, setLoading] = useState(true);
@@ -27,6 +29,7 @@ const UserAccount = () => {
   const [showDeleteAlert, setShowDeleteAlert] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [updatedInfo, setUpdatedInfo] = useState(userInfo);
+  const [presentToast] = useIonToast();
 
   const toggleClassDetails = (classID: number) => {
     setExpandedClass(expandedClass === classID ? null : classID);
@@ -61,7 +64,11 @@ const UserAccount = () => {
       setIsEditing(false);
     } catch (error) {
       console.error(error);
-      alert('Failed to update some fields. Please try again.');
+      presentToast({
+        message: 'Failed to update some fields. Please try again.',
+        duration: 3000,
+        color: 'danger',
+      });
     }
   };
 
@@ -144,8 +151,6 @@ const UserAccount = () => {
     fetchUserData();
   });
 
-  const [presentToast] = useIonToast();
-
   return (
     <IonPage>
       <Navbar />
@@ -159,7 +164,7 @@ const UserAccount = () => {
             </p>
           </div>
 
-          <IonButton onClick={() => window.history.back()} className="mb-6">
+          <IonButton onClick={() => navigate(-1)} className="mb-6">
             <IonIcon slot="start" icon={arrowBackOutline} />
             Back
           </IonButton>

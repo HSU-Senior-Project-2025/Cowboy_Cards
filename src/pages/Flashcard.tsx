@@ -22,7 +22,7 @@ import {
 } from '@ionic/react';
 import { arrowBackOutline } from 'ionicons/icons';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router';
 
 const Flashcard = () => {
   const { id } = useParams<{ id: string }>();

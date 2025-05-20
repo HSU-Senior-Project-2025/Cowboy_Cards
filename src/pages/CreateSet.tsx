@@ -13,10 +13,8 @@ import {
   IonToast,
 } from '@ionic/react';
 import { useState } from 'react';
-import { useHistory } from 'react-router-dom';
 
 const CreateSet = () => {
-  const history = useHistory();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [errors, setErrors] = useState({ title: '', description: '' });
@@ -66,7 +64,7 @@ const CreateSet = () => {
 
       setShowSuccess(true);
 
-      // history.push(`/set-overview/${setResponse.ID}`);
+      // navigate(`/set-overview/${setResponse.ID}`);
     } catch (error) {
       console.error('Error saving flashcard set:', error);
       setError(`Failed to save flashcard set: ${error.message}`);

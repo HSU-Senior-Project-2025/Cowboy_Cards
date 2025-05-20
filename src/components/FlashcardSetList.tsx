@@ -9,10 +9,10 @@ import {
   IonRow,
 } from '@ionic/react';
 import { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 const FlashcardCarousel = (props) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [flashcards, setFlashcards] = useState<Flashcard[]>([]);
 
   return (
@@ -29,8 +29,8 @@ const FlashcardCarousel = (props) => {
                   <IonCard
                     className="cursor-pointer hover:shadow-lg hover:-translate-y-1 transition-all duration-200 rounded-lg border shadow-sm"
                     onClick={() =>
-                      history.push(`/set-overview/${set.ID}`, {
-                        fromClassID: props.classID,
+                      navigate(`/set-overview/${set.ID}`, {
+                        state: { fromClassID: props.classID },
                       })
                     }
                   >

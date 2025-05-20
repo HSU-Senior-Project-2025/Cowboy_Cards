@@ -15,7 +15,7 @@ import { makeHttpCall } from '@/utils/makeHttpCall';
 import { IonContent, IonPage } from '@ionic/react';
 import { AlertCircle } from 'lucide-react';
 import { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 const ResetPass = () => {
   const [email, setEmail] = useState('');
@@ -25,7 +25,7 @@ const ResetPass = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const { toast } = useToast();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const validateForm = () => {
     const newErrors: { email?: string } = {};
@@ -69,7 +69,7 @@ const ResetPass = () => {
       });
 
       // Navigate to the confirmation page with the email
-      history.push('/confirm-reset-password', { email });
+      navigate('/confirm-reset-password', { state: email });
     } catch (error) {
       console.error('Reset password request error:', error);
 

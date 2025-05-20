@@ -11,16 +11,15 @@ import {
   IonMenuToggle,
   IonPopover,
   IonToolbar,
-  useIonRouter,
 } from '@ionic/react';
 import { add, close, menu, moon, personCircle, sunny } from 'ionicons/icons';
 import { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router';
 
 const Navbar = () => {
   const [popoverEvent, setPopoverEvent] = useState(null);
   const location = useLocation();
-  const ionRouter = useIonRouter();
+  const navigate = useNavigate();
   const { theme, setTheme } = useTheme();
 
   // Skip rendering on Index page
@@ -36,7 +35,7 @@ const Navbar = () => {
   const closePopover = () => setPopoverEvent(null);
 
   const handleMenuItemClick = (route) => {
-    ionRouter.push(route);
+    navigate(route);
     document.querySelector('ion-menu')?.close();
   };
 
@@ -46,10 +45,10 @@ const Navbar = () => {
 
   return (
     <>
-      <IonMenu side='start' contentId='main-content'>
+      <IonMenu side="start" contentId="main-content">
         <IonHeader>
           <IonToolbar>
-            <IonButtons slot='start'>
+            <IonButtons slot="start">
               <IonMenuToggle>
                 <IonButton>
                   <IonIcon icon={close} />
@@ -87,7 +86,7 @@ const Navbar = () => {
 
       <IonHeader>
         <IonToolbar>
-          <IonButtons slot='start'>
+          <IonButtons slot="start">
             <IonMenuToggle>
               <IonButton>
                 <IonIcon icon={menu} />
@@ -95,16 +94,13 @@ const Navbar = () => {
             </IonMenuToggle>
           </IonButtons>
 
-          <div
-            className='cursor-pointer'
-            onClick={() => ionRouter.push('/home')}
-          >
+          <div className="cursor-pointer" onClick={() => navigate('/home')}>
             <img
-              src='/Spirit-Cowboy-Profile-Only.png'
-              alt='Cowboy Cards Logo'
-              className='h-8 w-auto me:hidden block'
+              src="/Spirit-Cowboy-Profile-Only.png"
+              alt="Cowboy Cards Logo"
+              className="h-8 w-auto me:hidden block"
             />
-            <h2 className='hidden me:block text-2xl sm:text-3xl md:text-4xl text-ellipsis overflow-hidden whitespace-nowrap font-ewert text-[color:--ion-color-primary]'>
+            <h2 className="hidden me:block text-2xl sm:text-3xl md:text-4xl text-ellipsis overflow-hidden whitespace-nowrap font-ewert text-[color:--ion-color-primary]">
               Cowboy Cards
             </h2>
             {/* <IonTitle
@@ -115,9 +111,9 @@ const Navbar = () => {
             </IonTitle> */}
           </div>
 
-          <IonButtons slot='end'>
+          <IonButtons slot="end">
             <IonButton onClick={openPopover}>
-              <IonIcon icon={add} className='text-[32px] stroke-[2]' />
+              <IonIcon icon={add} className="text-[32px] stroke-[2]" />
             </IonButton>
             <IonPopover
               event={popoverEvent}
@@ -130,7 +126,7 @@ const Navbar = () => {
                     button
                     onClick={() => {
                       closePopover();
-                      ionRouter.push('/create-set');
+                      navigate('/create-set');
                     }}
                   >
                     Create Set
@@ -139,7 +135,7 @@ const Navbar = () => {
                     button
                     onClick={() => {
                       closePopover();
-                      ionRouter.push('/create-class');
+                      navigate('/create-class');
                     }}
                   >
                     Create Class
@@ -148,7 +144,7 @@ const Navbar = () => {
                     button
                     onClick={() => {
                       closePopover();
-                      ionRouter.push('/public-classes');
+                      navigate('/public-classes');
                     }}
                   >
                     Join Class
@@ -156,17 +152,17 @@ const Navbar = () => {
                 </IonList>
               </IonContent>
             </IonPopover>
-            <IonButton fill='clear' onClick={toggleDarkMode}>
+            <IonButton fill="clear" onClick={toggleDarkMode}>
               <IonIcon
-                slot='icon-only'
+                slot="icon-only"
                 icon={theme === 'dark' ? sunny : moon}
               />
             </IonButton>
           </IonButtons>
 
-          <IonButtons slot='end'>
-            <IonButton routerLink='/user-account'>
-              <IonIcon icon={personCircle} size='large' />
+          <IonButtons slot="end">
+            <IonButton routerLink="/user-account">
+              <IonIcon icon={personCircle} size="large" />
             </IonButton>
           </IonButtons>
         </IonToolbar>
