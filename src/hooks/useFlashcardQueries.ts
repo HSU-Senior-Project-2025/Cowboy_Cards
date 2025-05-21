@@ -45,7 +45,8 @@ export function useUpdateCardStudyStatus() {
         },
       });
     },
-    // We don't need to invalidate any queries here as this doesn't change the cards,
-    // just records study history
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['userSets'] });
+    },
   });
 }

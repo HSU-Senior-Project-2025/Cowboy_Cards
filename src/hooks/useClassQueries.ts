@@ -115,6 +115,10 @@ export function useDeleteStudent(class_id: string) {
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['classMembers', class_id] });
+      queryClient.invalidateQueries({
+        queryKey: ['classLeaderboard', class_id],
+      });
+      queryClient.invalidateQueries({ queryKey: ['userClasses'] });
     },
   });
 }

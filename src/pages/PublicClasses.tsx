@@ -14,10 +14,12 @@ import {
   IonSearchbar,
   useIonToast,
 } from '@ionic/react';
+import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const PublicClasses = () => {
+  const queryClient = useQueryClient();
   const [classes, setClasses] = useState<Class[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -59,37 +61,37 @@ const PublicClasses = () => {
     <IonPage>
       <Navbar />
       <IonContent>
-        <div id='main-content' className='container mx-auto px-0 py-8 w-4/5'>
-          <div className='flex items-center flex-col justify-between mb-4'>
-            <h1 className='text-4xl tracking-wide font-bold font-smokum pb-8'>
+        <div id="main-content" className="container mx-auto px-0 py-8 w-4/5">
+          <div className="flex items-center flex-col justify-between mb-4">
+            <h1 className="text-4xl tracking-wide font-bold font-smokum pb-8">
               Public Classes
             </h1>
             {(loading || isLoadingUserClasses) && <div>Loading...</div>}
-            {error && <div className='text-red-500 mt-2'>{error}</div>}
+            {error && <div className="text-red-500 mt-2">{error}</div>}
             <IonSearchbar
               value={searchText} // eslint-disable-next-line
               onIonInput={(e: any) => setSearchText(e.target.value)}
-              placeholder='Search classes'
-              className='mb-4 max-w-lg'
+              placeholder="Search classes"
+              className="mb-4 max-w-lg"
             />
           </div>
-          <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-3'>
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {filteredClasses?.map(
               (classItem) =>
                 !isUserMember(classItem.ID) && (
                   <Link key={classItem.ID} to={`/class/${classItem.ID}`}>
-                    <IonCard className='cursor-pointer hover:shadow-lg hover:-translate-y-1 transition-transform-shadow duration-200 rounded-lg border shadow-sm'>
-                      <IonCardHeader className='flex flex-col space-y-1.5 p-6'>
-                        <IonCardTitle className='text-2xl font-semibold leading-none tracking-tight'>
+                    <IonCard className="cursor-pointer hover:shadow-lg hover:-translate-y-1 transition-transform-shadow duration-200 rounded-lg border shadow-sm">
+                      <IonCardHeader className="flex flex-col space-y-1.5 p-6">
+                        <IonCardTitle className="text-2xl font-semibold leading-none tracking-tight">
                           {classItem.ClassName}
                         </IonCardTitle>
-                        <IonCardSubtitle className='text-sm '>
+                        <IonCardSubtitle className="text-sm ">
                           {classItem.ClassDescription || 'No description'}
                         </IonCardSubtitle>
                         <IonButton
-                          expand='block'
-                          color='primary'
-                          className='mt-4'
+                          expand="block"
+                          color="primary"
+                          className="mt-4"
                           onClick={async () => {
                             try {
                               const response = await makeHttpCall(
@@ -107,6 +109,9 @@ const PublicClasses = () => {
                                 message: 'Successfully joined class',
                                 duration: 2000,
                                 color: 'success',
+                              });
+                              queryClient.invalidateQueries({
+                                queryKey: ['userClasses'],
                               });
                             } catch (error) {
                               console.error('Error joining class:', error);
