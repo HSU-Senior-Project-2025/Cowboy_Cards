@@ -175,6 +175,7 @@ const Flashcard = () => {
                           back={card.Back}
                           onAdvance={handleAdvance}
                           cardId={card.ID}
+                          setId={id}
                         />
                       </CarouselItem>
                     ))}

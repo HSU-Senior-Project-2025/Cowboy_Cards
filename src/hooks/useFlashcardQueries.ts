@@ -32,8 +32,12 @@ export function useFlashcardCards(id: string) {
 export function useUpdateCardStudyStatus() {
   const queryClient = useQueryClient();
 
-  return useMutation<void, Error, { cardId: number; isCorrect: boolean }>({
-    mutationFn: ({ cardId, isCorrect }) => {
+  return useMutation<
+    void,
+    Error,
+    { cardId: number; isCorrect: boolean; setId: number }
+  >({
+    mutationFn: ({ cardId, isCorrect, setId }) => {
       const endpoint = isCorrect
         ? '/api/card_history/correct'
         : '/api/card_history/incorrect';
@@ -42,6 +46,7 @@ export function useUpdateCardStudyStatus() {
         method: 'POST',
         headers: {
           card_id: cardId.toString(),
+          set_id: setId.toString(),
         },
       });
     },

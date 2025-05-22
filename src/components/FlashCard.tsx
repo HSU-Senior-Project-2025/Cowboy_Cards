@@ -8,26 +8,35 @@ export const FlashCard = (props) => {
   const [isFlipped, setIsFlipped] = useState(false);
   const updateCardStatus = useUpdateCardStudyStatus();
   const [error, setError] = useState<Error | null>(null);
-  const handleScoreUpdate = async (isCorrect: boolean) => {
+
+  const setId = props.setId;
+
+  const handleScoreUpdate = async (isCorrect: boolean, setId: number) => {
     try {
       await updateCardStatus.mutateAsync({
         cardId: props.cardId,
         isCorrect,
+        setId,
       });
-      console.log(`Score update successful for card ${props.cardId}`);
+      console.log(
+        `Score update successful for card ${props.cardId}, set ${setId}`
+      );
       props.onAdvance?.();
     } catch (error) {
-      console.error(`Failed to update score for card ${props.cardId}:`, error);
+      console.error(
+        `Failed to update score for card ${props.cardId}, set ${setId}: `,
+        error
+      );
       setError(error as Error);
     }
   };
 
   const handleIncorrectClick = () => {
-    handleScoreUpdate(false);
+    handleScoreUpdate(false, setId);
   };
 
   const handleCorrectClick = () => {
-    handleScoreUpdate(true);
+    handleScoreUpdate(true, setId);
   };
 
   return (

@@ -26,7 +26,7 @@ func (h *DBHandler) UpdateFlashcardScore(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	headerVals, err := getHeaderVals(r, card_id)
+	headerVals, err := getHeaderVals(r, card_id, set_id)
 	if err != nil {
 		logAndSendError(w, err, "Header error", http.StatusBadRequest)
 		return
@@ -38,12 +38,45 @@ func (h *DBHandler) UpdateFlashcardScore(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
+	setID, err := getInt32Id(headerVals[set_id])
+	if err != nil {
+		logAndSendError(w, err, "Invalid set id", http.StatusBadRequest)
+		return
+	}
+
 	switch path.Base(r.URL.Path) {
 	case correct:
-		err = query.UpsertCorrectFlashcardScore(ctx, db.UpsertCorrectFlashcardScoreParams{
+		tx, err := conn.Begin(ctx)
+		if err != nil {
+			logAndSendError(w, err, "Database tx connection error", http.StatusInternalServerError)
+		}
+		defer tx.Rollback(ctx)
+
+		qtx := query.WithTx(tx)
+
+		err = qtx.UpsertCorrectFlashcardScore(ctx, db.UpsertCorrectFlashcardScoreParams{
 			UserID: userID,
 			CardID: cardID,
 		})
+		if err != nil {
+			logAndSendError(w, err, "Error updating card score", http.StatusInternalServerError)
+			return
+		}
+
+		err = qtx.UpdateSetScore(ctx, db.UpdateSetScoreParams{
+			UserID: userID,
+			SetID:  setID,
+		})
+		if err != nil {
+			logAndSendError(w, err, "Error updating set score", http.StatusInternalServerError)
+			return
+		}
+
+		err = tx.Commit(ctx)
+		if err != nil {
+			logAndSendError(w, err, "Failed to commit transaction", http.StatusInternalServerError)
+			return
+		}
 	case incorrect:
 		err = query.UpsertIncorrectFlashcardScore(ctx, db.UpsertIncorrectFlashcardScoreParams{
 			UserID: userID,

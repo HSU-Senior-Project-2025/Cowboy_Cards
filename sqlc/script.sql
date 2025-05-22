@@ -384,29 +384,6 @@ values
   (6, 13, 'user', 39),
   (8, 10, 'user', 41);
 
-create or replace function update_set_score () RETURNS TRIGGER
-set
-  SEARCH_PATH = public as $$
-
-DECLARE
-   setid INTEGER;
-
-BEGIN
-    setid = (SELECT set_id FROM flashcards WHERE id = NEW.card_id);
-	INSERT INTO set_user (user_id, set_id, role, set_score) VALUES (NEW.user_id, setid, 'user', 2, DEFAULT)
-	ON CONFLICT (user_id, set_id)
-	DO UPDATE SET set_score = (set_user.set_score + 1) 
-	WHERE NEW.user_id = set_user.user_id AND set_user.set_id = setid;
-  
-	RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-create
-or replace trigger update_score_trigger BEFORE
-update on card_history for EACH row when (OLD.score is distinct from NEW.score)
-execute FUNCTION update_set_score ();
-
 create or replace function update_login_streak () RETURNS TRIGGER
 set
   SEARCH_PATH = public as $$
