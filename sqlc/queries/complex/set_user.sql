@@ -5,7 +5,7 @@ INSERT INTO set_user (user_id, set_id, role) VALUES ($1, $2, $3);
 INSERT INTO set_user (user_id, set_id, role, set_score) VALUES ($1, $2, 'user', 1)
 ON CONFLICT (user_id, set_id)
 DO UPDATE SET set_score = (set_user.set_score + 1) 
-WHERE user_id = set_user.user_id AND set_user.set_id = $2;
+WHERE set_user.user_id = $1 AND set_user.set_id = $2;
 
 -- name: LeaveSet :exec
 DELETE FROM set_user WHERE user_id = $1 AND set_id = $2;
