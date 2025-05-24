@@ -52,6 +52,7 @@ export function useUpdateCardStudyStatus() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['userSets'] });
+      queryClient.invalidateQueries({ queryKey: ['classLeaderboard'] });
     },
   });
 }
