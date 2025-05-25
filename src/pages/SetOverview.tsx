@@ -79,7 +79,6 @@ const SetOverview = () => {
   // Error handling
   const error = setError || cardsError;
   if (error) {
-    console.error('Query error:', error);
     let message = 'Unknown error';
     if (error instanceof Error) message = error.message;
     presentToast({
@@ -201,7 +200,6 @@ const SetOverview = () => {
     const areCardsValid = validateCards();
 
     if (!isMetadataValid || !areCardsValid || !flashcardSetData) {
-      console.log('Form validation failed:', metadataErrors, cardErrors);
       presentToast({
         message: 'Please fix validation errors before saving.',
         duration: 3000,
@@ -290,7 +288,6 @@ const SetOverview = () => {
       setMetadataErrors({});
       setCardErrors({});
     } catch (error) {
-      console.error('Failed to update set:', error);
       let message = 'Unknown error during save';
       if (error instanceof Error) message = error.message;
       setMetadataErrors((prev) => ({
@@ -313,7 +310,6 @@ const SetOverview = () => {
 
   const handleDeleteSet = async () => {
     if (!id) {
-      console.error('Cannot delete set: ID is missing.');
       presentToast({
         message: 'Cannot delete: Set ID missing.',
         duration: 3000,
@@ -336,7 +332,6 @@ const SetOverview = () => {
       });
       history.push('/home');
     } catch (error) {
-      console.error('Failed to delete set:', error);
       let message = 'Unknown error during deletion';
       if (error instanceof Error) message = error.message;
       presentToast({

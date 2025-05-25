@@ -44,7 +44,6 @@ const PublicFlashcards = () => {
         );
         setFlashcardSets(res);
       } catch (error) {
-        console.error('Error fetching flashcard sets:', error);
         setError(`Error fetching flashcard sets: ${error.message}`);
       } finally {
         setLoading(false);
@@ -106,7 +105,6 @@ const PublicFlashcards = () => {
                                   },
                                 }
                               );
-                              console.log('Join set response:', response);
                               presentToast({
                                 message: 'Successfully joined set',
                                 duration: 2000,
@@ -116,7 +114,7 @@ const PublicFlashcards = () => {
                                 queryKey: ['userSets'],
                               });
                             } catch (error) {
-                              console.error('Error joining set:', error);
+                              setError(`Error joining set: ${error.message}`);
                             }
                           }}
                         >

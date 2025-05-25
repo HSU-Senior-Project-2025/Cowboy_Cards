@@ -41,17 +41,6 @@ export async function makeHttpCall<T>(
 
     // Check if the req failed: 4xx, 5xx
     if (!response.ok) {
-      console.log('resp', response);
-      // Handle specific auth error types
-      //   if (data.code === 'duplicate_email') {
-      //     throw new Error('This email is already registered');
-      //   } else if (data.code === 'duplicate_username') {
-      //     throw new Error('This username is already taken');
-      //   } else if (data.code === 'invalid_credentials') {
-      //     throw new Error('Invalid email or password');
-      //   } else {
-      //     throw new Error(data.message || 'Authentication failed');
-      //   }
       const msg = await response.text();
 
       throw new Error(

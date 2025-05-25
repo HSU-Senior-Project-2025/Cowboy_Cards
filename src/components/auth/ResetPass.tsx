@@ -71,8 +71,6 @@ const ResetPass = () => {
       // Navigate to the confirmation page with the email
       history.push('/confirm-reset-password', { email });
     } catch (error) {
-      console.error('Reset password request error:', error);
-
       // Handle specific error types
       let errorMessage = 'An unexpected error occurred. Please try again.';
 

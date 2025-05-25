@@ -12,7 +12,6 @@ function manualChunks(id: string) {
 }
 
 export default defineConfig(({ mode }) => {
-  console.log("mode: ",mode);
   const res = {
     base: './',
     preview: {

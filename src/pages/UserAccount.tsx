@@ -60,8 +60,11 @@ const UserAccount = () => {
       setUserInfo(updatedInfo);
       setIsEditing(false);
     } catch (error) {
-      console.error(error);
-      alert('Failed to update some fields. Please try again.');
+      presentToast({
+        message: `Failed to update some fields. Please try again. ${error.message}`,
+        duration: 4000,
+        color: 'danger',
+      });
     }
   };
 
@@ -130,9 +133,7 @@ const UserAccount = () => {
       const data = await makeHttpCall<User>(`/api/users/`);
       setUserInfo(data);
       setUpdatedInfo(data);
-      console.log('data', data as User);
     } catch (error) {
-      console.log(`Failed to fetch User Data: ${error.message}`);
       setError(`Failed to fetch User Data: ${error.message}`);
     } finally {
       setLoading(false);
@@ -140,7 +141,6 @@ const UserAccount = () => {
   }, []);
 
   useIonViewWillEnter(() => {
-    console.log('UserAccount will enter, fetching data...');
     fetchUserData();
   });
 

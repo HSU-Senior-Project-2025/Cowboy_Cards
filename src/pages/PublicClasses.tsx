@@ -104,7 +104,6 @@ const PublicClasses = () => {
                                   },
                                 }
                               );
-                              console.log('Join class response:', response);
                               presentToast({
                                 message: 'Successfully joined class',
                                 duration: 2000,
@@ -117,7 +116,7 @@ const PublicClasses = () => {
                                 queryKey: ['classMembers'],
                               });
                             } catch (error) {
-                              console.error('Error joining class:', error);
+                              setError(`Error joining class: ${error.message}`);
                             }
                           }}
                         >

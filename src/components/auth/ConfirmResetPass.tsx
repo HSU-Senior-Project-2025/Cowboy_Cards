@@ -102,8 +102,6 @@ const ConfirmResetPass = () => {
       // Redirect to login page
       history.push('/');
     } catch (error) {
-      console.error('Password reset error:', error);
-
       // Handle specific error types
       if (error.message === 'Invalid token') {
         setErrors({ token: 'Invalid or expired token' });

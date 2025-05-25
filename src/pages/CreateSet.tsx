@@ -69,7 +69,6 @@ const CreateSet = () => {
       setShowSuccess(true);
       queryClient.invalidateQueries({ queryKey: ['userSets'] });
     } catch (error) {
-      console.error('Error saving flashcard set:', error);
       setError(`Failed to save flashcard set: ${error.message}`);
     } finally {
       setLoading(false);

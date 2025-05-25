@@ -49,7 +49,6 @@ const Flashcard = () => {
   // Error handling
   const error = setError || cardsError;
   if (error) {
-    console.error('Query error:', error);
     let message = 'Unknown error';
     if (error instanceof Error) message = error.message;
     presentToast({

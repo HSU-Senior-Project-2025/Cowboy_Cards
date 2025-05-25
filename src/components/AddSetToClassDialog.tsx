@@ -30,8 +30,6 @@ const AddSetToClassDialog = (props) => {
   } = useUserSets();
 
   const addSetMutation = useAddSetToClass();
-  console.log('userSets', userSets);
-  console.log('addSetMutation', addSetMutation.data);
 
   // Filter sets that are not already in the class
   const availableSets = Array.isArray(userSets)
@@ -87,7 +85,6 @@ const AddSetToClassDialog = (props) => {
 
   const isLoading = isLoadingUserSets || addSetMutation.isPending;
   const error = userSetsError || addSetMutation.error;
-  console.log('availableSets', availableSets);
 
   return (
     <IonModal isOpen={props.isOpen} onDidDismiss={props.onDidDismiss}>

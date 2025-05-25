@@ -16,7 +16,7 @@ import {
   useDeleteStudent,
   useUpdateClass,
 } from '@/hooks/useClassQueries';
-import { IonContent, IonPage } from '@ionic/react';
+import { IonContent, IonPage, useIonToast } from '@ionic/react';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -25,6 +25,7 @@ const ClassDetail = () => {
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [carouselApi, setCarouselApi] = useState<CarouselApi>();
   const [tab, setTab] = useState('flashcards');
+  const [presentToast] = useIonToast();
   const [isEditing, setIsEditing] = useState(false);
   const [updatedInfo, setUpdatedInfo] = useState({
     class_name: '',
@@ -106,7 +107,11 @@ const ClassDetail = () => {
       ]);
       setIsEditing(false);
     } catch (error) {
-      alert('Failed to update some fields. Please try again.');
+      presentToast({
+        message: 'Failed to update some fields. Please try again.',
+        duration: 4000,
+        color: 'danger',
+      });
     }
   };
 
@@ -125,7 +130,11 @@ const ClassDetail = () => {
     try {
       await deleteStudentMutation.mutateAsync(studentId);
     } catch (error) {
-      alert('Error deleting student');
+      presentToast({
+        message: 'Error deleting student',
+        duration: 4000,
+        color: 'danger',
+      });
     }
   };
 

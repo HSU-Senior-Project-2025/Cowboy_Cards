@@ -93,9 +93,7 @@ const UserAccountSecondRow = (props) => {
           {
             text: 'Cancel',
             role: 'cancel',
-            handler: () => {
-              console.log('Cancel clicked');
-            },
+            handler: () => {},
           },
           {
             text: 'Save',
@@ -116,7 +114,6 @@ const UserAccountSecondRow = (props) => {
                     password: data.newPassword,
                   },
                 });
-                console.log(resp);
                 props.presentToast({
                   message: 'Password changed.',
                   duration: 5000,
@@ -145,9 +142,7 @@ const UserAccountSecondRow = (props) => {
           {
             text: 'Cancel',
             role: 'cancel',
-            handler: () => {
-              console.log('Cancel clicked');
-            },
+            handler: () => {},
           },
           {
             text: 'Delete',
@@ -157,7 +152,6 @@ const UserAccountSecondRow = (props) => {
                   method: 'DELETE',
                   headers: {},
                 });
-                console.log(resp);
                 props.presentToast({
                   message: 'Account deleted. Please close your browser.',
                   duration: 5000,

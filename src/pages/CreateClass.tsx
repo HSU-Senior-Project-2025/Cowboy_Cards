@@ -39,8 +39,6 @@ const CreateClass = () => {
         },
       });
 
-      console.log('Class created successfully:', data);
-
       setFormData({
         className: '',
         description: '',

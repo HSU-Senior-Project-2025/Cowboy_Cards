@@ -1,6 +1,6 @@
-import { useState } from 'react';
 import StudentList from '@/components/StudentList';
 import { IonAlert } from '@ionic/react';
+import { useState } from 'react';
 
 const StudentTab = (props) => {
   const [showDeleteAlert, setShowDeleteAlert] = useState({
@@ -33,18 +33,13 @@ const StudentTab = (props) => {
           {
             text: 'Cancel',
             role: 'cancel',
-            handler: () => {
-              console.log('Cancel clicked');
-            },
+            handler: () => {},
           },
           {
             text: 'Delete',
             handler: () => {
               if (showDeleteAlert.studentId !== null) {
                 props.handleActualDelete(showDeleteAlert.studentId);
-                console.log(
-                  `Student deletion initiated for ID: ${showDeleteAlert.studentId}`
-                );
               }
             },
           },

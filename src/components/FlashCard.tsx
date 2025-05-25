@@ -18,15 +18,8 @@ export const FlashCard = (props) => {
         isCorrect,
         setId,
       });
-      console.log(
-        `Score update successful for card ${props.cardId}, set ${setId}`
-      );
       props.onAdvance?.();
     } catch (error) {
-      console.error(
-        `Failed to update score for card ${props.cardId}, set ${setId}: `,
-        error
-      );
       setError(error as Error);
     }
   };
