@@ -145,7 +145,7 @@ const Flashcard = () => {
               <IonSpinner name="circular" />
             ) : cards.length === 0 ? (
               <div className="text-center text-gray-500 text-lg py-20">
-                This set has no cards yet.
+                This set has no cards.
               </div>
             ) : (
               <>

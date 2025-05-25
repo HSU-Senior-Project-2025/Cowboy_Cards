@@ -20,9 +20,9 @@ import {
   IonSpinner,
   useIonToast,
 } from '@ionic/react';
+import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
-import { useQueryClient } from '@tanstack/react-query';
 
 const SetOverview = () => {
   const { id } = useParams<{ id: string }>();
@@ -393,6 +393,7 @@ const SetOverview = () => {
             <SetOverviewControls
               isOwner={isOwner}
               isEditing={isEditing}
+              cardsToDisplay={cardsToDisplay}
               onBackClick={handleBackClick}
               onEditClick={handleEdit}
               onSaveClick={handleSave}

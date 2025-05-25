@@ -113,6 +113,9 @@ const PublicClasses = () => {
                               queryClient.invalidateQueries({
                                 queryKey: ['userClasses'],
                               });
+                              queryClient.invalidateQueries({
+                                queryKey: ['classMembers'],
+                              });
                             } catch (error) {
                               console.error('Error joining class:', error);
                             }

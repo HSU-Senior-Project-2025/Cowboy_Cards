@@ -24,7 +24,7 @@ const SetCardList = (props) => {
       ) : !hasCards && !props.isEditing ? (
         <div className="text-center">
           <p className="text-lg text-gray-900 dark:text-gray-400 mb-4">
-            This set has no cards yet.
+            This set has no cards.
           </p>
           {props.isOwner && (
             <IonButton

@@ -1,17 +1,22 @@
 import { IonButton } from '@ionic/react';
 
 const SetOverviewControls = (props) => {
+  const hasCards =
+    Array.isArray(props.cardsToDisplay) && props.cardsToDisplay.length > 0;
+
   return (
     <div className="flex flex-col items-center sm:items-end justify-end mt-4">
-      <IonButton
-        className="rounded-lg sm:ml-0 w-full sm:w-auto max-w-80"
-        color={'primary'}
-        style={{ '--border-radius': '0.5rem' }}
-        routerLink={props.studyLink}
-        disabled={props.isEditing}
-      >
-        Study Set
-      </IonButton>
+      {hasCards && (
+        <IonButton
+          className="rounded-lg sm:ml-0 w-full sm:w-auto max-w-80"
+          color={'primary'}
+          style={{ '--border-radius': '0.5rem' }}
+          routerLink={props.studyLink}
+          disabled={props.isEditing}
+        >
+          Study Set
+        </IonButton>
+      )}
       {props.isOwner && !props.isEditing && (
         <>
           <IonButton
