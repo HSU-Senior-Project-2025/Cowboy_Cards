@@ -71,20 +71,7 @@ func init() {
 }
 
 func Auth(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
-	log.Printf("DEBUG: Auth middleware called for path: %s", r.URL.Path)
-
 	ctx := r.Context()
-
-	// Log all cookies received in the request
-	cookies := r.Cookies()
-	if len(cookies) > 0 {
-		log.Printf("DEBUG: Request contains %d cookies", len(cookies))
-		for _, cookie := range cookies {
-			log.Printf("DEBUG: Cookie found - Name: %s, Path: %s, Domain: %s", cookie.Name, cookie.Path, cookie.Domain)
-		}
-	} else {
-		log.Printf("DEBUG: No cookies found in request")
-	}
 
 	session, err := store.Get(r, sessionName)
 	if err != nil {
@@ -110,7 +97,6 @@ func Auth(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 }
 
 func CreateSession(w http.ResponseWriter, r *http.Request, userID int32) error {
-	log.Printf("DEBUG: Creating session for user ID: %d", userID)
 	session, err := store.Get(r, sessionName)
 	if err != nil {
 		log.Printf("ERROR: Failed to get session: %v", err)
@@ -124,8 +110,6 @@ func CreateSession(w http.ResponseWriter, r *http.Request, userID int32) error {
 	session.Values["created_at"] = time.Now().Unix()
 	// session.Values["paseto_token"] = token
 
-	log.Printf("DEBUG: Session cookie options: Path=%s, MaxAge=%d, HttpOnly=%v, Secure=%v, SameSite=%v",
-		session.Options.Path, session.Options.MaxAge, session.Options.HttpOnly, session.Options.Secure, session.Options.SameSite)
 	// Save session
 	err = session.Save(r, w)
 	if err != nil {
@@ -133,7 +117,6 @@ func CreateSession(w http.ResponseWriter, r *http.Request, userID int32) error {
 		return err
 	}
 
-	log.Printf("DEBUG: Session successfully created for user ID: %d", userID)
 	return nil
 }
 

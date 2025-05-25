@@ -64,8 +64,6 @@ func SetCredsHeaders(w http.ResponseWriter, r *http.Request, next http.HandlerFu
 
 func (h *Handler) VerifyClassMemberMW(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		log.Printf("DEBUG: VerifyClassMemberMW called for path: %s", r.URL.Path)
-
 		query, ctx, conn, err := GetQueryConnAndContext(r, h)
 		if err != nil {
 			LogAndSendError(w, err, "Database connection error", http.StatusInternalServerError)
@@ -134,8 +132,6 @@ func (h *Handler) VerifyClassMemberMW(next http.Handler) http.Handler {
 
 func (h *Handler) VerifySetMemberMW(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		log.Printf("DEBUG: VerifySetMemberMW called for path: %s", r.URL.Path)
-
 		query, ctx, conn, err := GetQueryConnAndContext(r, h)
 		if err != nil {
 			LogAndSendError(w, err, "Database connection error", http.StatusInternalServerError)
