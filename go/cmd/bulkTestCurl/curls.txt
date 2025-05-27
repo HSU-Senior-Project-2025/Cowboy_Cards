@@ -1,0 +1,8 @@
+curl --cookie "cowboy-cards-session=[cookie]" https://cowboy-cards.dsouth.org/api/flashcards/ -sS -H "id: 1' OR '1'='1"
+curl --cookie "cowboy-cards-session=[cookie]" https://cowboy-cards.dsouth.org/api/flashcards/ -sS -H "id: text"
+curl --cookie "cowboy-cards-session=[cookie]" https://cowboy-cards.dsouth.org/api/flashcards/ -sS -H "id: "
+curl --cookie "cowboy-cards-session=[cookie]" https://cowboy-cards.dsouth.org/api/flashcards/list -sS -H "id: 1' OR '1'='1"
+curl --cookie "cowboy-cards-session=[cookie]" https://cowboy-cards.dsouth.org/api/flashcards/list -sS -H "id: text"
+curl --cookie "cowboy-cards-session=[cookie]" https://cowboy-cards.dsouth.org/api/flashcards/list -sS -H "id: "
+curl -X POST --cookie "cowboy-cards-session=[cookie]" https://cowboy-cards.dsouth.org/api/flashcards -sS -H "front: test front" -H "back: back test" -H "set_id: 1"
+curl -X DELETE --cookie "cowboy-cards-session=[cookie]" https://cowboy-cards.dsouth.org/api/flashcards -sS -H "id: 1"

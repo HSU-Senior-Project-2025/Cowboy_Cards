@@ -3,16 +3,19 @@ type CredentialOptions = 'include' | 'omit' | 'same-origin';
 
 // Interface defining the structure of options that can be passed to fetch requests
 interface FetchOptions {
-  method: HttpMethod;
+  method: HttpMethod; // eslint-disable-next-line
   headers: any;
   credentials?: CredentialOptions;
+  body?: string; //JSON
 }
 
 const defaultOpts: FetchOptions = {
   method: 'GET',
   headers: {},
-  credentials: 'include', //dev only
+  credentials: 'include', //dev only, remove in prod same origin
 };
+
+const API_BASE = import.meta.env.VITE_API_BASE;
 
 /**
  * Universal fetch utility for making HTTP requests
@@ -34,14 +37,23 @@ export async function makeHttpCall<T>(
   };
   try {
     // Make the actual HTTP request
-    const response = await fetch(url, finalOpts);
+    const response = await fetch(API_BASE + url, finalOpts);
 
-    // Check if the response was successful (status 200-299)
+    // Check if the req failed: 4xx, 5xx
     if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
+      const msg = await response.text();
+
+      throw new Error(
+        `HTTP error! Status: ${response.status}, Message: ${msg}`
+      );
     }
 
-    // all responses should be json now
+    // Handle 204 No Content specifically
+    if (response.status === 204) {
+      return null as T; // Return null or appropriate value for no content
+    }
+
+    // For other successful responses, parse JSON
     const data = await response.json();
     return data as T;
   } catch (error) {

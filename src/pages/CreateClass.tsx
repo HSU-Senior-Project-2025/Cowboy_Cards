@@ -1,141 +1,104 @@
-import { Navbar } from '@/components/navbar';
+import { Footer } from '@/components/Footer';
+import { Navbar } from '@/components/Navbar';
+import type { NewClass } from '@/types/globalTypes';
 import { makeHttpCall } from '@/utils/makeHttpCall';
 import {
   IonButton,
   IonCard,
   IonCardContent,
   IonContent,
-  IonText,
+  IonPage,
   IonTextarea,
+  IonToast,
 } from '@ionic/react';
-import { useEffect, useState } from 'react';
-
-type Class = {
-  ID: number;
-  ClassName: string;
-  ClassDescription: string;
-};
-
-const API_BASE = import.meta.env.VITE_API_BASE_URL;
+import { useQueryClient } from '@tanstack/react-query';
+import { useState } from 'react';
 
 const CreateClass = () => {
-  const [buttonClicked, setButtonClicked] = useState(false);
+  const queryClient = useQueryClient();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  // const [lastJoinCode, setLastJoinCode] = useState('');
   const [formData, setFormData] = useState({
     className: '',
     description: '',
   });
   const [showSuccess, setShowSuccess] = useState(false);
-  // const [isPrivate, setIsPrivate] = useState(false);
-  // const [textToCopy, setTextToCopy] = useState('This is the text to be copied');
-  // const [showToast, setShowToast] = useState(false);
-  // const [showSuccess, setShowSuccess] = useState(false);
 
-  // const copyToClipboard = async () => {
-  //   try {
-  //     await navigator.clipboard.writeText(textToCopy);
-  //     setShowToast(true);
-  //   } catch (err) {
-  //     console.error('Failed to copy text', err);
-  //   }
-  // };
+  const submitForm = async () => {
+    if (loading) return;
 
-  useEffect(() => {
-    async function submitForm() {
-      if (!buttonClicked) return;
+    setLoading(true);
+    setError(null);
 
-      setLoading(true);
-      setError(null);
+    try {
+      const data = await makeHttpCall<NewClass>(`/api/classes`, {
+        method: 'POST',
+        headers: {
+          class_name: formData.className,
+          class_description: formData.description,
+        },
+      });
 
-      try {
-        const data = await makeHttpCall<Class>(`${API_BASE}/api/classes`, {
-          method: 'POST',
-          headers: {
-            class_name: formData.className,
-            class_description: formData.description,
-          },
-        });
+      setFormData({
+        className: '',
+        description: '',
+      });
 
-        console.log('Class created successfully:', data);
-
-        // setLastJoinCode(formData.joinCode);
-
-        setButtonClicked(false);
-
-        setFormData({
-          className: '',
-          description: '',
-        });
-
-        setShowSuccess(true);
-        setLoading(false);
-      } catch (error) {
-        setError(`Failed to create class: ${error.message}`);
-      } finally {
-        setLoading(false);
-      }
+      setShowSuccess(true);
+      queryClient.invalidateQueries({ queryKey: ['userClasses'] });
+    } catch (error) {
+      setError(`Failed to create class: ${error.message}`);
+    } finally {
+      setLoading(false);
     }
-
-    if (buttonClicked) {
-      submitForm();
-    }
-  }, [buttonClicked, formData]);
-
-  // useEffect(() => {
-  //   if (lastJoinCode) {
-  //     setTextToCopy(lastJoinCode); // Update textToCopy when lastJoinCode changes
-  //   } else {
-  //     setTextToCopy(''); //reset the text to copy, if there is no join code.
-  //   }
-  // }, [lastJoinCode]);
+  };
 
   return (
-    <IonContent>
+    <IonPage>
       <Navbar />
-      <div id="main-content" className="container mx-auto px-4 py-8">
-        {/*<IonText color="warning">
-          <p>
-            Database only accepts a teacher ID of 12. <br />
-            So I have not included an input for that, it will automatically be
-            passed
-          </p>
-        </IonText>*/}
-        {error && <div className="text-red-500 mt-2">{error}</div>}
-        <form>
-          <IonCard className="mb-6 rounded-lg border shadow-sm">
-            <IonCardContent>
-              <IonTextarea
-                placeholder="Enter Class Name"
-                value={formData.className}
-                onIonChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    className: e.detail.value || '',
-                  }))
-                }
-                rows={1}
-                autoGrow
-                className="w-full text-xl font-bold mb-2"
-                style={{ resize: 'none' }}
-              />
-              <IonTextarea
-                placeholder="Enter Class Description"
-                value={formData.description}
-                onIonChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    description: e.detail.value || '',
-                  }))
-                }
-                rows={1}
-                autoGrow
-                className="w-full text-base mt-4"
-                style={{ resize: 'none' }}
-              />
-            </IonCardContent>
-            {/* <IonItem>
+      <IonContent>
+        <div
+          id="main-content"
+          className="container mx-auto px-4 py-8 max-w-4xl"
+        >
+          {loading && <div>Loading...</div>}
+          {error && <div className="text-red-500 mt-2">{error}</div>}
+          <h1 className="text-4xl tracking-wide font-bold font-smokum mb-6">
+            Create New Class
+          </h1>
+          <form>
+            <IonCard className="mb-6 rounded-lg border shadow-sm">
+              <IonCardContent>
+                <IonTextarea
+                  placeholder="Enter Class Name"
+                  value={formData.className}
+                  onIonChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      className: e.detail.value || '',
+                    }))
+                  }
+                  rows={1}
+                  autoGrow
+                  className="w-full text-xl font-bold mb-2"
+                  style={{ resize: 'none' }}
+                />
+                <IonTextarea
+                  placeholder="Enter Class Description"
+                  value={formData.description}
+                  onIonChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      description: e.detail.value || '',
+                    }))
+                  }
+                  rows={1}
+                  autoGrow
+                  className="w-full text-base mt-4"
+                  style={{ resize: 'none' }}
+                />
+              </IonCardContent>
+              {/* <IonItem>
               
               Public/Private will not be in MVP
 
@@ -163,17 +126,18 @@ const CreateClass = () => {
                 <IonRadio value="private">Private</IonRadio>
               </IonRadioGroup>
             </IonItem> */}
-          </IonCard>
-          <div className="flex flex-col md:flex-row justify-center md:justify-end gap-4 mt-8">
-            <IonButton
-              color="success"
-              disabled={loading}
-              onClick={() => setButtonClicked(true)}
-            >
-              {loading ? 'Creating...' : 'Create Class'}
-            </IonButton>
-          </div>
-          {/* 
+            </IonCard>
+            <div className="flex justify-center">
+              <IonButton
+                color="primary"
+                className="rounded-lg shadow-sm w-full md:w-auto"
+                onClick={submitForm}
+                disabled={loading}
+              >
+                {loading ? 'Creating...' : 'Create Class'}
+              </IonButton>
+            </div>
+            {/* 
           {showSuccess && (
             <IonText>
               {isPrivate && (
@@ -192,14 +156,20 @@ const CreateClass = () => {
               />
             </IonText>
           )} */}
-        </form>
-        {showSuccess && (
-          <IonText>
-            <p>Class created successfully!</p>
-          </IonText>
-        )}
-      </div>
-    </IonContent>
+          </form>
+          {showSuccess && (
+            <IonToast
+              isOpen={showSuccess}
+              color="success"
+              onDidDismiss={() => setShowSuccess(false)}
+              message="Class created successfully!"
+              duration={2000}
+            />
+          )}
+        </div>
+      </IonContent>
+      <Footer />
+    </IonPage>
   );
 };
 

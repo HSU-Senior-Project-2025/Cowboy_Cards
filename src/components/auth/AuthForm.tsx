@@ -11,12 +11,11 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/components/ui/use-toast';
-import { IonButton, IonIcon, useIonRouter } from '@ionic/react';
+import { makeHttpCall } from '@/utils/makeHttpCall';
+import { useIonRouter } from '@ionic/react';
 import { AlertCircle, LogIn } from 'lucide-react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-
-const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 export const AuthForm = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -25,6 +24,7 @@ export const AuthForm = () => {
   // Login form fields
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
   // Additional signup form fields
   const [username, setUsername] = useState('');
@@ -36,6 +36,7 @@ export const AuthForm = () => {
     email?: string;
     username?: string;
     password?: string;
+    confirmPassword?: string;
     general?: string;
   }>({});
 
@@ -48,6 +49,7 @@ export const AuthForm = () => {
       email?: string;
       username?: string;
       password?: string;
+      confirmPassword?: string;
     } = {};
     let isValid = true;
 
@@ -67,6 +69,16 @@ export const AuthForm = () => {
     } else if (password.length < 8) {
       newErrors.password = 'Password must be at least 8 characters';
       isValid = false;
+    }
+
+    if (!isLogin) {
+      if (!confirmPassword) {
+        newErrors.confirmPassword = 'Confirm password is required';
+        isValid = false;
+      } else if (confirmPassword !== password) {
+        newErrors.confirmPassword = 'Passwords do not match';
+        isValid = false;
+      }
     }
 
     // Username validation (only for signup)
@@ -91,11 +103,11 @@ export const AuthForm = () => {
     setErrors({});
 
     try {
-      let response;
+      let data;
 
       if (isLogin) {
         // Login request
-        response = await fetch(`${API_BASE}/login`, {
+        data = await makeHttpCall(`/login`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -108,7 +120,7 @@ export const AuthForm = () => {
         });
       } else {
         // Signup request
-        response = await fetch(`${API_BASE}/signup`, {
+        data = await makeHttpCall(`/signup`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -124,28 +136,9 @@ export const AuthForm = () => {
         });
       }
 
-      if (!response.ok) {
-        const errorData = await response.json();
-
-        // Handle specific error types
-        if (errorData.code === 'duplicate_email') {
-          setErrors({ email: 'This email is already registered' });
-          throw new Error('This email is already registered');
-        } else if (errorData.code === 'duplicate_username') {
-          setErrors({ username: 'This username is already taken' });
-          throw new Error('This username is already taken');
-        } else if (errorData.code === 'invalid_credentials') {
-          setErrors({ general: 'Invalid email or password' });
-          throw new Error('Invalid email or password');
-        } else {
-          throw new Error(errorData.message || 'Authentication failed');
-        }
-      }
-
-      const data = await response.json();
-
       // Show success message
       toast({
+        duration: 8000,
         title: isLogin ? 'Welcome back!' : 'Account created',
         description: isLogin
           ? 'You have been successfully logged in.'
@@ -155,7 +148,7 @@ export const AuthForm = () => {
       // Navigate to the home page using Ionic's router
       ionRouter.push('/home');
     } catch (error) {
-      console.error('Authentication error:', error);
+      setErrors(error);
 
       // If no specific error was set, set a general error
       if (Object.keys(errors).length === 0) {
@@ -189,9 +182,11 @@ export const AuthForm = () => {
   };
 
   return (
-    <Card className="w-[350px]">
+    <Card className="w-11/12 max-w-[350px] mb-8">
       <CardHeader>
-        <CardTitle>{isLogin ? 'Welcome back' : 'Create account'}</CardTitle>
+        <CardTitle className="text-4xl tracking-wide font-smokum font-bold">
+          {isLogin ? 'Welcome back' : 'Create account'}
+        </CardTitle>
         <CardDescription>
           {isLogin
             ? 'Enter your credentials to continue'
@@ -210,7 +205,12 @@ export const AuthForm = () => {
           {!isLogin && (
             <>
               <div className="space-y-2">
-                <Label htmlFor="username">Username</Label>
+                <Label
+                  className="text-3xl tracking-wide font-smokum font-bold"
+                  htmlFor="username"
+                >
+                  Username
+                </Label>
                 <Input
                   id="username"
                   type="text"
@@ -225,7 +225,12 @@ export const AuthForm = () => {
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="firstName">First Name</Label>
+                <Label
+                  className="text-3xl tracking-wide font-smokum font-bold"
+                  htmlFor="firstName"
+                >
+                  First Name
+                </Label>
                 <Input
                   id="firstName"
                   type="text"
@@ -236,7 +241,12 @@ export const AuthForm = () => {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="lastName">Last Name</Label>
+                <Label
+                  className="text-3xl tracking-wide font-smokum font-bold"
+                  htmlFor="lastName"
+                >
+                  Last Name
+                </Label>
                 <Input
                   id="lastName"
                   type="text"
@@ -249,7 +259,12 @@ export const AuthForm = () => {
             </>
           )}
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label
+              className="text-3xl tracking-wide font-smokum font-bold"
+              htmlFor="email"
+            >
+              Email
+            </Label>
             <Input
               id="email"
               type="email"
@@ -264,7 +279,12 @@ export const AuthForm = () => {
             )}
           </div>
           <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
+            <Label
+              className="text-3xl tracking-wide font-smokum font-bold"
+              htmlFor="password"
+            >
+              Password
+            </Label>
             <Input
               id="password"
               type="password"
@@ -282,8 +302,31 @@ export const AuthForm = () => {
               </p>
             )}
           </div>
+          {!isLogin && (
+            <div className="space-y-2">
+              <Label
+                className="text-3xl tracking-wide font-smokum font-bold"
+                htmlFor="confirmPassword"
+              >
+                Confirm Password
+              </Label>
+              <Input
+                id="confirmPassword"
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+                className={errors.confirmPassword ? 'border-red-500' : ''}
+              />
+              {errors.confirmPassword && (
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.confirmPassword}
+                </p>
+              )}
+            </div>
+          )}
           {isLogin && (
-            <Link to="/reset-password" className="text-sm text-purple-500">
+            <Link to="/reset-password" className="text-sm text-primary">
               Forgot password?
             </Link>
           )}
@@ -313,28 +356,6 @@ export const AuthForm = () => {
               ? 'Need an account? Sign up'
               : 'Already have an account? Sign in'}
           </Button>
-          <IonButton
-            expand="block"
-            fill="outline"
-            className="flex items-center justify-center space-x-2"
-            onClick={() => {
-              // Add your Google sign-in logic here
-              console.log('Sign in with Google clicked');
-            }}
-          >
-            <IonIcon
-              slot="start"
-              src="https://www.gstatic.com/marketing-cms/assets/images/d5/dc/cfe9ce8b4425b410b49b7f2dd3f3/g.webp=s96-fcrop64=1,00000000ffffffff-rw"
-              className="h-5 w-5"
-            />
-            <p></p>
-            Sign in with Google
-            <img
-              slot="start"
-              src="https://www.gstatic.com/marketing-cms/assets/images/d5/dc/cfe9ce8b4425b410b49b7f2dd3f3/g.webp=s96-fcrop64=1,00000000ffffffff-rw"
-              className="h-10 w-10"
-            />
-          </IonButton>
         </CardFooter>
       </form>
     </Card>

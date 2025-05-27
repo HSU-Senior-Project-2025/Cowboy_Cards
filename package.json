@@ -1,23 +1,27 @@
 {
   "name": "cowboy_cards",
   "private": true,
-  "version": "0.0.1",
+  "version": "1.0.1",
   "description": "Flashcard app for HSU 2025 CSCI Senior Project class",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "backend": "go run go/main.go",
+    "dev:live": "VITE_API_BASE=https://cowboy-cards.dsouth.org vite",
+    "dev:local": "VITE_API_BASE=http://localhost:8000 vite",
+    "dev:mobile": "VITE_API_BASE=http://10.84.16.32:8080 vite",
+    "go": "go run go/main.go",
     "sqlc:gen": "sqlc generate -f sqlc/sqlc.yaml",
-    "build": "vite build",
+    "build:staging": "VITE_API_BASE=https://cowboy-cards.dsouth.org vite build --mode staging",
+    "build:prod": "VITE_API_BASE=https://cowboy-cards.org vite build --mode production",
     "build:dev": "vite build --mode development",
+    "build:mobile": "VITE_API_BASE=https://cowboy-cards.dsouth.org vite build --mode mobile",
+    "build:ios": "npm run build:mobile && ionic cap open ios",
     "lint": "eslint .",
-    "preview": "vite preview",
-    "start": "vite"
+    "preview": "vite preview"
   },
   "author": "senior project class",
   "homepage": "https://github.com/HSU-Senior-Project-2025/Cowboy_Cards#readme",
   "dependencies": {
-    "@capacitor/android": "7.0.1",
+    "@capacitor/android": "7.2.0",
     "@capacitor/core": "^7.0.1",
     "@capacitor/ios": "7.0.1",
     "@hookform/resolvers": "^3.9.0",
@@ -56,6 +60,7 @@
     "cmdk": "^1.0.0",
     "date-fns": "^3.6.0",
     "embla-carousel-react": "^8.3.0",
+    "framer-motion": "^12.7.4",
     "input-otp": "^1.2.4",
     "lucide-react": "^0.462.0",
     "next-themes": "^0.3.0",
@@ -64,6 +69,7 @@
     "react-day-picker": "^8.10.1",
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.53.0",
+    "react-intersection-observer": "^9.16.0",
     "react-resizable-panels": "^2.1.3",
     "react-router": "^5.3.4",
     "react-router-dom": "^5.3.4",
@@ -92,6 +98,6 @@
     "tailwindcss": "^3.4.11",
     "typescript": "^5.5.3",
     "typescript-eslint": "^8.0.1",
-    "vite": "^5.4.1"
+    "vite": "5.4.18"
   }
 }

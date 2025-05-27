@@ -2,10 +2,10 @@ package controllers
 
 import (
 	"encoding/json"
-	"errors"
 	"net/http"
 	"path"
 	"strings"
+	"time"
 
 	"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/db"
 	"github.com/HSU-Senior-Project-2025/Cowboy_Cards/go/middleware"
@@ -48,37 +48,65 @@ func (h *DBHandler) GetUserById(w http.ResponseWriter, r *http.Request) {
 	// Get user_id from context (set by AuthMiddleware)
 	userID, ok := middleware.GetUserIDFromContext(ctx)
 	if !ok {
-		logAndSendError(w, err, "Unauthorized", http.StatusUnauthorized)
+		logAndSendError(w, errContext, "Unauthorized", http.StatusUnauthorized)
 		return
 	}
 
-	// headerVals, err := getHeaderVals(r, "id")
-	// if err != nil {
-	// 	logAndSendError(w, err, "Header error", http.StatusBadRequest)
-	// 	return
-	// }
+	tx, err := conn.Begin(ctx)
+	if err != nil {
+		logAndSendError(w, err, "Database tx connection error", http.StatusInternalServerError)
+	}
+	defer tx.Rollback(ctx)
 
-	// id, err := getInt32Id(headerVals["id"])
-	// if err != nil {
-	// 	logAndSendError(w, err, "Invalid id", http.StatusBadRequest)
-	// 	return
-	// }
+	qtx := query.WithTx(tx)
 
-	user, err := query.GetUserById(ctx, userID)
+	user, err := qtx.GetUserById(ctx, userID)
 	if err != nil {
 		logAndSendError(w, err, "User not found", http.StatusNotFound)
 		return
 	}
 
-	// Convert to response type to avoid sending sensitive information
+	classes, err := qtx.ListClassesOfAUser(ctx, userID)
+	if err != nil {
+		logAndSendError(w, err, "Error getting classes", http.StatusInternalServerError)
+		return
+	}
+
+	cardsStudied, err := qtx.GetCardsStudied(ctx, userID)
+	if err != nil {
+		logAndSendError(w, err, "Error getting cards studied", http.StatusInternalServerError)
+		return
+	}
+
+	totalScore, err := qtx.GetTotalScore(ctx, userID)
+	if err != nil {
+		logAndSendError(w, err, "Error getting total score", http.StatusInternalServerError)
+		return
+	}
+
+	totalCardViews, err := qtx.GetTotalCardViews(ctx, userID)
+	if err != nil {
+		logAndSendError(w, err, "Error getting total card views", http.StatusInternalServerError)
+		return
+	}
+
+	err = tx.Commit(ctx)
+	if err != nil {
+		logAndSendError(w, err, "Failed to commit transaction", http.StatusInternalServerError)
+		return
+	}
+
 	response := User{
-		// ID:        user.ID,
-		Username:  user.Username,
-		Email:     user.Email,
-		FirstName: user.FirstName,
-		LastName:  user.LastName,
-		CreatedAt: user.CreatedAt.Time,
-		UpdatedAt: user.UpdatedAt.Time,
+		Username:       user.Username,
+		Email:          user.Email,
+		FirstName:      user.FirstName,
+		LastName:       user.LastName,
+		LoginStreak:    user.LoginStreak,
+		CreatedAt:      user.CreatedAt.Time.Format(time.DateTime),
+		NumClasses:     len(classes),
+		CardsStudied:   int(cardsStudied),
+		TotalCardViews: totalCardViews,
+		TotalScore:     totalScore,
 	}
 
 	w.Header().Set("Content-Type", "application/json")
@@ -101,7 +129,7 @@ func (h *DBHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	// Get user_id from context (set by AuthMiddleware)
 	userID, ok := middleware.GetUserIDFromContext(ctx)
 	if !ok {
-		logAndSendError(w, err, "Unauthorized", http.StatusUnauthorized)
+		logAndSendError(w, errContext, "Unauthorized", http.StatusUnauthorized)
 		return
 	}
 
@@ -113,17 +141,11 @@ func (h *DBHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// id, err := getInt32Id(headerVals["id"])
-	// if err != nil {
-	// 	logAndSendError(w, err, "Invalid id", http.StatusBadRequest)
-	// 	return
-	// }
-
 	val := headerVals[route]
 
 	var res string
 	switch route {
-	case "username":
+	case username:
 		_, err = query.GetUserByUsername(ctx, val)
 		if err == nil {
 			logAndSendError(w, err, "Username already exists", http.StatusConflict)
@@ -137,7 +159,7 @@ func (h *DBHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 			Username: val,
 			ID:       userID,
 		})
-	case "email":
+	case email:
 		_, err = query.GetUserByEmail(ctx, val)
 		if err == nil {
 			logAndSendError(w, err, "Email already exists", http.StatusConflict)
@@ -151,21 +173,21 @@ func (h *DBHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 			Email: val,
 			ID:    userID,
 		})
-	case "first_name":
+	case first_name:
 		res, err = query.UpdateFirstname(ctx, db.UpdateFirstnameParams{
 			FirstName: val,
 			ID:        userID,
 		})
-	case "last_name":
+	case last_name:
 		res, err = query.UpdateLastname(ctx, db.UpdateLastnameParams{
 			LastName: val,
 			ID:       userID,
 		})
-	case "password":
-		// *************
-		// needs more validation here
-		// usual min pw len: 8, bcrypt max: 72 bytes
-		// *************
+	case password:
+		if err := CheckPasswordStrength(val); err != nil {
+			logAndSendError(w, err, "Password strength error", http.StatusBadRequest)
+			return
+		}
 
 		hashedPassword, err := bcrypt.GenerateFromPassword([]byte(val), bcrypt.DefaultCost)
 		if err != nil {
@@ -183,7 +205,7 @@ func (h *DBHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	default:
-		logAndSendError(w, errors.New("invalid column"), "Improper header", http.StatusBadRequest)
+		logAndSendError(w, errHeader, "Improper header", http.StatusBadRequest)
 		return
 	}
 
@@ -209,21 +231,9 @@ func (h *DBHandler) DeleteUser(w http.ResponseWriter, r *http.Request) {
 	// Get user_id from context (set by AuthMiddleware)
 	userID, ok := middleware.GetUserIDFromContext(ctx)
 	if !ok {
-		logAndSendError(w, err, "Unauthorized", http.StatusUnauthorized)
+		logAndSendError(w, errContext, "Unauthorized", http.StatusUnauthorized)
 		return
 	}
-
-	// headerVals, err := getHeaderVals(r, "id")
-	// if err != nil {
-	// 	logAndSendError(w, err, "Header error", http.StatusBadRequest)
-	// 	return
-	// }
-
-	// id, err := getInt32Id(headerVals["id"])
-	// if err != nil {
-	// 	logAndSendError(w, err, "Invalid id", http.StatusBadRequest)
-	// 	return
-	// }
 
 	err = query.DeleteUser(ctx, userID)
 	if err != nil {

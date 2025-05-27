@@ -1,0 +1,1 @@
+curl --cookie "cowboy-cards-session=[cookie]" https://cowboy-cards.dsouth.org/api/flashcards -sS -H "id: 2"

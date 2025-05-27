@@ -67,6 +67,9 @@ func CreatePool(config *pgxpool.Config) (h *controllers.DBHandler) {
 func Init() {
 	h := CreatePool(LoadPoolConfig())
 
+	buildenv := os.Getenv("BUILDENV")
+	log.Println("app: ", buildenv)
+
 	//mw for protected routes only
 	protectedRoutes := chi.NewRouter()
 	routes.Protected(protectedRoutes, h)
@@ -80,9 +83,11 @@ func Init() {
 	n := negroni.Classic() // serves "./public"
 	n.Use(middleware.Cors)
 	n.Use(negroni.HandlerFunc(middleware.SetCacheControlHeader))
-	n.Use(negroni.HandlerFunc(middleware.SetCredsHeaders)) //dev only, not necessary in prod w/ same origin
-	// Add CSRF protection middleware
-	// n.Use(negroni.HandlerFunc(middleware.CSRFMiddleware))
+
+	if buildenv == "" {
+		n.Use(negroni.HandlerFunc(middleware.SetCredsHeaders)) //dev only, not necessary in prod w/ same origin
+	}
+
 	n.UseHandler(unprotectedRoutes)
 
 	unprotectedRoutes.Mount("/api", protectedRouteHandler)

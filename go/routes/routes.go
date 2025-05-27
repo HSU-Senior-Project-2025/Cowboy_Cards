@@ -5,12 +5,6 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
-// func dummy(w http.ResponseWriter, r *http.Request) {
-// 	log.Println("url: ", r.URL)
-
-// 	json.NewEncoder(w).Encode("here: " + r.URL.Path)
-// }
-
 // every protected route is preceded by /api
 func Protected(r *chi.Mux, h *controllers.DBHandler) {
 
@@ -18,27 +12,43 @@ func Protected(r *chi.Mux, h *controllers.DBHandler) {
 
 	r.Route("/card_history", func(r chi.Router) {
 		// these are upserts, one each for (in)correct
-		r.Post("/incscore", h.UpsertCorrectFlashcardScore)
-		r.Post("/decscore", h.UpsertIncorrectFlashcardScore)
+		r.Post("/correct", h.UpdateFlashcardScore)
+		r.Post("/incorrect", h.UpdateFlashcardScore)
 
 		r.Get("/", h.GetCardScore)
 		r.Get("/set", h.GetScoresInASet)
 	})
 
 	r.Route("/class_set", func(r chi.Router) {
-		r.Post("/", h.AddSet)
-		r.Delete("/", h.RemoveSet)
-		r.Get("/get_sets", h.GetSetsInClass)
-		r.Get("/get_classes", h.GetClassesHavingSet)
+		r.Route("/", func(r chi.Router) {
+			r.Use(h.VerifyClassMemberMW)
+			r.Post("/", h.AddSetToClass)
+			r.Delete("/", h.RemoveSetFromClass) //never called
+		})
+		r.Get("/list_sets", h.ListSetsInClass)
+		r.Get("/list_classes", h.ListClassesHavingSet)
 	})
 
 	r.Route("/class_user", func(r chi.Router) {
+		r.Route("/", func(r chi.Router) {
+			r.Use(h.VerifyClassMemberMW)
+			r.Delete("/", h.LeaveClass)
+		})
+
 		r.Post("/", h.JoinClass)
-		r.Delete("/", h.LeaveClass)
 		r.Get("/classes", h.ListClassesOfAUser)
 		r.Get("/members", h.ListMembersOfAClass)
 		// r.Get("/getstudents", h.ListStudentsOfAClass)
 		// r.Get("/getteacher", h.ListTeachersOfAClass)
+	})
+
+	r.Route("/set_user", func(r chi.Router) {
+		r.Route("/", func(r chi.Router) {
+			r.Use(h.VerifySetMemberMW)
+			r.Delete("/", h.LeaveSet) //never called
+		})
+		r.Post("/", h.JoinSet)
+		r.Get("/list", h.ListSetsOfAUser)
 	})
 
 	// -------------------simple-------------------------
@@ -46,42 +56,45 @@ func Protected(r *chi.Mux, h *controllers.DBHandler) {
 	// r.Post("/logout", h.Logout)
 
 	r.Route("/classes", func(r chi.Router) {
-
 		r.Route("/", func(r chi.Router) {
-			// Ensure only teachers can update/delete
-			r.Use(h.VerifyTeacherMW)
+			r.Use(h.VerifyClassMemberMW)
+			r.Get("/", h.GetClassById)
 			r.Put("/class_name", h.UpdateClass)
 			r.Put("/class_description", h.UpdateClass)
-			r.Delete("/", h.DeleteClass)
+			r.Delete("/", h.DeleteClass) //never called
+		})
+
+		r.Route("/leaderboard", func(r chi.Router) {
+			r.Use(h.VerifyClassMemberMW)
+			r.Get("/", h.GetClassLeaderboard)
 		})
 
 		r.Get("/list", h.ListClasses)
-		r.Get("/", h.GetClassById)
 		r.Post("/", h.CreateClass)
 	})
 
 	r.Route("/flashcards", func(r chi.Router) {
-		r.Get("/", h.GetFlashcardById)
-		r.Get("/list", h.ListFlashcardsOfASet)
-		r.Post("/", h.CreateFlashcard)
 		r.Route("/", func(r chi.Router) {
-			r.Use(h.VerifyFlashcardOwnerMW) // Ensure only the owner can update/delete
+			r.Use(h.VerifySetMemberMW) // Ensure only the owner can update/delete
+			r.Post("/", h.CreateFlashcard)
 			r.Put("/front", h.UpdateFlashcard)
 			r.Put("/back", h.UpdateFlashcard)
-			r.Put("/set_id", h.UpdateFlashcard)
+			// r.Put("/set_id", h.UpdateFlashcard)
 			r.Delete("/", h.DeleteFlashcard)
 		})
+		r.Get("/", h.GetFlashcardById)
+		r.Get("/list", h.ListFlashcardsOfASet)
 
 		r.Route("/sets", func(r chi.Router) {
-			r.Get("/list", h.ListFlashcardSets)
-			r.Get("/", h.GetFlashcardSetById)
-			r.Post("/", h.CreateFlashcardSet)
 			r.Route("/", func(r chi.Router) {
-				r.Use(h.VerifySetOwnerMW) // Ensure only the owner can update/delete the set
+				r.Use(h.VerifySetMemberMW) // Ensure only the owner can update/delete the set
+				r.Get("/", h.GetFlashcardSetById)
 				r.Put("/set_name", h.UpdateFlashcardSet)
 				r.Put("/set_description", h.UpdateFlashcardSet)
 				r.Delete("/", h.DeleteFlashcardSet)
 			})
+			r.Get("/list", h.ListFlashcardSets)
+			r.Post("/", h.CreateFlashcardSet)
 		})
 	})
 
@@ -95,7 +108,7 @@ func Protected(r *chi.Mux, h *controllers.DBHandler) {
 		r.Put("/first_name", h.UpdateUser)
 		r.Put("/last_name", h.UpdateUser)
 		r.Put("/password", h.UpdateUser)
-		// r.Delete("/", h.DeleteUser)
+		r.Delete("/", h.DeleteUser)
 	})
 }
 
@@ -103,4 +116,6 @@ func Protected(r *chi.Mux, h *controllers.DBHandler) {
 func Unprotected(r *chi.Mux, h *controllers.DBHandler) {
 	r.Post("/login", h.Login)
 	r.Post("/signup", h.Signup)
+	r.Post("/send-reset-password-token", h.SendResetPasswordToken)
+	r.Post("/reset-password", h.ResetPassword)
 }
