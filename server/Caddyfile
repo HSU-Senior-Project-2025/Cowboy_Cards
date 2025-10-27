@@ -1,0 +1,41 @@
+{
+	log default {
+		output file /var/www/cowboy_cards/logs/general {
+			mode 664
+			roll_local_time
+		}
+		format json
+	}
+}
+cowboy-cards.org {
+	@backend path /login /signup /send-reset-password-token /reset-password /api/*
+	@broken path /class/* /flashcards/* /set-overview/*
+	root * /var/www/cowboy_cards/html
+	encode
+	log default {
+		#output file /var/www/cowboy_cards/logs/access {
+		#	mode 664
+		#	roll_local_time
+		#}
+		format filter {
+			request>headers>Cookie cookie {
+				replace cowboy-cards-session REDACTED
+			}
+		}
+	}
+	handle @backend {
+		reverse_proxy localhost:8000
+	}
+	handle @broken {
+		try_files {path}
+		file_server
+	}
+	handle_errors 404 {
+		rewrite * /index.html
+		file_server
+	}
+	handle {
+		try_files {path} /index.html
+		file_server
+	}
+}
