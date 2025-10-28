@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+#in /home/sp_admin/Cowboy_Cards
+echo "pulling repo..."
+git pull origin master
+sleep 1
+echo "killing and restarting server..."
+ps -guax | awk '/go\/main$/ {print $2}' | xargs -I pid kill -s KILL pid
+cd go/
+go build -o main
+cd ..
+go/main &
+sleep 1
+echo "removing old web files..."
+cd /var/www/cowboy_cards/html/
+sudo rm -r assets/ favicon.ico index.html *.{png,webp}
+cd -
+echo "building project..."
+npm run build:prod
+echo "copying files..."
+cd public/
+sudo mv Spirit-Cowboy-Profile-Only.png frame-*.png favicon.ico og-image.webp index.html assets/ /var/www/cowboy_cards/html/
+echo "project is ready"
+#the following should only be necessary for Caddyfile changes, not new web files
+#sudo systemctl reload caddy
+
+
+#other commands:
+#edit Caddyfile: sudo vim /etc/caddy/Caddyfile
+#format Caddyfile: sudo caddy fmt --overwrite --config /etc/caddy/Caddyfile
+#edit systemd service file: sudo vim /etc/systemd/system/caddy.service
+#caddy service: sudo systemctl start/stop/reload caddy
+#check status: systemctl status caddy
+#caddy service is currently enabled
+#logs are in: /var/www/cowboy_cards/logs/
+
+
+
+
