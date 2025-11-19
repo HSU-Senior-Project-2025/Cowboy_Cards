@@ -11,9 +11,9 @@
     "go": "go run go/main.go",
     "sqlc:gen": "sqlc generate -f sqlc/sqlc.yaml",
     "build:staging": "VITE_API_BASE=https://cowboy-cards.onrender.com vite build --mode staging",
-    "build:prod": "VITE_API_BASE=https://cowboy-cards.onrender.com/ vite build --mode production",
+    "build:prod": "VITE_API_BASE=https://cowboy-cards.onrender.com vite build --mode production",
     "build:dev": "vite build --mode development",
-    "build:mobile": "VITE_API_BASE=https://cowboy-cards.onrender.com/ vite build --mode mobile",
+    "build:mobile": "VITE_API_BASE=https://cowboy-cards.onrender.com vite build --mode mobile",
     "build:ios": "npm run build:mobile && ionic cap open ios",
     "lint": "eslint .",
     "preview": "vite preview"
