@@ -81,7 +81,7 @@ func Init() {
 	unprotectedRoutes := chi.NewRouter()
 	routes.Unprotected(unprotectedRoutes, h)
 	n := negroni.Classic() // serves "./public"
-	//n.Use(middleware.Cors)
+	n.Use(middleware.Cors)
 	n.Use(negroni.HandlerFunc(middleware.SetCacheControlHeader))
 
 	//if buildenv == "" {
@@ -94,7 +94,7 @@ func Init() {
 
 	port, ok := os.LookupEnv("PORT")
 	if !ok {
-		port = "8000"
+		port = "10000"
 	}
 	log.Println("server running on port " + port)
 
