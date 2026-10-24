@@ -5,7 +5,8 @@
 @import '@ionic/react/css/normalize.css';
 @import '@ionic/react/css/structure.css';
 @import '@ionic/react/css/typography.css';
-
+@import "tailwindcss";
+@config "../tailwind.config.ts";
 /* Optional CSS utils that can be commented out */
 /* import '@ionic/react/css/padding.css'; */
 /* import '@ionic/react/css/float-elements.css'; */
@@ -263,10 +264,7 @@ body.dark {
   --ion-card-color: #ffffff;
 }
 
-/* Tailwind Directives & Layers */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+
 
 @layer base {
   :root {
