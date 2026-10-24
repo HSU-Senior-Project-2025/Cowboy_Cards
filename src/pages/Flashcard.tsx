@@ -139,7 +139,7 @@ const Flashcard = () => {
             </div>
           </div>
 
-          <div className="w-full max-w-xl mx-auto relative py-8 min-h-[400px] flex flex-col items-center justify-center">
+          <div className="w-full max-w-xl mx-auto relative py-8 min-h-100 flex flex-col items-center justify-center">
             {isLoading ? (
               <IonSpinner name="circular" />
             ) : cards.length === 0 ? (
@@ -166,7 +166,7 @@ const Flashcard = () => {
                   setApi={setCarouselApi}
                   className="w-full"
                 >
-                  <CarouselContent className="-mt-1 h-[400px]">
+                  <CarouselContent className="-mt-1 h-100">
                     {cards?.map((card, index) => (
                       <CarouselItem key={index}>
                         <FlashCard

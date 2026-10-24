@@ -16,7 +16,7 @@ const SetCardList = (props) => {
     Array.isArray(props.cardsToDisplay) && props.cardsToDisplay.length > 0;
 
   return (
-    <div className="mt-8 min-h-[200px]">
+    <div className="mt-8 min-h-50">
       {props.loading ? (
         <div className="flex items-center justify-center">
           <IonSpinner name="circular" />

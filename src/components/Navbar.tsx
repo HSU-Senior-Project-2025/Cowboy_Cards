@@ -104,7 +104,7 @@ const Navbar = () => {
               alt='Cowboy Cards Logo'
               className='h-8 w-auto me:hidden block'
             />
-            <h2 className='hidden me:block text-2xl sm:text-3xl md:text-4xl text-ellipsis overflow-hidden whitespace-nowrap font-ewert text-[color:--ion-color-primary]'>
+            <h2 className='hidden me:block text-2xl sm:text-3xl md:text-4xl text-ellipsis overflow-hidden whitespace-nowrap font-ewert text-[--ion-color-primary]'>
               Cowboy Cards
             </h2>
             {/* <IonTitle
@@ -117,7 +117,7 @@ const Navbar = () => {
 
           <IonButtons slot='end'>
             <IonButton onClick={openPopover}>
-              <IonIcon icon={add} className='text-[32px] stroke-[2]' />
+              <IonIcon icon={add} className='text-[32px] stroke-2' />
             </IonButton>
             <IonPopover
               event={popoverEvent}

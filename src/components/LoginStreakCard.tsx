@@ -43,7 +43,7 @@ export default function LoginStreakCard(props) {
           width={IMAGE_SIZE}
           height={IMAGE_SIZE}
         />
-        <span className="text-6xl px-4 font-rye font-extrabold text-[color:--ion-color-primary] tabular-nums -ml-[30%] me:ml-0">
+        <span className="text-6xl px-4 font-rye font-extrabold text-[--ion-color-primary] tabular-nums ml-[-30%] me:ml-0">
           {frame + 1}
         </span>
       </IonCardContent>

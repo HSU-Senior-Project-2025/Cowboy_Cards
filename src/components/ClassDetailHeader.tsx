@@ -41,7 +41,7 @@ const ClassDetailHeader = (props) => {
               {props.classData.ClassDescription || 'No description available'}
             </p>
             <IonButton
-              className="rounded-lg mt-4 max-w-[200px]"
+              className="rounded-lg mt-4 max-w-50"
               style={{ '--border-radius': '0.5rem' }}
               routerLink="/home"
               color="primary"

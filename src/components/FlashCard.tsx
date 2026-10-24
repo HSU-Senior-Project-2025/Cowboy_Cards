@@ -39,10 +39,10 @@ export const FlashCard = (props) => {
         className={`flip-card cursor-pointer ${isFlipped ? 'flipped' : ''}`}
         onClick={() => setIsFlipped(!isFlipped)}
       >
-        <Card className="flip-card-front p-8 min-h-[300px] flex items-center justify-center text-center">
+        <Card className="flip-card-front p-8 min-h-75 flex items-center justify-center text-center">
           <p className="text-xl">{props.front}</p>
         </Card>
-        <Card className="flip-card-back p-8 min-h-[300px] flex items-center justify-center text-center absolute top-0 w-full">
+        <Card className="flip-card-back p-8 min-h-75 flex items-center justify-center text-center absolute top-0 w-full">
           <p className="text-xl">{props.back}</p>
         </Card>
       </div>

@@ -127,7 +127,7 @@ const ConfirmResetPass = () => {
     <IonPage>
       <IonContent>
         <div className="flex items-center justify-center min-h-screen">
-          <Card className="w-[350px]">
+          <Card className="w-87.5">
             <CardHeader>
               <CardTitle>Reset Your Password</CardTitle>
               <CardDescription>

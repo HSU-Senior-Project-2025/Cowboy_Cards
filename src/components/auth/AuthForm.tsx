@@ -182,7 +182,7 @@ export const AuthForm = () => {
   };
 
   return (
-    <Card className="w-11/12 max-w-[350px] mb-8">
+    <Card className="w-11/12 max-w-87.5 mb-8">
       <CardHeader>
         <CardTitle className="text-4xl tracking-wide font-smokum font-bold">
           {isLogin ? 'Welcome back' : 'Create account'}

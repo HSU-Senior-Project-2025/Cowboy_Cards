@@ -97,7 +97,7 @@ const ResetPass = () => {
     <IonPage>
       <IonContent>
         <div className="flex items-center justify-center min-h-screen">
-          <Card className="w-11/12 max-w-[350px]">
+          <Card className="w-11/12 max-w-87.5">
             <CardHeader>
               <CardTitle className="text-4xl tracking-wide font-smokum font-bold">
                 Reset password

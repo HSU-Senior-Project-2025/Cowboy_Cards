@@ -42,7 +42,7 @@ const SetOverviewHeader = (props) => {
                 'No description available'}
             </p>
             <IonButton
-              className="rounded-lg mt-4 max-w-[200px]"
+              className="rounded-lg mt-4 max-w-50"
               style={{ '--border-radius': '0.5rem' }}
               onClick={props.onBackClick}
               disabled={props.isEditing}

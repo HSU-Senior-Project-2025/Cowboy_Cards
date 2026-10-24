@@ -41,7 +41,7 @@ const Home = () => {
       <IonContent>
         <div
           id="main-content"
-          className="container mx-auto px-4 py-8 flex-grow"
+          className="container mx-auto px-4 py-8 grow"
         >
           {error && <div className="text-red-500 mt-2">{error.message}</div>}
           <div className="flex flex-col me:flex-row me:justify-between me:items-center mb-8">
